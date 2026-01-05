@@ -21,3 +21,19 @@
 // };
 
 // export default ProtectedRoute;
+
+
+// import { Navigate, Outlet } from "react-router-dom";
+// import { useAuthStore } from "../store/authStore"; // אם אתה משתמש ב-Zustand
+
+// const ProtectedRoute = () => {
+//   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+//   if (!isAuthenticated) {
+//     return <Navigate to="/login" replace />;
+//   }
+
+//   return <Outlet />;
+// };
+
+// export default ProtectedRoute;

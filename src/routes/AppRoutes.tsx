@@ -1,22 +1,45 @@
-// import { Routes, Route } from 'react-router-dom';
-// import HomePage from '../pages/Home/HomePage';
-// import LoginPage from '../pages/Auth/LoginPage';
-// import AdminPage from '../pages/Admin/AdminPage';
-// import ProtectedRoute from './ProtectedRoute';
+import { Routes, Route } from "react-router-dom";
+import Home from "../pages/Home/Home";
+import NotFound from "../pages/NotFound";
+import Login from "../pages/Login";
+// import Home from "../pages/Home";
+// import Login from "../pages/Login";
+// import ProductDetails from "../pages/ProductDetails";
+// import Cart from "../pages/Cart";
+// import Checkout from "../pages/Checkout";
+// import NotFound from "../pages/NotFound";
 
-// const AppRoutes = () => {
-//   return (
-//     <Routes>
-//       {/* נתיבים ציבוריים */}
-//       <Route path="/" element={<HomePage />} />
-//       <Route path="/login" element={<LoginPage />} />
+// import AdminDashboard from "../pages/Admin/Dashboard";
+// import ProtectedRoute from "./ProtectedRoute";
 
-//       {/* נתיבים מוגנים */}
-//       <Route element={<ProtectedRoute />}>
-//         <Route path="/admin" element={<AdminPage />} />
-//       </Route>
-//     </Routes>
-//   );
-// };
+const AppRoutes = () => {
+  return (
+    <Routes>
+      {/* נתיבים ציבוריים */}
+      <Route path="/" element={<Home />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="/login" element={<Login />} />
 
-// export default AppRoutes;
+      {/* <Route path="/login" element={<Login />} />
+      <Route path="/product/:id" element={<ProductDetails />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/checkout" element={<Checkout />} /> */}
+
+      {/* נתיבים מוגנים */}
+      {/* <Route element={<ProtectedRoute />}>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/orders" element={<OrderHistory />} />
+      </Route> */}
+
+      {/* <Route element={<AdminRoute />}>
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/products" element={<ProductManagement />} />
+      </Route> */}
+
+      {/* 404 */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
+
+export default AppRoutes;
