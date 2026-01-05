@@ -1,14 +1,17 @@
 import React from 'react';
 import './Fotter.css';
+import { UI_STRINGS } from '../../../../constants/uiStrings';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <footer className="footer">
       <div className="footer-grid">
         {/* Brand Section */}
         <div className="footer-brand">
-          <h2 className="logo">SEONCHA</h2>
-          <p className="footer-tagline">Fresh groceries delivered to your door.</p>
+          <h2 className="logo">{UI_STRINGS.NAV.BRAND}</h2>
+          <p className="footer-tagline">{UI_STRINGS.NAV.TAGLINE}</p>
           <div className="social-row">
              <button className="icon-btn-small"><img src="https://img.icons8.com/material-outlined/20/000000/facebook.png" alt="FB"/></button>
              <button className="icon-btn-small"><img src="https://img.icons8.com/material-outlined/20/000000/instagram-new.png" alt="IG"/></button>
@@ -18,31 +21,31 @@ const Footer = () => {
 
         {/* Links Section */}
         <div className="footer-links">
-          <h4>Company</h4>
-          <a href="/about">About Us</a>
-          <a href="/stores">Our Stores</a>
-          <a href="/contact">Contact</a>
+          <h4>{UI_STRINGS.FOOTER.COMPANY_SECTION}</h4>
+          <a href="/about">{UI_STRINGS.FOOTER.ABOUT_US}</a>
+          <a href="/stores">{UI_STRINGS.FOOTER.STORES}</a>
+          <a href="/contact">{UI_STRINGS.FOOTER.CONTACT}</a>
         </div>
 
         <div className="footer-links">
-          <h4>Support</h4>
-          <a href="/faq">Help Center</a>
-          <a href="/shipping">Delivery Info</a>
-          <a href="/terms">Terms of Service</a>
+          <h4>{UI_STRINGS.COMMON.SUPPORT}</h4>
+          <a href="/faq">{UI_STRINGS.FOOTER.HELP_CENTER}</a>
+          <a href="/shipping">{UI_STRINGS.FOOTER.DELIVERY_INFO}</a>
+          <a href="/terms">{UI_STRINGS.FOOTER.TERMS}</a>
         </div>
 
         {/* Newsletter/App Section */}
         <div className="footer-app">
-          <h4>Download our App</h4>
+          <h4>{UI_STRINGS.FOOTER.DOWNLOAD_APP}</h4>
           <div className="app-badge-stack">
-            <button className="app-store-btn">App Store</button>
-            <button className="app-store-btn">Google Play</button>
+            <button className="app-store-btn">{UI_STRINGS.FOOTER.APP_STORE}</button>
+            <button className="app-store-btn">{UI_STRINGS.FOOTER.GOOGLE_PLAY}</button>
           </div>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; 2026 SEONCHA. All rights reserved.</p>
+        <p>{UI_STRINGS.FOOTER.COPYRIGHT(currentYear)}</p>
         <div className="payment-icons">
           <img src="https://img.icons8.com/color/32/000000/visa.png" alt="Visa"/>
           <img src="https://img.icons8.com/color/32/000000/mastercard.png" alt="MC"/>

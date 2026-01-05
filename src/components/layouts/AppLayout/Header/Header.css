@@ -14,20 +14,6 @@
   align-items: center;
 }
 
-/* Logo as Home Navigation */
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--primary-text);
-  text-decoration: none;
-  cursor: pointer;
-  transition: opacity var(--transition-fast);
-}
-
-.logo:hover {
-  opacity: 0.85;
-}
-
 /* Right-side actions */
 .header-actions {
   display: flex;
@@ -44,9 +30,9 @@
   position: relative;
   display: flex;
   align-items: center;
+  text-decoration: none;
   transition: transform var(--transition-fast),
               opacity var(--transition-fast);
-  text-decoration: none;
 }
 
 .icon-btn:hover,
