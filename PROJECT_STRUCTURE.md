@@ -19,9 +19,9 @@ src/
 │   │   └── Card/
 │   │
 │   └── 📁 layout/               # App skeleton
-│       ├── MainLayout/
-│       │   ├── MainLayout.tsx
-│       │   ├── MainLayout.css
+│       ├── AppLayout/           # Root component (routing..)
+│       │   ├── App.tsx
+│       │   ├── App.css
 │       │   ├── Header.tsx       # Navigation, user menu
 │       │   ├── Footer.tsx
 │       │   └── Sidebar.tsx
@@ -190,7 +190,6 @@ src/
 │   └── 📁 utils/
 │       └── formatters.test.ts
 │
-├── App.tsx                      # Root component (Providers, Router)
 ├── main.tsx                     # Entry point
 ├── index.css                    # Global styles
 ├── vite-env.d.ts                # Vite types
