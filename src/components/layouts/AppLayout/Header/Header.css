@@ -14,38 +14,56 @@
   align-items: center;
 }
 
+/* Logo as Home Navigation */
 .logo {
-  font-family: var(--font-main);
-  font-size: var(--font-size-lg);
-  font-weight: 800;
+  font-size: 1.5rem;
+  font-weight: bold;
   color: var(--primary-text);
-  letter-spacing: 1px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
 }
 
+.logo:hover {
+  opacity: 0.85;
+}
+
+/* Right-side actions */
 .header-actions {
   display: flex;
   align-items: center;
   gap: var(--spacing-lg);
 }
 
+/* Icon buttons (NavLinks styled as buttons) */
 .icon-btn,
 .cart-wrapper {
   background: none;
-  border: none;
   cursor: pointer;
   padding: var(--spacing-xs);
   position: relative;
   display: flex;
   align-items: center;
-  transition: var(--transition-fast);
+  transition: transform var(--transition-fast),
+              opacity var(--transition-fast);
+  text-decoration: none;
 }
 
-/* This filter ensures icons turn white in dark mode if you use black icons */
-[data-theme="dark"] .icon-btn img,
-[data-theme="dark"] .cart-wrapper img {
-  filter: invert(1);
+.icon-btn:hover,
+.cart-wrapper:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
+/* Keyboard accessibility */
+.icon-btn:focus-visible,
+.cart-wrapper:focus-visible,
+.logo:focus-visible {
+  outline: 2px solid var(--tertiary);
+  outline-offset: 4px;
+}
+
+/* Icons */
 .icon-btn img,
 .cart-wrapper img {
   width: 24px;
@@ -54,11 +72,18 @@
   transition: filter var(--transition-normal);
 }
 
+/* Dark mode icon handling */
+[data-theme="dark"] .icon-btn img,
+[data-theme="dark"] .cart-wrapper img {
+  filter: invert(1);
+}
+
+/* Cart badge */
 .badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background-color: var(--tertiary); /* Using your orange tertiary color */
+  background-color: var(--tertiary);
   color: white;
   font-size: 10px;
   font-weight: bold;
@@ -69,3 +94,4 @@
   align-items: center;
   justify-content: center;
 }
+

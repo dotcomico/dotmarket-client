@@ -9,6 +9,9 @@
 
   --border-color: rgba(255, 255, 255, 0.1);
   --surface-color: #1e1e1e;
+  /* 🌑 Dark Mode Icon Logic */
+  --icon-filter: invert(1) brightness(2); 
+  --interactive-hover: rgba(255, 255, 255, 0.05);
 }
 :root {
   /* 🎨 Colors */
@@ -21,6 +24,12 @@
   --secondary-text: rgb(44, 44, 44);
   --tertiary-text: rgb(102, 102, 102);
 
+  --success: #2e7d32;
+  --error: #d32f2f;
+  --warning: #ed6c02;
+  --info: #0288d1;
+
+
   /* 📏 Spacing */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -29,7 +38,7 @@
   --spacing-xl: 32px;
 
   /* 🔤 Typography */
-  --font-main: "Inter", sans-serif;
+  --font-main: 'Outfit', sans-serif;
   --font-size-sm: 0.875rem;
   --font-size-md: 1rem;
   --font-size-lg: 1.25rem;
@@ -49,47 +58,8 @@
   /* ⚡ Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
-}
-:root[data-theme="dark"] {
-  --primary: #1a1a1a;
-  --secondary: #222;
-  --tertiary: rgba(255, 123, 0, 1); 
 
-  --primary-text: #fff;
-  --secondary-text: #ccc;
-  --tertiary-text: rgb(150, 150, 150); /* Slightly lighter for dark mode visibility */
-
-  --border-color: rgba(255, 255, 255, 0.1);
-  --surface-color: #1e1e1e;
-  
-  /* 🌑 Dark Mode Icon Logic */
-  --icon-filter: invert(1) brightness(2); 
-  --interactive-hover: rgba(255, 255, 255, 0.05);
-}
-:root {
-  /* ... Your Existing Colors ... */
-  --primary: #fff0d9;
-  --secondary: rgb(250, 250, 250);
-  --tertiary: rgba(255, 123, 0, 1);
-
-  /* 🚥 Feedback Colors (Important for Grocery Apps) */
-  --success: #2e7d32;
-  --error: #d32f2f;
-
-  /* ... Your Existing Text ... */
-  --primary-text: black;
-  --secondary-text: rgb(44, 44, 44);
-  --tertiary-text: rgb(102, 102, 102);
-
-  /* 🖱️ Interactive States */
+    /* 🖱️ Interactive States */
   --interactive-hover: rgba(0, 0, 0, 0.05);
   --icon-filter: none;
-
-  /* ... Your Existing Spacing, Typography, Shadows ... */
-  
-  --border-color: rgba(0, 0, 0, 0.1);
-  --surface-color: var(--secondary);
-
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
 }

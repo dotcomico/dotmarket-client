@@ -1,1 +1,13 @@
 @import "./styles/variables.css";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap'); 
+.logo {
+  font-family: var(--font-main);
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--primary-text);
+  letter-spacing: 1px;
+text-decoration: none !important;
+  border: none;
+  outline: none;
+
+}

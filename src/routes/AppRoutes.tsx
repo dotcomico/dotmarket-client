@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
+import { PATHS } from "./paths";
 // import Home from "../pages/Home";
 // import Login from "../pages/Login";
 // import ProductDetails from "../pages/ProductDetails";
@@ -16,9 +17,9 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* נתיבים ציבוריים */}
-      <Route path="/" element={<Home />} />
+      <Route path={PATHS.HOME} element={<Home />} />
       <Route path="/home" element={<Home />} />
-      <Route path="/login" element={<Login />} />
+      <Route path={PATHS.LOGIN} element={<Login />} />
 
       {/* <Route path="/login" element={<Login />} />
       <Route path="/product/:id" element={<ProductDetails />} />

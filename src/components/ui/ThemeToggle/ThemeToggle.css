@@ -1,5 +1,5 @@
 .theme-toggle-btn {
-  background: var(--interactive-hover);
+  background: transparent;
   border: none;
   cursor: pointer;
   padding: var(--spacing-xs);
@@ -13,6 +13,4 @@
 .theme-toggle-btn img {
   width: 22px;
   height: 22px;
-  /* We don't need filter here because we swap the URL in the TSX, 
-     but you can keep it as a backup */
 }
