@@ -1,3 +1,6 @@
 .app{
-    padding-top: 80px;
+    /* RED JUST FOR DEVELOPING */
+    background-color: red;  
+    /* background-color: var(--primary);   */
+    padding-top: 72px;
 }
