@@ -6,7 +6,9 @@ html , body {
   margin: 0;
   font-family: var(--font-main);
 }
-
+input {
+  caret-color: #007bff;
+}
 /* Logo as Home Navigation */
 .logo {
   font-family: var(--font-main);
@@ -27,3 +29,4 @@ html , body {
   outline: 2px solid var(--tertiary);
   outline-offset: 4px;
 }
+

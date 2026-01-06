@@ -5,7 +5,7 @@
  */
 export const UI_STRINGS = {
   NAV: {
-    BRAND: "Supermarket",
+    BRAND: "DotMarket",
     TAGLINE: "Fresh groceries delivered to your door.",
     HOME: "Supermarket",
     SUPPORT: "Support",

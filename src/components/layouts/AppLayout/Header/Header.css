@@ -4,6 +4,12 @@
   border-bottom: 1px solid var(--secondary-text);
   box-shadow: var(--shadow-sm);
   transition: background-color var(--transition-normal);
+  position: fixed;   /* Fixes the header to the viewport */
+  top: 0;            /* Sticks it to the very top */
+  left: 0;           /* Ensures it starts from the left edge */
+  right: 0;          /* Ensures it stretches to the right edge */
+  width: 100%;       /* Backup for full width */
+  z-index: 1000;     /* Keeps the header above other content */
 }
 
 .header-container {
