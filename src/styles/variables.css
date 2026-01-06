@@ -1,13 +1,19 @@
 :root {
   /* 🎨 Colors */
   --primary: #fff;
-  --secondary: #f6f6f6;
-  --tertiary: rgba(255, 123, 0, 1);
+  --secondary: #ededee;
+  --tertiary: rgb(0, 76, 255);
 
   /* 📝 Text Colors */
   --primary-text: black;
-  --secondary-text: rgb(44, 44, 44);
-  --tertiary-text: rgb(102, 102, 102);
+  --secondary-text: rgb(78, 78, 78);
+  --tertiary-text: rgb(103, 103, 103);
+
+  --surface-color: var(--secondary);
+  --surface-color-hover: #dddddd;
+  --surface-color-focus: var(--secondary);
+  --surface-disabled: #f6f6f6;
+
 
   /* Status */
   --success: #2e7d32;
@@ -16,6 +22,7 @@
   --info: #0288d1;
 
   /* 📏 Spacing */
+  --spacing-xxs: 2px;
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
@@ -31,20 +38,25 @@
   --font-size-xxl: 2rem;
 
   /* 🕶️ Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
 
   /* 🧱 Layout */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-pill: 24px;
+  --radius-circle: 24px;
+
   --border-color: rgba(0, 0, 0, 0.1);
   --surface-color: var(--secondary);
 
   /* ⚡ Interaction */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
+  --transition-slow: 500ms ease;
+
   --interactive-hover: rgba(0, 0, 0, 0.05);
 
   /* 🖼️ Icons */
@@ -53,16 +65,21 @@
 
 /*🌑 Dark Theme Overrides */
 :root[data-theme="dark"] {
-  --primary: #1a1a1a;
-  --secondary: #222;
-  --tertiary: rgba(255, 123, 0, 1);
+  --primary: #050505;
+  --secondary: #1f1f1f;
+  /* --secondary: #3f3f3f; */
+  --tertiary: rgb(24, 58, 226);
 
   --primary-text: #fff;
   --secondary-text: #ccc;
   --tertiary-text: rgb(102, 102, 102);
 
+  --surface-color: var(--secondary);
+  --surface-color-hover: #333;
+  --surface-color-focus: #282828;
+  --surface-disabled: #141414;
+
   --border-color: rgba(255, 255, 255, 0.1);
-  --surface-color: #1e1e1e;
 
   --interactive-hover: rgba(255, 255, 255, 0.05);
   --icon-filter: invert(1) brightness(2);
