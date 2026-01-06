@@ -35,6 +35,14 @@ export const UI_STRINGS = {
     SHIPPING: "Delivery Fee",
     TOTAL: "Total Amount",
   },
+  PRODUCT: {
+    ADD_TO_CART: "Add to Cart",
+    OUT_OF_STOCK: "Out of Stock",
+    SALE: "Sale!",
+    UNIT_KG: "per kg",
+    UNIT_PIECE: "per unit",
+    PRICE_TAG: (price: number) => `$${price.toFixed(2)}`,
+  },
 
   AUTH: {
     LOGIN: "Login",
