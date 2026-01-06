@@ -4,12 +4,12 @@
   border-bottom: 1px solid var(--secondary-text);
   box-shadow: var(--shadow-sm);
   transition: background-color var(--transition-normal);
-  position: fixed;   /* Fixes the header to the viewport */
-  top: 0;            /* Sticks it to the very top */
-  left: 0;           /* Ensures it starts from the left edge */
-  right: 0;          /* Ensures it stretches to the right edge */
-  width: 100%;       /* Backup for full width */
-  z-index: 1000;     /* Keeps the header above other content */
+  position: fixed;   
+  top: 0;            
+  left: 0;           
+  right: 0;        
+  width: 100%;       
+  z-index: 1000; 
 }
 
 .header-container {
@@ -18,8 +18,39 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-lg);
 }
-
+.header .search-container {
+  flex: 0 1 100px; /* Default size: doesn't grow, can shrink, starts at 400px */
+  transition: all var(--transition-normal);
+}
+.header:has(.cancel-btn) .search-container {
+  flex: 1; /* Grows to fill all available space */
+  max-width: 800px; /* Optional: prevents it from getting TOO wide on desktop */
+}
+.cancel-btn {
+  background: none;
+  border: none;
+  color: var(--tertiary); /* Using your variable for brand color */
+  font-weight: 600;
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  white-space: nowrap;
+  font-size: 14px;
+  animation: slideIn 0.2s ease-out;
+}
+.cancel-btn:hover {
+  text-decoration: underline;
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }}
 /* Right-side actions */
 .header-actions {
   display: flex;
@@ -46,7 +77,6 @@
   transform: scale(1.05);
   opacity: 0.9;
 }
-
 /* Keyboard accessibility */
 .icon-btn:focus-visible,
 .cart-wrapper:focus-visible,
