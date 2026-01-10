@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { PATHS } from "../../../../routes/paths";
 import { UI_STRINGS } from "../../../../constants/uiStrings";
-import "./HeaderX.css";
+import "./Header.css";
 import SearchBarX from "../../../ui/SearchBarX/SearchBarX";
 import { useEffect, useRef, useState } from "react";
 import HeaderActions from "./HeaderActions";
 
-const HeaderX = () => {
+const Header = () => {
   const cartCount = 12; // Replace with actualcarCount
   const [isSearchActive, setIsSearchActive] = useState(false);
   const headerRef = useRef<HTMLHeadingElement>(null);
@@ -38,7 +38,7 @@ console.log('Searching for:', searchTerm);
 return (
   <header 
   ref={headerRef}
-  className={`headerx ${isSearchActive ? "search-active" : ""}`} role="banner">
+  className={`header ${isSearchActive ? "search-active" : ""}`} role="banner">
     <div className="header-container">
       <NavLink
         to={PATHS.HOME}
@@ -67,4 +67,4 @@ return (
 );
 };
 
-export default HeaderX;
+export default Header;
