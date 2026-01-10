@@ -36,7 +36,7 @@ const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
     <div className={`search-container`} role="search"
       onClick={() => inputRef.current?.focus()}
     >
-      <div className="search-icon-leading" aria-hidden="true">
+      <div className="search-icon-leading" aria-hidden="true" onClick={handleExecuteSearch}>
         <svg
           width="18"
           height="18"

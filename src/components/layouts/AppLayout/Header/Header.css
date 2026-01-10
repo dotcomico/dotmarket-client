@@ -140,7 +140,9 @@ transform: scale(1.1);
   .header .search-container {
     flex: 0 1 200px;
   }
-
+  .header.search-active .logo {
+    display: none
+  }
   .header.search-active .search-container {
     flex: 1;
     max-width: none;

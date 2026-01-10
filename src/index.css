@@ -4,8 +4,13 @@
 html , body {
   padding: 0;
   margin: 0;
-  font-family: var(--font-main);
+  font-family: var(--font-main); 
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 input {
   caret-color: #007bff;
 }
