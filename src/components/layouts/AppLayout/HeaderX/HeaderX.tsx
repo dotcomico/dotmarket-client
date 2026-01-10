@@ -4,7 +4,7 @@ import { UI_STRINGS } from "../../../../constants/uiStrings";
 import "./HeaderX.css";
 import SearchBarX from "../../../ui/SearchBarX/SearchBarX";
 import { useEffect, useRef, useState } from "react";
-import HeaderActions from "../Header/HeaderActions";
+import HeaderActions from "./HeaderActions";
 
 const HeaderX = () => {
   const cartCount = 12; // Replace with actualcarCount
