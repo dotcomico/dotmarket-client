@@ -4,7 +4,7 @@ import { PATHS } from "../../../../routes/paths";
 import { UI_STRINGS } from "../../../../constants/uiStrings";
 import "./Header.css";
 import { useSearchState } from "./useSearchState";
-import HeaderActions from "./HeaderAcrions";
+import HeaderActions from "./HeaderActions";
 
 const Header = () => {
   // TODO: Replace with actual cart count from state/context
