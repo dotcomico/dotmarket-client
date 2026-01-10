@@ -25,6 +25,7 @@ export const UI_STRINGS = {
     ERROR_DEFAULT: "Something went wrong. Please try again.",
     SUPPORT:"Support",
     SEARCH_GENERIC: "Search bla bla...",
+    
   },
 
   CART: {

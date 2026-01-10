@@ -4,14 +4,32 @@ import './SearchBarX.css';
 
 type SearchBarXProps = {
   onFocusChange: (focused: boolean) => void;
+  onSearch?: (searchTerm: string) => void;
 };
 
-const SearchBarX = ({ onFocusChange }: SearchBarXProps) => {
+const SearchBarX = ({ onFocusChange, onSearch }: SearchBarXProps) => {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const clearInput = () => {
     setValue('');
+    inputRef.current?.focus();
+  };
+
+  const handleExecuteSearch = () => {
+    if ( value.trim() && onSearch)
+    onSearch(value.trim());
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleExecuteSearch();
+      
+    }
+    if(e.key === 'Escape'){
+      inputRef.current?.blur();
+      onFocusChange(false);
+    }
   };
 
   return (
@@ -39,12 +57,11 @@ const SearchBarX = ({ onFocusChange }: SearchBarXProps) => {
         type="text"
         className="search-input"
         placeholder={UI_STRINGS.COMMON.SEARCH_PLACEHOLDER}
+        aria-label="Search"
         onFocus={() => onFocusChange(true)}
-        onBlur={() => onFocusChange(false)}
         onChange={(e) => setValue(e.target.value)}
         value={value}
-        // onKeyDown={handleKeyDown}
-        // aria-label=
+        onKeyDown={handleKeyDown}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
@@ -53,11 +70,12 @@ const SearchBarX = ({ onFocusChange }: SearchBarXProps) => {
 
       {value.length > 0 && (
         <button
+          type="button"
           onMouseDown={(e) => e.preventDefault()}
           onClick={clearInput}
           className="clear-btn"
           aria-label="Clear search input"
-          tabIndex={-1}
+        // tabIndex={-1}
         >
           <svg
             width="18"
