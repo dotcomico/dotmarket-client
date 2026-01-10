@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react';
 import { UI_STRINGS } from '../../../constants/uiStrings';
-import './SearchBarX.css';
+import './SearchBar.css';
 
-type SearchBarXProps = {
+type SearchBarProps = {
   onFocusChange: (focused: boolean) => void;
   onSearch?: (searchTerm: string) => void;
 };
 
-const SearchBarX = ({ onFocusChange, onSearch }: SearchBarXProps) => {
+const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -96,4 +96,4 @@ const SearchBarX = ({ onFocusChange, onSearch }: SearchBarXProps) => {
   );
 };
 
-export default SearchBarX;
+export default SearchBar;

@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { PATHS } from "../../../../routes/paths";
 import { UI_STRINGS } from "../../../../constants/uiStrings";
 import "./Header.css";
-import SearchBarX from "../../../ui/SearchBarX/SearchBarX";
+import SearchBar from "../../../ui/SearchBar/SearchBar";
 import { useEffect, useRef, useState } from "react";
 import HeaderActions from "./HeaderActions";
 
@@ -48,7 +48,7 @@ return (
         {UI_STRINGS.NAV.BRAND}
       </NavLink>
 
-      <SearchBarX onFocusChange={ handleSearchFocusChange} onSearch={handleSearchByTerm}/>
+      <SearchBar onFocusChange={ handleSearchFocusChange} onSearch={handleSearchByTerm}/>
 
       {isSearchActive &&
         <button
