@@ -10,6 +10,7 @@ const Header = () => {
   const cartCount = 12; // Replace with actualcarCount
   const [isSearchActive, setIsSearchActive] = useState(false);
   const headerRef = useRef<HTMLHeadingElement>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   const handleSearchFocusChange = (focused: boolean) => {
     setIsSearchActive(focused);
@@ -31,6 +32,16 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll= ()=>{
+      setScrolled(window.scrollY > 0);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
 const handleSearchByTerm = (searchTerm: string) => {
 console.log('Searching for:', searchTerm);
 };
@@ -38,7 +49,7 @@ console.log('Searching for:', searchTerm);
 return (
   <header 
   ref={headerRef}
-  className={`header ${isSearchActive ? "search-active" : ""}`} role="banner">
+  className={`header ${isSearchActive ? "search-active" : ""} ${scrolled? 'scrolled' : ''}`} role="banner">
     <div className="header-container">
       <NavLink
         to={PATHS.HOME}

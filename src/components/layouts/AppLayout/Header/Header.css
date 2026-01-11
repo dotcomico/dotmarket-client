@@ -1,15 +1,19 @@
 .header {
   background-color: var(--primary);
   padding: var(--spacing-md) var(--spacing-xl);
-  border-bottom: 1px solid var(--secondary-text);
-  box-shadow: var(--shadow-sm);
-  transition: background-color var(--transition-normal);
+  border-bottom: 1px solid rgba(211, 211, 211, 0.692);
+  transition:
+   background-color var(--transition-normal),
+   box-shadow var(--transition-normal);
   position: fixed;   
   top: 0;            
   left: 0;           
   right: 0;        
   width: 100%;       
   z-index: 1000; 
+}
+.header.scrolled {
+   box-shadow: var( --shadow-sm)
 }
 
 .header-container {
