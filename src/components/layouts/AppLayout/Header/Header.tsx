@@ -3,47 +3,26 @@ import { PATHS } from "../../../../routes/paths";
 import { UI_STRINGS } from "../../../../constants/uiStrings";
 import "./Header.css";
 import SearchBar from "../../../ui/SearchBar/SearchBar";
-import { useEffect, useRef, useState } from "react";
 import HeaderActions from "./HeaderActions";
+import { useSearchState } from "../../../../hooks/useSearchState";
+import { useScrollDetection } from "../../../../hooks/useScrollDetection";
 
 const Header = () => {
-  const cartCount = 12; // Replace with actualcarCount
-  const [isSearchActive, setIsSearchActive] = useState(false);
-  const headerRef = useRef<HTMLHeadingElement>(null);
-  const [scrolled, setScrolled] = useState(false);
+const cartCount = 12; // TODO: Replace with actual cart count from state/context
 
-  const handleSearchFocusChange = (focused: boolean) => {
-    setIsSearchActive(focused);
-  };
+// Custom hooks for search and scroll behavior
+  const { 
+    isSearchActive, 
+    headerRef, 
+    handleSearchFocusChange, 
+    handleCancel 
+  } = useSearchState();
 
-  useEffect(() => {
-    // Handler to call on outside click
-    const handleClickOutside = (event:MouseEvent) => {
-      // Check if the click is outside the header
-      if (headerRef.current && !headerRef.current.contains(event.target as Node)) {
-        setIsSearchActive(false);
-      }
-    };
-    // Add event listener
-    document.addEventListener('mousedown', handleClickOutside);
-    // Cleanup the event listener on component unmount
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleScroll= ()=>{
-      setScrolled(window.scrollY > 0);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+ const scrolled = useScrollDetection();
 
 const handleSearchByTerm = (searchTerm: string) => {
 console.log('Searching for:', searchTerm);
+ // TODO: Navigate to search results or trigger search action
 };
 
 return (
@@ -59,13 +38,16 @@ return (
         {UI_STRINGS.NAV.BRAND}
       </NavLink>
 
-      <SearchBar onFocusChange={ handleSearchFocusChange} onSearch={handleSearchByTerm}/>
+      <SearchBar
+       onFocusChange={handleSearchFocusChange} 
+         onSearch={handleSearchByTerm}
+         />
 
       {isSearchActive &&
         <button
           className="cancel-btn"
           aria-label="Cancel search"
-          onClick={() => setIsSearchActive(false)}
+          onClick={() => handleCancel}
           type="button"
         >
           {UI_STRINGS.COMMON.CANCEL}
