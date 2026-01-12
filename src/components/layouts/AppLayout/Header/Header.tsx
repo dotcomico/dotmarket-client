@@ -6,7 +6,7 @@ import SearchBar from "../../../ui/SearchBar/SearchBar";
 import HeaderActions from "./HeaderActions";
 import { useSearchState } from "../../../../hooks/useSearchState";
 import { useScrollDetection } from "../../../../hooks/useScrollDetection";
-import { useHeaderHeight } from "./useHeaderHeight";
+import { useHeaderHeight } from "../../../../hooks/useHeaderHeight";
 
 const Header = () => {
 const cartCount = 12; // TODO: Replace with actual cart count from state/context
