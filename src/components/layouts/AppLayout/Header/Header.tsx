@@ -6,6 +6,7 @@ import SearchBar from "../../../ui/SearchBar/SearchBar";
 import HeaderActions from "./HeaderActions";
 import { useSearchState } from "../../../../hooks/useSearchState";
 import { useScrollDetection } from "../../../../hooks/useScrollDetection";
+import { useEffect } from "react";
 
 const Header = () => {
 const cartCount = 12; // TODO: Replace with actual cart count from state/context
@@ -19,6 +20,25 @@ const cartCount = 12; // TODO: Replace with actual cart count from state/context
   } = useSearchState();
 
  const scrolled = useScrollDetection();
+
+ // Set CSS variable for header height
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      }
+    };
+
+    // Update on mount and when header might change size
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+
+    return () => {
+      window.removeEventListener('resize', updateHeaderHeight);
+    };
+  }, [headerRef]); // Re-run if search state changes header size
+
 
 const handleSearchByTerm = (searchTerm: string) => {
 console.log('Searching for:', searchTerm);
