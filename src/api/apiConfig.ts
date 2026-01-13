@@ -14,6 +14,11 @@ export const API_ENDPOINTS = {
   ORDERS: '/orders',
   ORDER_BY_ID: (id: number) => `/orders/${id}`,
   
+  // Categories
+  CATEGORIES: '/categories',
+  CATEGORIES_TREE: '/categories/tree',
+  CATEGORY_BY_ID: (id: number) => `/categories/${id}`,
+  
   // Admin
   ADMIN_USERS: '/users',
   ADMIN_UPDATE_ROLE: (id: number) => `/users/${id}/role`,
