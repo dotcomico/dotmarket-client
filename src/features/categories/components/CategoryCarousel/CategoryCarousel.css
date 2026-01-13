@@ -1,0 +1,30 @@
+.category-carousel {
+  margin: 2rem 0;
+}
+
+.category-carousel h2 {
+  margin-bottom: 1rem;
+}
+
+.category-carousel__scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scroll-snap-type: x mandatory;
+}
+
+.category-carousel__scroll > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
+}
+
+/* Hide scrollbar but keep functionality */
+.category-carousel__scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.category-carousel__scroll::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
