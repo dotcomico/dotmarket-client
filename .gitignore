@@ -1,5 +1,6 @@
-.env.development
-.env.production
+.env
+.env.*
+!.env.example
 old_p_s.md
 
 # Logs

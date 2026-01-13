@@ -1,10 +1,9 @@
-// src/api/axiosInstance.ts
 import axios from 'axios';
-import { API_BASE_URL } from './apiConfig';
+import { API_BASE_URL, API_TIMEOUT } from './apiConfig';
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -29,6 +28,13 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/login';
+    }
+     if (error.response?.status === 403) {
+      console.error('Access denied');
+    }
+
+    if (error.response?.status === 500) {
+      console.error('Server error');
     }
     return Promise.reject(error);
   }
