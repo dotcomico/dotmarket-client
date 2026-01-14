@@ -1,7 +1,7 @@
 .category-nav {
   display: flex;
-  gap: 1.5rem;
-  padding: 0.5rem 0;
+  gap: 0.5rem;
+  padding: var(--spacing-xs);
 }
 
 .category-nav a {
@@ -9,14 +9,17 @@
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  color: inherit;
+  color: var(--primary-text);
   font-size: 0.9rem;
   white-space: nowrap;
-  transition: color 0.2s;
+  border-radius: var(--radius-pill);
+  padding: var(--spacing-xs) var(--spacing-smd);
+    transition: var(--transition-fast);
 }
 
 .category-nav a:hover {
-  color: var(--primary);
+  background-color: var(--surface-color-hover);
+  font-weight: var(--font-weight-medium)
 }
 
 .category-nav__icon {

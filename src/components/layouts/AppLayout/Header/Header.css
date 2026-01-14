@@ -1,6 +1,6 @@
 .header {
   background-color: var(--primary);
-  padding: var(--spacing-md) var(--spacing-xl);
+  padding: var(--spacing-smd) var(--spacing-xl);
   border-bottom: 1px solid rgba(211, 211, 211, 0.692);
   transition:
    background-color var(--transition-normal),
