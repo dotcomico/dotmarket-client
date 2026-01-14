@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  border-radius: 8px;
-  background: var(--card-bg);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-xxl);
   text-decoration: none;
-  color: inherit;
-  transition: transform 0.2s;
+  color: var(--primary-text);
+  transition: transform var(--transition-fast);
+  background-color: var(--surface-color)
 }
 
 .category-card:hover {
@@ -19,6 +19,7 @@
   height: 150px;
   object-fit: cover;
   border-radius: 4px;
+  background-color: blue;
 }
 
 .category-card__placeholder {
@@ -42,7 +43,7 @@
 .category-card--horizontal .category-card__placeholder {
   width: 80px;
   height: 80px;
-  margin-left: 1rem;
+  margin-left: 2rem;
 }
 
 /* Compact variant (for header) */
