@@ -1,4 +1,3 @@
-import React from 'react'
 import "./Home.css";
 import {  CategoryCarousel, CategoryNav } from '../../features/categories';
 import { CategoryList } from '../../features/categories/components/CategoryList/CategoryList';
@@ -6,9 +5,10 @@ import { CategoryList } from '../../features/categories/components/CategoryList/
 const Home = () => {
   return (
     <div className='Home'>
+    
       <CategoryCarousel />
       <CategoryNav />
-      <CategoryList variant="grid" limit={8} />
+      <CategoryList variant="grid" limit={8} showChildren={true} />
     </div>
   )
 }
