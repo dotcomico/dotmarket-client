@@ -2,8 +2,18 @@
   display: flex;
   gap: 0.5rem;
   padding: var(--spacing-xs);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-snap-align: start;
+}
+.category-nav::-webkit-scrollbar {
+    height: 8px;
 }
 
+.category-nav::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 4px;
+}
 .category-nav a {
   display: flex;
   align-items: center;
@@ -14,7 +24,7 @@
   white-space: nowrap;
   border-radius: var(--radius-pill);
   padding: var(--spacing-xs) var(--spacing-smd);
-    transition: var(--transition-fast);
+  transition: var(--transition-fast);
 }
 
 .category-nav a:hover {
