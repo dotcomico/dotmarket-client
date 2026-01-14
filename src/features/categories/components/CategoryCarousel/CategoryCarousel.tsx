@@ -12,12 +12,12 @@ export const CategoryCarousel = () => {
     }
   }, [categories.length, fetchCategories]);
 
-  if (isLoading) return <div className="category-carousel__loading">טוען קטגוריות...</div>;
+  if (isLoading) return <div className="category-carousel__loading">Loading categorys...</div>;
   if (error) return <div className="category-carousel__error">{error}</div>;
 
   return (
     <section className="category-carousel">
-      <h2>קטגוריות פופולריות</h2>
+      <h2>Popular categories</h2>
       <div className="category-carousel__scroll">
         {categories.map(category => (
           <CategoryCard 

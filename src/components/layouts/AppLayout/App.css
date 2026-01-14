@@ -3,7 +3,7 @@
     background-color: red;  
     /* background-color: var(--primary);   */
     
-      /* Use CSS variable set by Header component */
+    /* Use CSS variable set by Header component */
     padding-top: var(--header-height, 72px);
     /* Fallback to 72px if variable not set yet */
     
