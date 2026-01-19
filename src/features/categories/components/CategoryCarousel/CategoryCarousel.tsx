@@ -23,7 +23,7 @@ export const CategoryCarousel = () => {
           <CategoryCard 
             key={category.id} 
             category={category} 
-            variant="horizontal" 
+            variant="grid" 
           />
         ))}
       </div>

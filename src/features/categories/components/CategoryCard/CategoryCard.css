@@ -7,7 +7,6 @@
   text-decoration: none;
   color: var(--primary-text);
   transition: transform var(--transition-fast);
-  background-color: var(--surface-color)
 }
 
 .category-card:hover {
@@ -20,6 +19,16 @@
   object-fit: cover;
   border-radius: 4px;
   background-color: blue;
+}
+
+
+.category-card--grid{
+  padding: 0;
+}
+.category-card--grid .category-card__image-container {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xxl);
+  min-width: 170px;
 }
 
 .category-card__placeholder {

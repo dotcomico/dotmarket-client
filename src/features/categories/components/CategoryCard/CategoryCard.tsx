@@ -7,19 +7,21 @@ interface CategoryCardProps {
   variant?: 'horizontal' | 'grid' | 'compact';
 }
 
-export const CategoryCard = ({ category, variant = 'grid' }: CategoryCardProps) => {
+export const CategoryCard = ({ category, variant = 'horizontal' }: CategoryCardProps) => {
   return (
     <Link 
       to={`/categories/${category.slug}`} 
       className={`category-card category-card--${variant}`}
     >
+      <div className='category-card__image-container'>
       {category.image ? (
-        <img src={category.image} alt={category.name} />
+          <img src={category.image} alt={category.name} />
       ) : (
         <div className="category-card__placeholder">
           {category.icon || '📦'}
         </div>
-      )}
+      )} 
+      </div>
       <h3>{category.name}</h3>
     </Link>
   );
