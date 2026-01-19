@@ -4,6 +4,7 @@ import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 import { PATHS } from "./paths";
 import Products from "../pages/Products";
+import Categorys from "../pages/Categorys";
 // import Home from "../pages/Home";
 // import Login from "../pages/Login";
 // import ProductDetails from "../pages/ProductDetails";
@@ -18,11 +19,11 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* נתיבים ציבוריים */}
-      <Route path={PATHS.HOME} element={<Home />} />
       <Route path="/home" element={<Home />} />
+      <Route path={PATHS.HOME} element={<Home />} />
       <Route path={PATHS.LOGIN} element={<Login />} />
-      <Route path={PATHS.PRODUCTS} element={< Products/>} />
-
+      <Route path={PATHS.PRODUCTS} element={< Products />} />
+      <Route path={PATHS.CATEGORY_DETAILS} element={<Categorys />} />
       {/* <Route path="/login" element={<Login />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
@@ -39,7 +40,7 @@ const AppRoutes = () => {
         <Route path="/admin/products" element={<ProductManagement />} />
       </Route> */}
 
-    
+
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

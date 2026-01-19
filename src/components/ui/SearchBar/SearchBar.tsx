@@ -1,34 +1,44 @@
 import { useRef, useState } from 'react';
 import { UI_STRINGS } from '../../../constants/uiStrings';
 import './SearchBar.css';
+import { useAppNavigation } from '../../../hooks/useAppNavigation ';
 
 type SearchBarProps = {
   onFocusChange: (focused: boolean) => void;
-  onSearch?: (searchTerm: string) => void;
+  onSearch?: (searchTerm: string) => void;  // for adding suggestion view - onSearch called while typing
 };
 
 const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const { goToProducts } = useAppNavigation();
 
   const clearInput = () => {
     setValue('');
     inputRef.current?.focus();
   };
 
-  const handleExecuteSearch = () => {
-    if ( value.trim() && onSearch)
-    onSearch(value.trim());
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleExecuteSearch();
-      
     }
-    if(e.key === 'Escape'){
+    if (e.key === 'Escape') {
       inputRef.current?.blur();
       onFocusChange(false);
+    }
+  };
+
+  const handleExecuteSearch = () => {
+    if (value.trim())
+      goToProducts(value);
+    // inputRef.current?.blur();
+    // onFocusChange(false);
+  };
+
+  const handleTypingSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value)
+    if (onSearch) {
+      onSearch(value);
     }
   };
 
@@ -59,7 +69,7 @@ const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
         placeholder={UI_STRINGS.COMMON.SEARCH_PLACEHOLDER}
         aria-label="Search"
         onFocus={() => onFocusChange(true)}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => handleTypingSearch(e)}
         value={value}
         onKeyDown={handleKeyDown}
         autoComplete="off"

@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { useCategoryStore } from '../../categoryStore';
+import { buildPath } from '../../../../routes/paths';
 import './CategoryNav.css';
 
 export const CategoryNav = () => {
@@ -7,10 +9,13 @@ export const CategoryNav = () => {
   return (
     <nav className="category-nav">
       {categories.map(category => (
-        <a key={category.id} href={`/categories/${category.slug}`}>
+        <Link 
+          key={category.id} 
+          to={buildPath.categoryDetail(category.slug)}
+        >
           {category.icon && <span className="category-nav__icon">{category.icon}</span>}
           {category.name}
-        </a>
+        </Link>
       ))}
     </nav>
   );
