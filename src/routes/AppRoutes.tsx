@@ -39,7 +39,7 @@ const AppRoutes = () => {
         <Route path="/admin/products" element={<ProductManagement />} />
       </Route> */}
 
-      {/* 404 */}
+    
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

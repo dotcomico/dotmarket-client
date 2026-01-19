@@ -1,10 +1,11 @@
 export const PATHS = {
-  HOME: '/',
+   HOME: '/',
   PRODUCTS: '/products',
   LOGIN: '/login',
   CART: '/cart',
   PRODUCT_DETAILS: '/product/:id',
   CHECKOUT: '/checkout',
+  CATEGORY_DETAILS: '/categories/:slug',
   // Admin routes
   ADMIN: {
     DASHBOARD: '/admin',
@@ -14,3 +15,9 @@ export const PATHS = {
   PROFILE: '/profile',
   ORDERS: '/orders',
 } as const;
+
+export const buildPath = {
+  productDetail: (id: number | string) => `/product/${id}`,
+  categoryDetail: (slug: string) => `/categories/${slug}`,
+  productsWithSearch: (searchTerm: string) => `/products?search=${encodeURIComponent(searchTerm)}`,
+};

@@ -1,4 +1,3 @@
-// features/categories/components/CategoryNav/CategoryNav.tsx
 import { useCategoryStore } from '../../categoryStore';
 import './CategoryNav.css';
 

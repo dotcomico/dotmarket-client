@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { PATHS } from "../routes/paths";
+import { PATHS, buildPath } from "../routes/paths";
 
 export const useAppNavigation = () => {
   const navigate = useNavigate();
 
-  const goToProducts = (searchTerm: string) => {
-    navigate(`${PATHS.PRODUCTS}?search=${encodeURIComponent(searchTerm)}`);
-  };
-
   return {
-    goToProducts,
+    goToProducts: (searchTerm?: string) => {
+      navigate(searchTerm ? buildPath.productsWithSearch(searchTerm) : PATHS.PRODUCTS);
+    },
+    goBack: () => navigate(-1),
   };
 };
