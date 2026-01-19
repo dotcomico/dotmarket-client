@@ -8,6 +8,7 @@ import { useSearchState } from "../../../../hooks/useSearchState";
 import { useScrollDetection } from "../../../../hooks/useScrollDetection";
 import { useHeaderHeight } from "./useHeaderHeight";
 import { CategoryNav } from "../../../../features/categories";
+import { useAppNavigation } from "../../../../hooks/useAppNavigation ";
 
 const Header = () => {
   const cartCount = 12; // TODO: Replace with actual cart count from state/context
@@ -19,15 +20,15 @@ const Header = () => {
     handleSearchFocusChange,
     handleCancel
   } = useSearchState();
+  const { goToProducts } = useAppNavigation();
 
   const scrolled = useScrollDetection();
-
+  
   // Set CSS variable for header height
   useHeaderHeight(headerRef);
 
   const handleSearchByTerm = (searchTerm: string) => {
-    console.log('Searching for:', searchTerm);
-    // TODO: Navigate to search results or trigger search action
+    goToProducts(searchTerm);
   };
 
   return (
