@@ -1,8 +1,5 @@
 .products {
 	background-color: var(--primary);
 	min-height: 100vh;
-	margin: 0;
-}
-h1 {
-	margin: 0;
+	overflow: auto;
 }

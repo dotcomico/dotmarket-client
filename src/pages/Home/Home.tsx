@@ -1,11 +1,12 @@
 import "./Home.css";
-import {  CategoryCarousel } from '../../features/categories';
+import { CategoryList } from '../../features/categories';
 
 const Home = () => {
   return (
     <div className='Home'>
     
-      <CategoryCarousel />
+    
+      <CategoryList variant="grid" limit={9} showChildren={false} />
       
     </div>
   )
