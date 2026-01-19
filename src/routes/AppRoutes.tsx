@@ -3,22 +3,20 @@ import Home from "../pages/Home/Home";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 import { PATHS } from "./paths";
-import Products from "../pages/Products";
-import Categorys from "../pages/Categorys";
+import Products from "../pages/Products/Products";
+import Categorys from "../pages/Categorys/Categorys";
 // import Home from "../pages/Home";
 // import Login from "../pages/Login";
 // import ProductDetails from "../pages/ProductDetails";
 // import Cart from "../pages/Cart";
 // import Checkout from "../pages/Checkout";
 // import NotFound from "../pages/NotFound";
-
 // import AdminDashboard from "../pages/Admin/Dashboard";
 // import ProtectedRoute from "./ProtectedRoute";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* נתיבים ציבוריים */}
       <Route path="/home" element={<Home />} />
       <Route path={PATHS.HOME} element={<Home />} />
       <Route path={PATHS.LOGIN} element={<Login />} />

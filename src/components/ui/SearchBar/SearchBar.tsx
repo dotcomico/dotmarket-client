@@ -35,7 +35,7 @@ const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
     // onFocusChange(false);
   };
 
-  const handleTypingSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const handleTypingSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
     if (onSearch) {
       onSearch(value);

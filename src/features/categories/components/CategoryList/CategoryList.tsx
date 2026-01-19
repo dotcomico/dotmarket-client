@@ -26,7 +26,7 @@ export const CategoryList = ({
     return (
       <div className="category-list__loading">
         <div className="spinner" />
-        <p>טוען קטגוריות...</p>
+        <p>Loading categories...</p>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export const CategoryList = ({
     return (
       <div className="category-list__error">
         <p>❌ {error}</p>
-        <button onClick={fetchCategories}>נסה שוב</button>
+        <button onClick={fetchCategories}>Try again</button>
       </div>
     );
   }
@@ -43,7 +43,7 @@ export const CategoryList = ({
   if (categories.length === 0) {
     return (
       <div className="category-list__empty">
-        <p>אין קטגוריות זמינות</p>
+        <p>No categories available</p>
       </div>
     );
   }
@@ -52,7 +52,7 @@ export const CategoryList = ({
 
   return (
     <section className="category-list">
-      <h2>כל הקטגוריות</h2>
+      <h2>All categories</h2>
       
       <div className={`category-list__container category-list__container--${variant}`}>
         {displayCategories.map(category => (
@@ -62,7 +62,7 @@ export const CategoryList = ({
               variant={variant === 'list' ? 'horizontal' : 'grid'} 
             />
             
-            {/* תת-קטגוריות (אם יש) */}
+          {/* Subcategories (if any) */}
             {showChildren && category.children && category.children.length > 0 && (
               <div className="category-list__children">
                 {category.children.map(child => (

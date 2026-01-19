@@ -6,7 +6,7 @@ const Products = () => {
   const searchTerm = params.get("search") || "";
 
   return (
-    <div className="products-page">
+    <div className="products">
       <h1>Products</h1>
       {searchTerm && <p>Showing results for: <strong>{searchTerm}</strong></p>}
     </div>
