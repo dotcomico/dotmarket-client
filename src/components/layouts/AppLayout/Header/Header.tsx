@@ -54,7 +54,7 @@ const Header = () => {
           <button
             className="cancel-btn"
             aria-label="Cancel search"
-            onClick={() => handleCancel}
+            onClick={ handleCancel}
             type="button"
           >
             {UI_STRINGS.COMMON.CANCEL}

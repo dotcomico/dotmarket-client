@@ -51,9 +51,7 @@ export const CategoryList = ({
   const displayCategories = limit ? categories.slice(0, limit) : categories;
 
   return (
-    <section className="category-list">
-      <h2>All categories</h2>
-      
+    <section className="category-list">  
       <div className={`category-list__container category-list__container--${variant}`}>
         {displayCategories.map(category => (
           <div key={category.id} className="category-list__item">
