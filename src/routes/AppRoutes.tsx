@@ -17,11 +17,13 @@ import Categorys from "../pages/Categorys/Categorys";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
+      {/* Public routes */}
       <Route path={PATHS.HOME} element={<Home />} />
       <Route path={PATHS.LOGIN} element={<Login />} />
-      <Route path={PATHS.PRODUCTS} element={< Products />} />
+      <Route path={PATHS.PRODUCTS} element={<Products />} />
+      <Route path="/categories/:slug/products" element={<Products />} />
       <Route path={PATHS.CATEGORY_DETAILS} element={<Categorys />} />
+     
       {/* <Route path="/login" element={<Login />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
