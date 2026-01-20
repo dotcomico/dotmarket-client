@@ -3,19 +3,37 @@ import { useSearchParams, useParams, Link } from "react-router-dom";
 import { PATHS } from "../../routes/paths";
 import { ProductGrid, useProductStore } from "../../features/products";
 import { categoryApi } from "../../features/categories/api/categoryApi";
-import type { CategoryProductsResponse } from "../../features/categories/api/categoryApi";
+import { CategoryCard } from "../../features/categories";
+import type { CategoryProductsResponse, CategoryDetail } from "../../features/categories/api/categoryApi";
 import "./Products.css";
 
 const Products = () => {
   const { products, isLoading, fetchProducts, error } = useProductStore();
-  const { slug } = useParams<{ slug?: string }>(); // Get category slug from URL
+  const { slug } = useParams<{ slug?: string }>();
   const [searchParams] = useSearchParams();
   
   const [categoryInfo, setCategoryInfo] = useState<CategoryProductsResponse['category'] | null>(null);
+  const [categoryDetail, setCategoryDetail] = useState<CategoryDetail | null>(null);
   const [categoryError, setCategoryError] = useState<string | null>(null);
   
   const searchTerm = searchParams.get('search') || "";
   const categoryId = searchParams.get('categoryId');
+
+  // Fetch category details (including children)
+  useEffect(() => {
+    const loadCategoryDetails = async () => {
+      if (slug) {
+        try {
+          const response = await categoryApi.getBySlug(slug);
+          setCategoryDetail(response.data);
+        } catch (err) {
+          console.error('Failed to load category details:', err);
+        }
+      }
+    };
+    
+    loadCategoryDetails();
+  }, [slug]);
 
   // Fetch products based on whether we're in a category view or general products view
   useEffect(() => {
@@ -50,6 +68,7 @@ const Products = () => {
       } else {
         // General products view
         setCategoryInfo(null);
+        setCategoryDetail(null);
         fetchProducts({
           search: searchTerm,
           categoryId: categoryId ? parseInt(categoryId) : undefined
@@ -87,6 +106,9 @@ const Products = () => {
     }
     return "No products available";
   };
+
+  // Check if category has children
+  const hasChildren = categoryDetail?.children && categoryDetail.children.length > 0;
 
   return (
     <div className="products-page">
@@ -132,6 +154,22 @@ const Products = () => {
         <div className="error-message">
           Error: {error || categoryError}
         </div>
+      )}
+
+      {/* Subcategories Section */}
+      {hasChildren && !searchTerm && (
+        <section className="subcategories-section">
+          <h2>Shop by Category</h2>
+          <div className="subcategories-grid">
+            {categoryDetail.children!.map(subcategory => (
+              <CategoryCard 
+                key={subcategory.id}
+                category={subcategory}
+                variant="grid"
+              />
+            ))}
+          </div>
+        </section>
       )}
 
       {/* Product Grid */}
