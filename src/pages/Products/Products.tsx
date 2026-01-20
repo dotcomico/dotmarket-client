@@ -116,11 +116,25 @@ const Products = () => {
       <nav className="breadcrumb">
         <Link to={PATHS.HOME}>Home</Link>
         <span> / </span>
-        {categoryInfo ? (
+        
+        {categoryDetail?.breadcrumbs && categoryDetail.breadcrumbs.length > 0 ? (
           <>
-            <Link to={PATHS.CATEGORY_DETAILS.replace(':slug', slug!)}>
-              {categoryInfo.name}
-            </Link>
+            {/* Show full category hierarchy */}
+            {categoryDetail.breadcrumbs.map((crumb, index) => {
+              const isLast = index === categoryDetail.breadcrumbs.length - 1;
+              return (
+                <span key={crumb.id}>
+                  {isLast ? (
+                    <span className="breadcrumb-current">{crumb.name}</span>
+                  ) : (
+                    <Link to={`/categories/${crumb.slug}/products`}>
+                      {crumb.name}
+                    </Link>
+                  )}
+                  {!isLast && <span> / </span>}
+                </span>
+              );
+            })}
             {searchTerm && (
               <>
                 <span> / </span>
@@ -130,6 +144,7 @@ const Products = () => {
           </>
         ) : (
           <>
+            {/* Fallback for non-category pages */}
             <span>Products</span>
             {searchTerm && (
               <>
@@ -165,7 +180,7 @@ const Products = () => {
               <CategoryCard 
                 key={subcategory.id}
                 category={subcategory}
-                variant="grid"
+                variant="compact"
               />
             ))}
           </div>
