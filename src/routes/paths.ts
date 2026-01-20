@@ -18,6 +18,6 @@ export const PATHS = {
 
 export const buildPath = {
   productDetail: (id: number | string) => `/product/${id}`,
-  categoryDetail: (slug: string) => `/categories/${slug}`,
+  categoryDetail: (slug: string) => `/categories/${slug}/products`,
   productsWithSearch: (searchTerm: string) => `/products?search=${encodeURIComponent(searchTerm)}`,
 };
