@@ -9,8 +9,9 @@ export const CategoryNav = () => {
   return (
     <nav className="category-nav">
       {categories.map(category => (
-        <Link 
-          key={category.id} 
+        <Link
+          key={category.id}
+          // to={`/categories/${category.slug}/products`}
           to={buildPath.categoryDetail(category.slug)}
         >
           {category.icon && <span className="category-nav__icon">{category.icon}</span>}

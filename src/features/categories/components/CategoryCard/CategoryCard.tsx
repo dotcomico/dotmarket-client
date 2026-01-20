@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { buildPath } from '../../../../routes/paths';
 import type { Category } from '../../types/category.types';
 import './CategoryCard.css';
+import { buildPath } from '../../../../routes/paths';
 
 interface CategoryCardProps {
   category: Category;
@@ -9,6 +9,7 @@ interface CategoryCardProps {
 }
 
 export const CategoryCard = ({ category, variant = 'horizontal' }: CategoryCardProps) => {
+
   return (
     <Link
       to={buildPath.categoryDetail(category.slug)}
