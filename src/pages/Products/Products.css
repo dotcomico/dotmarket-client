@@ -89,7 +89,10 @@
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: var(--spacing-md);
 }
-
+.breadcrumb-current {
+  color: var(--primary-text);
+  font-weight: var(--font-weight-semibold);
+}
 /* Responsive */
 @media (max-width: 768px) {
   .subcategories-grid {
