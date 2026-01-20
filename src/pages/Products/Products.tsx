@@ -1,15 +1,34 @@
-import { useSearchParams } from "react-router-dom";
 import "./Products.css";
+import { PATHS } from "../../routes/paths";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Products = () => {
-  const [params] = useSearchParams();
-  const searchTerm = params.get("search") || "";
+  const [categoryName, setCategoryName] = useState('d');
+  const [searchTerm, setsearchTerm] = useState('banana');
 
   return (
-    <div className="products">
-      <h1>Products</h1>
-      {searchTerm && <p>Showing results for: <strong>{searchTerm}</strong></p>}
-    </div>
+    <div className="products-page">
+      {/* Breadcrumb */}
+      <nav className="breadcrumb">
+        <Link to={PATHS.HOME}>Home</Link>
+        <span> / </span>
+        {categoryName && <span>{categoryName}</span>}
+      </nav>
+
+      {/* Category Header */}
+      {categoryName && (
+        <div className="category-header">
+          <h1>{categoryName}</h1>
+        </div>
+      )}
+
+      {searchTerm && (
+        <p className="search-info">
+          Showing results for: <strong>{searchTerm}</strong>
+        </p>
+      )}
+</div>
   );
 };
 
