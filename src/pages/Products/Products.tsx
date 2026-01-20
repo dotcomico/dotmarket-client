@@ -1,11 +1,24 @@
-import "./Products.css";
+import { useEffect } from "react";
+import { useSearchParams, Link } from "react-router-dom";
 import { PATHS } from "../../routes/paths";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { ProductGrid, useProductStore } from "../../features/products"; // Using your index.ts exports
+import "./Products.css";
 
 const Products = () => {
-  const [categoryName, setCategoryName] = useState('d');
-  const [searchTerm, setsearchTerm] = useState('banana');
+  const { products, isLoading, fetchProducts, error } = useProductStore();
+
+  // Handle URL Search Params (e.g., ?search=banana&category=1)
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('search') || "";
+  const categoryId = searchParams.get('categoryId');
+
+  // Fetch products on mount or when filters change
+  useEffect(() => {
+    fetchProducts({
+      search: searchTerm,
+      categoryId: categoryId ? parseInt(categoryId) : undefined
+    });
+  }, [searchTerm, categoryId, fetchProducts]);
 
   return (
     <div className="products-page">
@@ -13,22 +26,24 @@ const Products = () => {
       <nav className="breadcrumb">
         <Link to={PATHS.HOME}>Home</Link>
         <span> / </span>
-        {categoryName && <span>{categoryName}</span>}
+        <span>Products</span>
+        {searchTerm && <span> / Search: {searchTerm}</span>}
       </nav>
 
-      {/* Category Header */}
-      {categoryName && (
-        <div className="category-header">
-          <h1>{categoryName}</h1>
-        </div>
-      )}
+      {/* Header Logic */}
+      <div className="category-header">
+        <h1>{searchTerm ? `Search Results for "${searchTerm}"` : "All Products"}</h1>
+      </div>
 
-      {searchTerm && (
-        <p className="search-info">
-          Showing results for: <strong>{searchTerm}</strong>
-        </p>
-      )}
-</div>
+      {/* Error Handling */}
+      {error && <div className="error-message">Error: {error}</div>}
+
+      <ProductGrid
+        products={products}
+        isLoading={isLoading}
+        emptyMessage={searchTerm ? `No products found for "${searchTerm}"` : "No products available."}
+      />
+    </div>
   );
 };
 
