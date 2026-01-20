@@ -45,3 +45,15 @@
   margin-bottom: var(--spacing-lg);
   color: var(--secondary-text);
 }
+.category-icon {
+  font-size: 3rem;
+  margin-right: var(--spacing-md);
+}
+
+.error-message {
+  padding: var(--spacing-md);
+  background-color: var(--error);
+  color: white;
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+}
