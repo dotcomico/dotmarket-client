@@ -5,6 +5,8 @@ import Login from "../pages/Login";
 import { PATHS } from "./paths";
 import Products from "../pages/Products/Products";
 import Categorys from "../pages/Categorys/Categorys";
+import ProtectedRoute from "./ProtectedRoute";
+import Register from "../pages/Register";
 // import Home from "../pages/Home";
 // import Login from "../pages/Login";
 // import ProductDetails from "../pages/ProductDetails";
@@ -20,20 +22,37 @@ const AppRoutes = () => {
       {/* Public routes */}
       <Route path={PATHS.HOME} element={<Home />} />
       <Route path={PATHS.LOGIN} element={<Login />} />
+      <Route path={PATHS.REGISTER} element={<Register />} />
       <Route path={PATHS.PRODUCTS} element={<Products />} />
       <Route path="/categories/:slug/products" element={<Products />} />
       <Route path={PATHS.CATEGORY_DETAILS} element={<Categorys />} />
-     
+
       {/* <Route path="/login" element={<Login />} />
       <Route path="/product/:id" element={<ProductDetails />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} /> */}
 
-      {/* נתיבים מוגנים */}
-      {/* <Route element={<ProtectedRoute />}>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/orders" element={<OrderHistory />} />
-      </Route> */}
+      <Route element={<ProtectedRoute />}>
+        <Route
+          path={PATHS.PROFILE}
+          element={<div>Profile Page (Protected)</div>}
+        />
+
+        <Route
+          path={PATHS.ORDERS}
+          element={<div>Orders Page (Protected)</div>}
+        />
+
+        <Route
+          path={PATHS.CART}
+          element={<div>Cart Page (Protected)</div>}
+        />
+
+        <Route
+          path={PATHS.CHECKOUT}
+          element={<div>Checkout Page (Protected)</div>}
+        />
+      </Route>
 
       {/* <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminDashboard />} />
