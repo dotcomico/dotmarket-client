@@ -1,39 +1,24 @@
-// import { Navigate, Outlet, useLocation } from 'react-router-dom';
-// import { useAuth } from '../hooks/useAuth'; // נניח שיש לך הוק שמנהל מצב התחברות
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
+import { PATHS } from './paths';
 
-// const ProtectedRoute = () => {
-//   const { isLoggedIn, isLoading } = useAuth();
-//   const location = useLocation();
+/*
+  Protected Route Component
+  Wraps routes that require authentication.
+  If user is not logged in, redirects to login page. 
+ */
+const ProtectedRoute = () => {
+  const { isAuthenticated } = useAuthStore();
+  const location = useLocation();
 
-//   // בזמן שהאפליקציה בודקת אם יש טוקן תקף (למשל מול ה-LocalStorage)
-//   if (isLoading) {
-//     return <div>Loading...</div>; // או Spinner מעוצב
-//   }
+  if (!isAuthenticated) {
+    // Save the location they tried to visit
+    // so we can redirect them back after login
+    return <Navigate to={PATHS.LOGIN} state={{ from: location }} replace />;
+  }
 
-//   // אם המשתמש לא מחובר, נשלח אותו ללוגין
-//   // אנחנו שומרים את ה-location כדי שנוכל להחזיר אותו לדף שבו הוא היה אחרי ההתחברות
-//   if (!isLoggedIn) {
-//     return <Navigate to="/login" state={{ from: location }} replace />;
-//   }
+  // If authenticated, render the child routes
+  return <Outlet />;
+};
 
-//   // אם הכל תקין, הצג את רכיבי הבן (הדפים המוגנים)
-//   return <Outlet />;
-// };
-
-// export default ProtectedRoute;
-
-
-// import { Navigate, Outlet } from "react-router-dom";
-// import { useAuthStore } from "../store/authStore"; // אם אתה משתמש ב-Zustand
-
-// const ProtectedRoute = () => {
-//   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-
-//   if (!isAuthenticated) {
-//     return <Navigate to="/login" replace />;
-//   }
-
-//   return <Outlet />;
-// };
-
-// export default ProtectedRoute;
+export default ProtectedRoute;
