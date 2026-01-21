@@ -1,7 +1,8 @@
 export const PATHS = {
-   HOME: '/',
+  HOME: '/',
   PRODUCTS: '/products',
   LOGIN: '/login',
+  REGISTER: '/register',
   CART: '/cart',
   PRODUCT_DETAILS: '/product/:id',
   CHECKOUT: '/checkout',
