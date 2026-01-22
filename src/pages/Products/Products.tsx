@@ -6,16 +6,17 @@ import { categoryApi } from "../../features/categories/api/categoryApi";
 import { CategoryCard } from "../../features/categories";
 import type { CategoryProductsResponse, CategoryDetail } from "../../features/categories/api/categoryApi";
 import "./Products.css";
+import { getErrorMessage, logError } from "../../utils/errorHandler";
 
 const Products = () => {
   const { products, isLoading, fetchProducts, error } = useProductStore();
   const { slug } = useParams<{ slug?: string }>();
   const [searchParams] = useSearchParams();
-  
+
   const [categoryInfo, setCategoryInfo] = useState<CategoryProductsResponse['category'] | null>(null);
   const [categoryDetail, setCategoryDetail] = useState<CategoryDetail | null>(null);
   const [categoryError, setCategoryError] = useState<string | null>(null);
-  
+
   const searchTerm = searchParams.get('search') || "";
   const categoryId = searchParams.get('categoryId');
 
@@ -26,12 +27,15 @@ const Products = () => {
         try {
           const response = await categoryApi.getBySlug(slug);
           setCategoryDetail(response.data);
-        } catch (err) {
-          console.error('Failed to load category details:', err);
+          setCategoryError(null); // Clear any previous errors
+        } catch (error) {
+          logError(error, 'Products.loadCategoryDetails');
+          setCategoryDetail(null);
+          setCategoryError(getErrorMessage(error, 'Failed to load category details'));
         }
       }
     };
-    
+
     loadCategoryDetails();
   }, [slug]);
 
@@ -39,7 +43,6 @@ const Products = () => {
   useEffect(() => {
     const loadProducts = async () => {
       if (slug) {
-        // We're viewing a specific category
         try {
           setCategoryError(null);
           const response = await categoryApi.getProducts(slug, {
@@ -47,26 +50,27 @@ const Products = () => {
             page: 1,
             limit: 100
           });
-          
-          // Update the product store with category products
+
           useProductStore.setState({
             products: response.data.products,
             pagination: response.data.pagination,
             isLoading: false,
             error: null
           });
-          
+
           setCategoryInfo(response.data.category);
-        } catch (err) {
-          setCategoryError(err instanceof Error ? err.message : 'Failed to load category');
-          useProductStore.setState({ 
-            products: [], 
-            isLoading: false, 
-            error: 'Category not found' 
+        } catch (error) {
+          const errorMessage = getErrorMessage(error, 'Category not found');
+          logError(error, 'Products.loadProducts');
+
+          setCategoryError(errorMessage);
+          useProductStore.setState({
+            products: [],
+            isLoading: false,
+            error: errorMessage
           });
         }
       } else {
-        // General products view
         setCategoryInfo(null);
         setCategoryDetail(null);
         fetchProducts({
@@ -116,7 +120,7 @@ const Products = () => {
       <nav className="breadcrumb">
         <Link to={PATHS.HOME}>Home</Link>
         <span> / </span>
-        
+
         {categoryDetail?.breadcrumbs && categoryDetail.breadcrumbs.length > 0 ? (
           <>
             {/* Show full category hierarchy */}
@@ -177,7 +181,7 @@ const Products = () => {
           <h2>Shop by Category</h2>
           <div className="subcategories-grid">
             {categoryDetail.children!.map(subcategory => (
-              <CategoryCard 
+              <CategoryCard
                 key={subcategory.id}
                 category={subcategory}
                 variant="compact"

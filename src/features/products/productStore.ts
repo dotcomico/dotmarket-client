@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { productApi } from './api/productApi';
+import { getErrorMessage, logError } from '../../utils/errorHandler';
 import type { ProductFilters, ProductState } from './types/product.types';
-
 
 export const useProductStore = create<ProductState>((set, get) => ({
   products: [],
@@ -19,13 +19,13 @@ export const useProductStore = create<ProductState>((set, get) => ({
         isLoading: false 
       });
     } catch (error) {
-      const errorMessage = error instanceof Error 
-        ? error.message 
-        : 'Failed to fetch products';
+      const errorMessage = getErrorMessage(error, 'Failed to load products');
+      logError(error, 'productStore.fetchProducts');
       
       set({ 
         error: errorMessage,
-        isLoading: false 
+        isLoading: false,
+        products: [] 
       });
     }
   },
