@@ -1,0 +1,99 @@
+/* Core Styles - Shared by both */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary);
+  border-radius: var(--radius-pill);
+  padding: var(--spacing-xs);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: fit-content;
+  overflow: hidden;
+}
+
+/* Variant: Floating (Product Card Style) */
+.quantity-selector--floating {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 20;
+  height: 40px;
+  width: 40px;
+  padding: 0;
+}
+
+.quantity-selector--floating.quantity-selector--active {
+  width: 110px;
+  padding: 0 4px;
+  justify-content: space-between;
+}
+
+/* Buttons */
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--tertiary);
+  border-radius: var(--radius-circle);
+  font-size: 22px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  flex-shrink: 0;
+}
+
+/* Specific sizing for floating plus icon when inactive */
+.quantity-selector--floating:not(.quantity-selector--active) .quantity-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background-color: rgba(0, 76, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.quantity-btn:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+.quantity-btn:disabled {
+  background-color: var(--surface-disabled);
+  color: var(--tertiary-text);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Display Text */
+.quantity-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+  font-size: var(--font-size-md);
+}
+
+/* Animations */
+.animate-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.pop-in {
+  animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(0.5) translateX(10px); }
+  to { opacity: 1; transform: scale(1) translateX(0); }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); }
+  100% { transform: scale(1); }
+}
