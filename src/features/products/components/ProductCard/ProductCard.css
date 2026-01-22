@@ -174,58 +174,94 @@
   }
 }
 
-
 .quantity-selector {
   position: absolute;
   top: 10px;
   right: 10px;
   background: white;
-  border-radius: 50%; 
   display: flex;
   align-items: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.2s ease-in-out;
-  z-index: 10;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  z-index: 20;
   height: 40px;
-  min-width: 40px;
+  width: 40px;
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   overflow: hidden;
+  padding: 0;
 }
 
 .quantity-selector--active {
-  border-radius: 25px;
+  width: 110px;
   padding: 0 4px;
-  background: #f0faff; 
 }
 
 .quantity-btn {
-  background: none;
+  background: transparent;
   border: none;
-  width: 32px;
-  height: 32px;
-  font-size: 20px;
-  font-weight: 500;
-  color: #009de0; 
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  color: var(--tertiary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
   border-radius: 50%;
+  transition: background-color 0.2s, transform 0.1s;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.plus-icon {
+  width: 40px;
+}
+
+.quantity-selector--active .quantity-btn {
+  width: 32px;
+  height: 32px;
 }
 
 .quantity-btn:hover {
-  background-color: rgba(0, 157, 224, 0.1);
+  background-color: rgba(0, 157, 224, 0.15);
 }
 
-.quantity-count {
-  padding: 0 12px;
+.quantity-btn:active {
+  transform: scale(0.85);
+}
+
+/* Animations */
+.animate-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.pop-in {
+  animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   font-weight: 700;
-  color: #009de0;
-  font-size: 16px;
-  min-width: 20px;
+  color: var(--tertiary);
+  flex-grow: 1;
   text-align: center;
 }
 
-.quantity-btn.plus {
-  margin-left: auto;
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateX(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.5);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
