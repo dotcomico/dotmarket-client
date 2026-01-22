@@ -8,6 +8,7 @@ import Categorys from "../pages/Categorys/Categorys";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "../pages/Register";
 import Cart from "../pages/Cart";
+import Profile from "../pages/Profile/Profile";
 // import Home from "../pages/Home";
 // import Login from "../pages/Login";
 // import ProductDetails from "../pages/ProductDetails";
@@ -36,7 +37,7 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route
           path={PATHS.PROFILE}
-          element={<div>Profile Page (Protected)</div>}
+          element={<Profile/>}
         />
 
         <Route
