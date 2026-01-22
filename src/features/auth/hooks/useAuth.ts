@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 import { authApi, type LoginCredentials, type RegisterData } from '../api/authApi';
 import { PATHS } from '../../../routes/paths';
+import { getErrorMessage, logError } from '../../../utils/errorHandler';
 
 /**
  * Custom hook for authentication logic
@@ -42,8 +43,9 @@ export const useAuth = () => {
       navigate(PATHS.HOME);
       
       return { success: true };
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Login failed. Please try again.';
+    } catch (err) {
+      const errorMessage = getErrorMessage(err, 'Login failed. Please try again.');
+      logError(err, 'useAuth.login');
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -69,8 +71,9 @@ export const useAuth = () => {
       navigate(PATHS.HOME);
       
       return { success: true };
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
+    } catch (err) {
+      const errorMessage = getErrorMessage(err, 'Registration failed. Please try again.');
+      logError(err, 'useAuth.register');
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
