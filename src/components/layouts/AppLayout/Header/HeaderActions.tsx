@@ -3,14 +3,14 @@ import { PATHS } from "../../../../routes/paths";
 import { UI_STRINGS } from "../../../../constants/uiStrings";
 import ThemeToggle from "../../../ui/ThemeToggle/ThemeToggle";
 import { useAuthStore } from "../../../../store/authStore";
-import { useAuth } from "../../../../features/auth/hooks/useAuth";
+import { ProfileDropdown } from "../../../../features/profile/components/ProfileDropdown/ProfileDropdown";
 
 const HeaderActions = ({ cartCount }: { cartCount: number }) => {
   const { isAuthenticated, user } = useAuthStore();
-  const { logout } = useAuth();
 
   return (
     <nav className="header-actions" aria-label="Main navigation">
+     
       <ThemeToggle />
 
       {isAuthenticated ? (
@@ -22,11 +22,7 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
             aria-label={UI_STRINGS.NAV.PROFILE}
             title={user?.username || 'Profile'}
           >
-            <img
-              src="https://img.icons8.com/material-outlined/24/000000/user--v1.png"
-              alt=""
-              aria-hidden="true"
-            />
+           {user && <ProfileDropdown user={user} />}
           </NavLink>
 
           {/* Orders Link */}
@@ -60,21 +56,7 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
                 {cartCount}
               </span>
             )}
-          </NavLink>
-
-          {/* Logout Button */}
-          <button
-            onClick={logout}
-            className="icon-btn"
-            aria-label={UI_STRINGS.AUTH.LOGOUT}
-            title="Logout"
-          >
-            <img
-              src="https://img.icons8.com/material-outlined/24/000000/exit.png"
-              alt=""
-              aria-hidden="true"
-            />
-          </button>
+          </NavLink>  
         </>
       ) : (
         <>
