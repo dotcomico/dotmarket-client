@@ -1,0 +1,95 @@
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.profile-header__avatar {
+  flex-shrink: 0;
+}
+
+.profile-header__avatar-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-circle);
+  background: linear-gradient(135deg, var(--tertiary) 0%, rgb(24, 58, 226) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xxxl);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.profile-header__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.profile-header__name {
+  margin: 0;
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-text);
+}
+
+.profile-header__email {
+  margin: 0;
+  font-size: var(--font-size-md);
+  color: var(--secondary-text);
+}
+
+.profile-header__badge {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.profile-header__badge--admin {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: var(--error);
+}
+
+.profile-header__badge--manager {
+  background-color: rgba(237, 108, 2, 0.1);
+  color: var(--warning);
+}
+
+.profile-header__badge--customer {
+  background-color: rgba(0, 76, 255, 0.1);
+  color: var(--tertiary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: var(--spacing-lg);
+  }
+
+  .profile-header__avatar-circle {
+    width: 80px;
+    height: 80px;
+    font-size: var(--font-size-xxl);
+  }
+
+  .profile-header__info {
+    align-items: center;
+  }
+
+  .profile-header__name {
+    font-size: var(--font-size-xl);
+  }
+}
