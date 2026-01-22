@@ -1,7 +1,7 @@
-import { useState } from 'react'; // Added useState
 import { Link } from 'react-router-dom';
 import { buildPath } from '../../../../routes/paths';
 import type { Product } from '../../types/product.types';
+import { useCart } from '../../../cart/hooks/useCart';
 import './ProductCard.css';
 
 interface ProductCardProps {
@@ -9,19 +9,29 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const [quantity, setQuantity] = useState(0); // State for quantity
+  const { getProductQuantity, addToCart, changeQuantity } = useCart();
+  const quantity = getProductQuantity(product.id); 
   const isOutOfStock = product.stock === 0;
 
   const handleIncrement = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setQuantity(prev => prev + 1);
+    
+    if (quantity === 0) {
+      addToCart(product, 1);
+    } else {
+      // increment
+      changeQuantity(product.id, quantity + 1);
+    }
   };
 
   const handleDecrement = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setQuantity(prev => Math.max(0, prev - 1));
+    
+    if (quantity > 0) {
+      changeQuantity(product.id, quantity - 1);
+    }
   };
 
   return (
@@ -33,7 +43,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           ) : (
             <div className="product-card__placeholder">📦</div>
           )}
-
 
           {!isOutOfStock && (
             <div className={`quantity-selector ${quantity > 0 ? 'quantity-selector--active' : ''}`}>
