@@ -1,3 +1,4 @@
+import { useState } from 'react'; // Added useState
 import { Link } from 'react-router-dom';
 import { buildPath } from '../../../../routes/paths';
 import type { Product } from '../../types/product.types';
@@ -8,7 +9,20 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const [quantity, setQuantity] = useState(0); // State for quantity
   const isOutOfStock = product.stock === 0;
+
+  const handleIncrement = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setQuantity(prev => prev + 1);
+  };
+
+  const handleDecrement = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setQuantity(prev => Math.max(0, prev - 1));
+  };
 
   return (
     <div className="product-card">
@@ -19,6 +33,20 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           ) : (
             <div className="product-card__placeholder">📦</div>
           )}
+          
+          {/* Quantity Selector */}
+          {!isOutOfStock && (
+            <div className={`quantity-selector ${quantity > 0 ? 'quantity-selector--active' : ''}`}>
+              {quantity > 0 && (
+                <>
+                  <button className="quantity-btn" onClick={handleDecrement}>−</button>
+                  <span className="quantity-count">{quantity}</span>
+                </>
+              )}
+              <button className="quantity-btn plus" onClick={handleIncrement}>+</button>
+            </div>
+          )}
+
           {isOutOfStock && (
             <div className="product-card__badge product-card__badge--out-of-stock">
               Out of Stock
@@ -39,18 +67,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
           <div className="product-card__footer">
             <span className="product-card__price">${product.price.toFixed(2)}</span>
-            
-            <button 
-              className="product-card__add-btn"
-              disabled={isOutOfStock}
-              onClick={(e) => {
-                e.preventDefault();
-                // TODO: Add to cart logic
-                console.log('Add to cart:', product.id);
-              }}
-            >
-              {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-            </button>
           </div>
         </div>
       </Link>
