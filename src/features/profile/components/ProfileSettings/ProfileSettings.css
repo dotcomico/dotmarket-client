@@ -1,0 +1,195 @@
+.profile-settings {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.profile-settings__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.profile-settings__header h2 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  color: var(--primary-text);
+}
+
+.profile-settings__edit-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--tertiary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.profile-settings__edit-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.profile-settings__edit-btn:active {
+  transform: translateY(0);
+}
+
+/* Message */
+.profile-settings__message {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.profile-settings__message--success {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.profile-settings__message--error {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: var(--error);
+  border: 1px solid var(--error);
+}
+
+/* Form */
+.profile-settings__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-group label {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-text);
+  font-size: var(--font-size-sm);
+}
+
+.form-group input {
+  padding: var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  background-color: var(--primary);
+  color: var(--primary-text);
+  transition: var(--transition-fast);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--tertiary);
+  box-shadow: 0 0 0 3px rgba(0, 76, 255, 0.1);
+}
+
+.form-group input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: var(--surface-disabled);
+}
+
+.profile-settings__divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: var(--spacing-md) 0;
+}
+
+.profile-settings__section-title {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-lg);
+  color: var(--primary-text);
+}
+
+.profile-settings__section-subtitle {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+}
+
+/* Action Buttons */
+.profile-settings__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-md);
+}
+
+.profile-settings__btn {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.profile-settings__btn--cancel {
+  background-color: transparent;
+  color: var(--secondary-text);
+  border: 2px solid var(--border-color);
+}
+
+.profile-settings__btn--cancel:hover {
+  background-color: var(--surface-color-hover);
+}
+
+.profile-settings__btn--save {
+  background-color: var(--tertiary);
+  color: white;
+}
+
+.profile-settings__btn--save:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.profile-settings__btn--save:active,
+.profile-settings__btn--cancel:active {
+  transform: translateY(0);
+}
+
+.profile-settings__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-settings {
+    padding: var(--spacing-lg);
+  }
+
+  .profile-settings__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+
+  .profile-settings__edit-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-settings__actions {
+    flex-direction: column;
+  }
+}
