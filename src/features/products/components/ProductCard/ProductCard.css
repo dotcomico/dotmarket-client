@@ -84,7 +84,6 @@
   color: var(--primary-text);
   line-height: 1.3;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -95,7 +94,6 @@
   color: var(--secondary-text);
   line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -194,6 +192,7 @@
 
 .quantity-selector--active {
   width: 110px;
+  background: #fff0df;
   padding: 0 4px;
 }
 
