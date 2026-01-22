@@ -33,17 +33,20 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           ) : (
             <div className="product-card__placeholder">📦</div>
           )}
-          
-          {/* Quantity Selector */}
+
+
           {!isOutOfStock && (
             <div className={`quantity-selector ${quantity > 0 ? 'quantity-selector--active' : ''}`}>
               {quantity > 0 && (
                 <>
-                  <button className="quantity-btn" onClick={handleDecrement}>−</button>
-                  <span className="quantity-count">{quantity}</span>
+                  <button className="quantity-btn animate-in" onClick={handleDecrement}>−</button>
+                  <span key={quantity} className="quantity-count pop-in">{quantity}</span>
                 </>
               )}
-              <button className="quantity-btn plus" onClick={handleIncrement}>+</button>
+
+              <button className="quantity-btn plus-icon" onClick={handleIncrement}>
+                +
+              </button>
             </div>
           )}
 
@@ -56,7 +59,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
         <div className="product-card__content">
           <h3 className="product-card__title">{product.name}</h3>
-          
+
           {product.description && (
             <p className="product-card__description">{product.description}</p>
           )}
