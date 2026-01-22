@@ -3,6 +3,7 @@ import { buildPath } from '../../../../routes/paths';
 import type { Product } from '../../types/product.types';
 import { useCart } from '../../../cart/hooks/useCart';
 import './ProductCard.css';
+import { QuantitySelector } from '../../../../components/ui/QuantitySelector/QuantitySelector';
 
 interface ProductCardProps {
   product: Product;
@@ -10,29 +11,8 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product }: ProductCardProps) => {
   const { getProductQuantity, addToCart, changeQuantity } = useCart();
-  const quantity = getProductQuantity(product.id); 
+  const quantity = getProductQuantity(product.id);
   const isOutOfStock = product.stock === 0;
-
-  const handleIncrement = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (quantity === 0) {
-      addToCart(product, 1);
-    } else {
-      // increment
-      changeQuantity(product.id, quantity + 1);
-    }
-  };
-
-  const handleDecrement = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (quantity > 0) {
-      changeQuantity(product.id, quantity - 1);
-    }
-  };
 
   return (
     <div className="product-card">
@@ -45,18 +25,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           )}
 
           {!isOutOfStock && (
-            <div className={`quantity-selector ${quantity > 0 ? 'quantity-selector--active' : ''}`}>
-              {quantity > 0 && (
-                <>
-                  <button className="quantity-btn animate-in" onClick={handleDecrement}>−</button>
-                  <span key={quantity} className="quantity-count pop-in">{quantity}</span>
-                </>
-              )}
-
-              <button className="quantity-btn plus-icon" onClick={handleIncrement}>
-                +
-              </button>
-            </div>
+            <QuantitySelector
+              variant="floating"
+              quantity={quantity}
+              stock={product.stock}
+              onUpdate={(newVal) => quantity === 0 ? addToCart(product, 1) : changeQuantity(product.id, newVal)}
+            />
           )}
 
           {isOutOfStock && (
