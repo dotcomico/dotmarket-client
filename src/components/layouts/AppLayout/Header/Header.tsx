@@ -8,9 +8,10 @@ import { useSearchState } from "../../../../hooks/useSearchState";
 import { useScrollDetection } from "../../../../hooks/useScrollDetection";
 import { useHeaderHeight } from "./useHeaderHeight";
 import { CategoryNav } from "../../../../features/categories";
+import { useCart } from "../../../../features/cart/hooks/useCart";
 
 const Header = () => {
-  const cartCount = 12; // TODO: Replace with actual cart count from state/context
+  const { itemCount } = useCart(); // Get cart count from store
 
   // Custom hooks for search and scroll behavior
   const {
@@ -19,7 +20,6 @@ const Header = () => {
     handleSearchFocusChange,
     handleCancel
   } = useSearchState();
-
 
   const scrolled = useScrollDetection();
 
@@ -33,7 +33,9 @@ const Header = () => {
   return (
     <header
       ref={headerRef}
-      className={`header ${isSearchActive ? "search-active" : ""} ${scrolled ? 'scrolled' : ''}`} role="banner">
+      className={`header ${isSearchActive ? "search-active" : ""} ${scrolled ? 'scrolled' : ''}`} 
+      role="banner"
+    >
       <div className="header-container">
         <NavLink
           to={PATHS.HOME}
@@ -42,8 +44,6 @@ const Header = () => {
         >
           {UI_STRINGS.NAV.BRAND}
         </NavLink>
-
-
 
         <SearchBar
           onFocusChange={handleSearchFocusChange}
@@ -54,20 +54,16 @@ const Header = () => {
           <button
             className="cancel-btn"
             aria-label="Cancel search"
-            onClick={ handleCancel}
+            onClick={handleCancel}
             type="button"
           >
             {UI_STRINGS.COMMON.CANCEL}
           </button>
         }
 
-        {!isSearchActive && <HeaderActions cartCount={cartCount} />}
+        {!isSearchActive && <HeaderActions cartCount={itemCount} />}
       </div>
-      {scrolled &&
-        // Todo: just if scralled some px from the 0 height then show the catagoris
-        <CategoryNav />
-      }
-
+      {scrolled && <CategoryNav />}
     </header>
   );
 };
