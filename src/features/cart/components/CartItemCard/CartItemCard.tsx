@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import type { CartItem } from '../../types/cart.type';
 import { buildPath } from '../../../../routes/paths';
 import './CartItemCard.css';
+import { QuantitySelector } from '../../../../components/ui/QuantitySelector/QuantitySelector';
 
 interface CartItemCardProps {
   item: CartItem;
@@ -9,38 +10,24 @@ interface CartItemCardProps {
   onRemove: (productId: number) => void;
 }
 
-export const CartItemCard = ({ 
-  item, 
-  onUpdateQuantity, 
-  onRemove 
+export const CartItemCard = ({
+  item,
+  onUpdateQuantity,
+  onRemove
 }: CartItemCardProps) => {
   const { product, quantity } = item;
   const itemTotal = product.price * quantity;
 
-  const handleIncrement = () => {
-    if (quantity < product.stock) {
-      onUpdateQuantity(product.id, quantity + 1);
-    }
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      onUpdateQuantity(product.id, quantity - 1);
-    }
-  };
-
-  const isMaxQuantity = quantity >= product.stock;
-
   return (
     <div className="cart-item-card">
-      <Link 
-        to={buildPath.productDetail(product.id)} 
+      <Link
+        to={buildPath.productDetail(product.id)}
         className="cart-item-card__image-link"
       >
         {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.name} 
+          <img
+            src={product.image}
+            alt={product.name}
             className="cart-item-card__image"
           />
         ) : (
@@ -49,19 +36,19 @@ export const CartItemCard = ({
       </Link>
 
       <div className="cart-item-card__details">
-        <Link 
-          to={buildPath.productDetail(product.id)} 
+        <Link
+          to={buildPath.productDetail(product.id)}
           className="cart-item-card__name"
         >
           {product.name}
         </Link>
-        
+
         {product.category && (
           <span className="cart-item-card__category">
             {product.category.name}
           </span>
         )}
-        
+
         <div className="cart-item-card__price">
           ${product.price.toFixed(2)}
           {quantity > 1 && (
@@ -71,32 +58,14 @@ export const CartItemCard = ({
       </div>
 
       <div className="cart-item-card__actions">
-        <div className="cart-item-card__quantity">
-          <button 
-            onClick={handleDecrement}
-            className="quantity-btn"
-            aria-label="Decrease quantity"
-          >
-            −
-          </button>
-          
-          <span className="quantity-display">{quantity}</span>
-          
-          <button 
-            onClick={handleIncrement}
-            className="quantity-btn"
-            disabled={isMaxQuantity}
-            aria-label="Increase quantity"
-            title={isMaxQuantity ? 'Max stock reached' : ''}
-          >
-            +
-          </button>
-        </div>
-
-        {isMaxQuantity && (
-          <span className="cart-item-card__stock-warning">
-            Max available
-          </span>
+        <QuantitySelector
+          quantity={quantity}
+          stock={product.stock}
+          min={1}
+          onUpdate={(newVal) => onUpdateQuantity(product.id, newVal)}
+        />
+        {quantity >= product.stock && (
+          <span className="cart-item-card__stock-warning">Max available</span>
         )}
       </div>
 
@@ -104,18 +73,18 @@ export const CartItemCard = ({
         <div className="cart-item-card__subtotal">
           ${itemTotal.toFixed(2)}
         </div>
-        
-        <button 
+
+        <button
           onClick={() => onRemove(product.id)}
           className="cart-item-card__remove"
           aria-label={`Remove ${product.name} from cart`}
         >
-          <svg 
-            width="18" 
-            height="18" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
             strokeWidth="2"
           >
             <polyline points="3 6 5 6 21 6"></polyline>
