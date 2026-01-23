@@ -1,5 +1,9 @@
 import { create } from 'zustand';
-import type { UIState } from '../models/ui.model';
+
+interface UIState {
+  isDark: boolean;
+  toggleTheme: () => void;
+}
 
 export const useUIStore = create<UIState>((set) => ({
   isDark: localStorage.getItem('theme') === 'dark',
