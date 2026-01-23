@@ -1,0 +1,91 @@
+.admin-header {
+  height: 70px;
+  background-color: var(--primary);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-xl);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 240px;
+  z-index: 50;
+}
+
+.admin-header__title {
+  margin: 0;
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+  text-transform: capitalize;
+}
+
+.admin-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.admin-header__notification {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.admin-header__notification:hover {
+  background-color: var(--surface-color);
+}
+
+.admin-header__badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--error);
+  border-radius: var(--radius-circle);
+}
+
+.admin-header__user {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: var(--surface-color);
+  border-radius: var(--radius-md);
+}
+
+.admin-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-circle);
+  background: linear-gradient(135deg, var(--tertiary), rgb(24, 58, 226));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: var(--font-weight-bold);
+}
+
+.admin-header__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header__username {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+}
+
+.admin-header__role {
+  font-size: 12px;
+  color: var(--secondary-text);
+  text-transform: capitalize;
+}
