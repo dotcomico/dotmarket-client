@@ -18,6 +18,11 @@
   background-color: var(--surface-color-hover);
 }
 
+.profile-dropdown__trigger:focus-visible {
+  outline: 2px solid var(--tertiary);
+  outline-offset: 2px;
+}
+
 .profile-dropdown__avatar {
   width: 32px;
   height: 32px;
@@ -36,6 +41,6 @@
   transition: transform var(--transition-fast);
 }
 
-.profile-dropdown__trigger:hover .profile-dropdown__icon {
-  transform: translateY(2px);
+.profile-dropdown__icon--open {
+  transform: rotate(180deg);
 }
