@@ -41,13 +41,27 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
               />
             </NavLink>
 
+            {/* Admin Dashboard Link - Only for admin/manager */}
+            {(user?.role === 'admin' || user?.role === 'manager') && (
+              <NavLink
+                to={PATHS.ADMIN.DASHBOARD}
+                className="icon-btn"
+                aria-label="Admin Dashboard"
+              >
+                <img
+                  src="https://img.icons8.com/material-outlined/24/000000/control-panel.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </NavLink>
+            )}
+            
             {/* Cart Link */}
             <NavLink
               to={PATHS.CART}
               className="cart-wrapper"
-              aria-label={`${UI_STRINGS.NAV.CART}${
-                cartCount > 0 ? `, ${cartCount} item${cartCount !== 1 ? "s" : ""}` : ""
-              }`}
+              aria-label={`${UI_STRINGS.NAV.CART}${cartCount > 0 ? `, ${cartCount} item${cartCount !== 1 ? "s" : ""}` : ""
+                }`}
             >
               <img
                 src="https://img.icons8.com/material-outlined/24/000000/shopping-cart--v1.png"
