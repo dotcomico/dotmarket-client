@@ -1,13 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { UserMenuPopup } from '../../../../components/ui/UserMenuPopup/UserMenuPopup';
 import './ProfileDropdown.css';
-
-interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: 'admin' | 'manager' | 'customer';
-}
+import type { User } from '../../../../types';
 
 interface ProfileDropdownProps {
   user: User;
