@@ -1,13 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-// Define what a User looks like
-interface User {
-    id: number,
-    username: string,
-    email: string,
-    role: 'admin' | 'manager' | 'customer';
-}
+import type { User } from '../types';
 
 // Define the shape of our auth state
 interface AuthState {
@@ -21,13 +14,14 @@ interface AuthState {
     logout: () => void;
     clearAuth: () => void;
 }
+
 /*
-Auth Store - Manages authentication state acress the app
+Auth Store - Manages authentication state across the app
 
 Features:
--Persists to localStorage automatically 
-_Provides login/logout functionality
--Tracks authentication status
+- Persists to localStorage automatically 
+- Provides login/logout functionality
+- Tracks authentication status
 */
 export const useAuthStore = create<AuthState>()(
     persist(
