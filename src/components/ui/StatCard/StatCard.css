@@ -1,0 +1,29 @@
+.stat-card {
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  color: white;
+  min-width: 200px;
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-card__title {
+  font-size: var(--font-size-sm);
+  opacity: 0.9;
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-card__value {
+  font-size: var(--font-size-xxxl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
+}
+
+.stat-card__change {
+  font-size: 13px;
+  opacity: 0.85;
+}
