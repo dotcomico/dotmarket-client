@@ -1,3 +1,8 @@
+import type { User, UserRole } from '../../../types';
+
+// Re-export for convenience
+export type { User, UserRole };
+
 // Admin Dashboard Types
 export interface DashboardStats {
   totalRevenue: number;
@@ -6,19 +11,19 @@ export interface DashboardStats {
   totalProducts: number;
 }
 
+export type OrderStatus = 'completed' | 'processing' | 'pending' | 'cancelled';
+
 export interface RecentOrder {
   id: number;
   customer: string;
   amount: number;
-  status: 'completed' | 'processing' | 'pending' | 'cancelled';
+  status: OrderStatus;
   date: string;
 }
 
-export interface AdminUser {
-  id: number;
-  username: string;
-  email: string;
-  role: 'admin' | 'manager' | 'customer';
+export interface AdminUser extends User {
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Admin Filters
@@ -29,7 +34,7 @@ export interface ProductFilter {
 }
 
 export interface OrderFilter {
-  status: 'all' | 'completed' | 'processing' | 'pending' | 'cancelled';
+  status: 'all' | OrderStatus;
   dateRange: {
     start: Date | null;
     end: Date | null;
