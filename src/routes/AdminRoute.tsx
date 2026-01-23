@@ -1,35 +1,26 @@
-// import { Navigate } from 'react-router-dom';
-// import { useAuthStore } from '@/store/authStore';
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthStore } from "../store/authStore";
+import { PATHS } from "./paths";
 
-// export const AdminRoute = ({ children }: { children: React.ReactNode }) => {
-//   const { user, isAuthenticated } = useAuthStore();
-  
-//   if (!isAuthenticated) {
-//     return <Navigate to="/login" />;
-//   }
-  
-//   if (user?.role !== 'admin' && user?.role !== 'manager') {
-//     return <Navigate to="/" />;
-//   }
-  
-//   return <>{children}</>;
-// };
+/**
+ * Protected Route for Admin & Manager only
+ * Customers and unauthenticated users are redirected
+ */
+const AdminRoute = () => {
+  const { isAuthenticated, user } = useAuthStore();
 
-// import { Navigate, Outlet } from "react-router-dom";
-// import { useAuthStore } from "../store/authStore";
+  // Not authenticated -> redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to={PATHS.LOGIN} replace />;
+  }
 
-// const AdminRoute = () => {
-//   const { isAuthenticated, user } = useAuthStore();
+  // Customer role -> redirect to home (no access)
+  if (user?.role === 'customer') {
+    return <Navigate to={PATHS.HOME} replace />;
+  }
 
-//   if (!isAuthenticated) {
-//     return <Navigate to="/login" replace />;
-//   }
+  // Admin or Manager -> allow access
+  return <Outlet />;
+};
 
-//   if (user?.role !== "ADMIN") {
-//     return <Navigate to="/" replace />;
-//   }
-
-//   return <Outlet />;
-// };
-
-// export default AdminRoute;
+export default AdminRoute;
