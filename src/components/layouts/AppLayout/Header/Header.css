@@ -166,3 +166,111 @@ transform: scale(1.1);
     height: 20px;
   }
 }
+
+/* Logout Modal */
+.logout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.logout-modal {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.logout-modal h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: var(--font-size-xl);
+  color: var(--primary-text);
+}
+
+.logout-modal p {
+  margin: 0 0 var(--spacing-xl) 0;
+  color: var(--secondary-text);
+  font-size: var(--font-size-md);
+}
+
+.logout-modal__actions {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.logout-modal__btn {
+  flex: 1;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.logout-modal__btn--cancel {
+  background-color: transparent;
+  color: var(--secondary-text);
+  border: 2px solid var(--border-color);
+}
+
+.logout-modal__btn--cancel:hover {
+  background-color: var(--surface-color-hover);
+}
+
+.logout-modal__btn--confirm {
+  background-color: var(--error);
+  color: white;
+}
+
+.logout-modal__btn--confirm:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.logout-modal__btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logout-modal {
+    padding: var(--spacing-lg);
+  }
+
+  .logout-modal__actions {
+    flex-direction: column;
+  }
+}
