@@ -1,0 +1,50 @@
+/* Recent Orders Specific Styles */
+.admin-card--large {
+  grid-column: 1;
+}
+
+.order-id {
+  color: var(--tertiary);
+  font-weight: var(--font-weight-semibold);
+  font-family: 'Courier New', monospace;
+}
+
+.amount {
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+}
+
+.text-secondary {
+  color: var(--secondary-text);
+  font-size: var(--font-size-sm);
+}
+
+/* Status Badge */
+.status {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status--completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status--processing {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status--pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status--cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
