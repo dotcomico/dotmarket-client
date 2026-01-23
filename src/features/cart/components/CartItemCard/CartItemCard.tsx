@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import type { CartItem } from '../../types/cart.type';
+import type { CartItem } from '../../types/cart.types';
 import { buildPath } from '../../../../routes/paths';
 import './CartItemCard.css';
 import { QuantitySelector } from '../../../../components/ui/QuantitySelector/QuantitySelector';
