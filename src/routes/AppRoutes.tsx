@@ -10,6 +10,7 @@ import Register from "../pages/Register";
 import Cart from "../pages/Cart";
 import Profile from "../pages/Profile/Profile";
 import AdminRoute from "./AdminRoute";
+import { AdminLayout } from "../components/layouts/AdminLayout/AdminLayout";
 import Dashboard from "../pages/admin/Dashboard";
 import ProductManagement from "../pages/admin/ProductManagement";
 import OrderManagement from "../pages/admin/OrderManagement";
@@ -34,17 +35,19 @@ const AppRoutes = () => {
         <Route path={PATHS.CHECKOUT} element={<div>Checkout</div>} />
       </Route>
 
-      {/* Admin routes (admin & manager only) */}
+      {/* Admin routes (admin & manager only) with AdminLayout */}
       <Route element={<AdminRoute />}>
-        <Route path={PATHS.ADMIN.DASHBOARD} element={<Dashboard />} />
-        <Route path={PATHS.ADMIN.PRODUCTS} element={<ProductManagement />} />
-        <Route path={PATHS.ADMIN.ORDERS} element={<OrderManagement />} />
-        <Route path={PATHS.ADMIN.USERS} element={<UserManagement />} />
+        <Route element={<AdminLayout />}>
+          <Route path={PATHS.ADMIN.DASHBOARD} element={<Dashboard />} />
+          <Route path={PATHS.ADMIN.PRODUCTS} element={<ProductManagement />} />
+          <Route path={PATHS.ADMIN.ORDERS} element={<OrderManagement />} />
+          <Route path={PATHS.ADMIN.USERS} element={<UserManagement />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFound />} />
-    </Routes> 
-  
+    </Routes>
+
   );
 };
 
