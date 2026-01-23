@@ -30,7 +30,7 @@
 }
 .header.search-active .search-container {
   flex: 1; /* Grows to fill all available space */
-  max-width: 800px; /* Optional: prevents it from getting TOO wide on desktop */
+  max-width: 800px; /* prevents it from getting TOO wide on desktop */
 }
 .cancel-btn {
  background: none;
