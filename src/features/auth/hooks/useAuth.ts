@@ -14,7 +14,7 @@ import { getErrorMessage, logError } from '../../../utils/errorHandler';
 export const useAuth = () => {
   const navigate = useNavigate();
   const { setAuth, logout: clearAuth, isAuthenticated, user } = useAuthStore();
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,20 +28,22 @@ export const useAuth = () => {
   const login = async (credentials: LoginCredentials) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       // Call backend API
       const response = await authApi.login(credentials);
-      
       // Store token & user in Zustand store (and localStorage via persist)
       setAuth(response.token, response.user);
-      
       // Also store token separately for axios interceptor
       localStorage.setItem('token', response.token);
-      
-      // Redirect to home page
-      navigate(PATHS.HOME);
-      
+
+      // Role-based redirect
+      if (response.user.role === 'admin' || response.user.role === 'manager') {
+        navigate(PATHS.ADMIN.DASHBOARD);
+      } else {
+        navigate(PATHS.HOME);
+      }
+
       return { success: true };
     } catch (err) {
       const errorMessage = getErrorMessage(err, 'Login failed. Please try again.');
@@ -60,16 +62,16 @@ export const useAuth = () => {
   const register = async (data: RegisterData) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await authApi.register(data);
-      
+
       // Auto-login after registration
       setAuth(response.token, response.user);
       localStorage.setItem('token', response.token);
-      
+
       navigate(PATHS.HOME);
-      
+
       return { success: true };
     } catch (err) {
       const errorMessage = getErrorMessage(err, 'Registration failed. Please try again.');
@@ -99,7 +101,7 @@ export const useAuth = () => {
     user,
     isLoading,
     error,
-    
+
     // Actions
     login,
     register,
