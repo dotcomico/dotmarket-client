@@ -9,14 +9,11 @@ import ProtectedRoute from "./ProtectedRoute";
 import Register from "../pages/Register";
 import Cart from "../pages/Cart";
 import Profile from "../pages/Profile/Profile";
-// import Home from "../pages/Home";
-// import Login from "../pages/Login";
-// import ProductDetails from "../pages/ProductDetails";
-// import Cart from "../pages/Cart";
-// import Checkout from "../pages/Checkout";
-// import NotFound from "../pages/NotFound";
-// import AdminDashboard from "../pages/Admin/Dashboard";
-// import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
+import Dashboard from "../pages/admin/Dashboard";
+import ProductManagement from "../pages/admin/ProductManagement";
+import OrderManagement from "../pages/admin/OrderManagement";
+import UserManagement from "../pages/admin/UserManagement";
 
 const AppRoutes = () => {
   return (
@@ -29,41 +26,25 @@ const AppRoutes = () => {
       <Route path="/categories/:slug/products" element={<Products />} />
       <Route path={PATHS.CATEGORY_DETAILS} element={<Categorys />} />
 
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/product/:id" element={<ProductDetails />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<Checkout />} /> */}
-
+      {/* Protected routes (authenticated users) */}
       <Route element={<ProtectedRoute />}>
-        <Route
-          path={PATHS.PROFILE}
-          element={<Profile/>}
-        />
-
-        <Route
-          path={PATHS.ORDERS}
-          element={<div>Orders Page (Protected)</div>}
-        />
-
-        <Route
-          path={PATHS.CART}
-          element={<Cart/>}
-        />
-
-        <Route
-          path={PATHS.CHECKOUT}
-          element={<div>Checkout Page (Protected)</div>}
-        />
+        <Route path={PATHS.PROFILE} element={<Profile />} />
+        <Route path={PATHS.ORDERS} element={<div>Orders Page</div>} />
+        <Route path={PATHS.CART} element={<Cart />} />
+        <Route path={PATHS.CHECKOUT} element={<div>Checkout</div>} />
       </Route>
 
-      {/* <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/products" element={<ProductManagement />} />
-      </Route> */}
-
+      {/* Admin routes (admin & manager only) */}
+      <Route element={<AdminRoute />}>
+        <Route path={PATHS.ADMIN.DASHBOARD} element={<Dashboard />} />
+        <Route path={PATHS.ADMIN.PRODUCTS} element={<ProductManagement />} />
+        <Route path={PATHS.ADMIN.ORDERS} element={<OrderManagement />} />
+        <Route path={PATHS.ADMIN.USERS} element={<UserManagement />} />
+      </Route>
 
       <Route path="*" element={<NotFound />} />
-    </Routes>
+    </Routes> 
+  
   );
 };
 
