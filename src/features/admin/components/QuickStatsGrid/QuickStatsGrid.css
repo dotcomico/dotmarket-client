@@ -1,0 +1,47 @@
+/* Quick Stats Grid */
+.dashboard-grid--3col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.admin-card--highlight {
+  padding: var(--spacing-lg);
+}
+
+.quick-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.quick-stat__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.quick-stat__info {
+  flex: 1;
+}
+
+.quick-stat__value {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-text);
+  margin-bottom: var(--spacing-xxs);
+}
+
+.quick-stat__label {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid--3col {
+    grid-template-columns: 1fr;
+  }
+}
