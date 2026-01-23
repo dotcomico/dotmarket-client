@@ -14,8 +14,6 @@
 .search-container:focus-within {
   background-color: var(--surface-color-focus);
   border-color: var(--tertiary);
-  /* ????????????!!!!!!!!!!!!! what rgb */
-  /* box-shadow: 0 0 0 3px rgba(var(--tertiary-rgb, 0, 123, 255), 0.1); */
 }
 
 .search-container:hover:not(:focus-within) {
