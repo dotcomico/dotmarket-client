@@ -21,9 +21,29 @@ export interface RecentOrder {
   date: string;
 }
 
+// Extended User for admin management views
 export interface AdminUser extends User {
-  createdAt?: string;
+  createdAt: string;
   updatedAt?: string;
+  ordersCount?: number;
+  totalSpent?: number;
+  lastActive?: string;
+}
+
+// Order with customer details for management view
+export interface AdminOrder {
+  id: number;
+  customer: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  items: number;
+  amount: number;
+  status: OrderStatus;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Admin Filters
@@ -39,4 +59,9 @@ export interface OrderFilter {
     start: Date | null;
     end: Date | null;
   };
+}
+
+export interface UserFilter {
+  search: string;
+  role: 'all' | UserRole;
 }
