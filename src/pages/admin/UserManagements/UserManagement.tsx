@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { AdminHeader } from '../../components/admin/AdminHeader/AdminHeader';
-import SearchBar from '../../components/ui/SearchBar/SearchBar';
-import type { User, UserRole } from '../../types';
-import { useAdminAccess } from '../../features/admin/hooks/useAdminAccess';
+import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
+import SearchBar from '../../../components/ui/SearchBar/SearchBar';
+import type { User, UserRole } from '../../../types';
+import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
 import './UserManagement.css';
 
 // Extended User type with timestamps for admin view

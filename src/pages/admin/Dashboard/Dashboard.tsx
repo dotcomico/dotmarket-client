@@ -1,11 +1,9 @@
 import { useEffect, useMemo } from 'react';
-import { AdminHeader } from '../../components/admin/AdminHeader/AdminHeader';
-import { DashboardStats } from '../../features/admin/components/DashboardStats/DashboardStats';
-import { RecentOrdersTable } from '../../features/admin/components/RecentOrdersTable/RecentOrdersTable';
-import { LowStockAlert } from '../../features/admin/components/LowStockAlert/LowStockAlert';
-import { QuickStatsGrid } from '../../features/admin/components/QuickStatsGrid/QuickStatsGrid';
-import { useProductStore } from '../../features/products';
+
 import './Dashboard.css';
+import { useProductStore } from '../../../features/products';
+import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
+import { DashboardStats, LowStockAlert, QuickStatsGrid, RecentOrdersTable } from '../../../features/admin';
 
 const Dashboard = () => {
   const { products, fetchProducts } = useProductStore();

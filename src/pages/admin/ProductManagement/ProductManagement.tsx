@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
-import { AdminHeader } from '../../components/admin/AdminHeader/AdminHeader';
-import { useProductStore } from '../../features/products';
-import SearchBar from '../../components/ui/SearchBar/SearchBar';
-import type { Product } from '../../features/products/types/product.types';
 import './ProductManagement.css';
+import { useProductStore, type Product } from '../../../features/products';
+import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
+import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 
 const ProductManagement = () => {
   const { products, fetchProducts, isLoading } = useProductStore();

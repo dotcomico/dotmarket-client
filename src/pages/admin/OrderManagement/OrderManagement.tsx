@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { AdminHeader } from '../../components/admin/AdminHeader/AdminHeader';
-import SearchBar from '../../components/ui/SearchBar/SearchBar';
-import type { OrderStatus } from '../../features/admin/types/admin.types';
+import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
+import SearchBar from '../../../components/ui/SearchBar/SearchBar';
+import type { OrderStatus } from '../../../features/admin/types/admin.types';
 import './OrderManagement.css';
 
 // Order type - extending the existing OrderStatus type

@@ -11,10 +11,10 @@ import Cart from "../pages/Cart";
 import Profile from "../pages/Profile/Profile";
 import AdminRoute from "./AdminRoute";
 import { AdminLayout } from "../components/layouts/AdminLayout/AdminLayout";
-import Dashboard from "../pages/admin/Dashboard";
-import ProductManagement from "../pages/admin/ProductManagement";
-import OrderManagement from "../pages/admin/OrderManagement";
-import UserManagement from "../pages/admin/UserManagement";
+import OrderManagement from "../pages/admin/OrderManagement/OrderManagement";
+import UserManagement from "../pages/admin/UserManagements/UserManagement";
+import ProductManagement from "../pages/admin/ProductManagement/ProductManagement";
+import Dashboard from "../pages/admin/Dashboard/Dashboard";
 
 const AppRoutes = () => {
   return (
