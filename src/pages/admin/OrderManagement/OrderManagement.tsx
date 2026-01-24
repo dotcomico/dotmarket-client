@@ -3,6 +3,7 @@ import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import type { OrderStatus } from '../../../features/admin/types/admin.types';
 import './OrderManagement.css';
+import { formatDate } from '../../../utils/formatters';
 
 // Order type - extending the existing OrderStatus type
 interface Order {
@@ -59,15 +60,6 @@ const OrderManagement = () => {
     return classes[status];
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   const handleStatusChange = (orderId: number, newStatus: OrderStatus) => {
     setOrders(prev => prev.map(order => 
