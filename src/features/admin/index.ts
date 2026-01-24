@@ -8,4 +8,13 @@ export { QuickStatsGrid } from './components/QuickStatsGrid/QuickStatsGrid';
 export { useAdminAccess } from './hooks/useAdminAccess';
 
 // Types
-export type { DashboardStats as DashboardStatsType } from './types/admin.types';
+export type { 
+  DashboardStats as DashboardStatsType,
+  OrderStatus,
+  RecentOrder,
+  AdminUser,
+  AdminOrder,
+  ProductFilter,
+  OrderFilter,
+  UserFilter
+} from './types/admin.types';
