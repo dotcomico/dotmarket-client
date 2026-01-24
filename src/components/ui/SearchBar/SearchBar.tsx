@@ -4,14 +4,37 @@ import './SearchBar.css';
 import { useAppNavigation } from '../../../hooks/useAppNavigation ';
 
 type SearchBarProps = {
-  onFocusChange: (focused: boolean) => void;
-  onSearch?: (searchTerm: string) => void;  // for adding suggestion view - onSearch called while typing
+  onFocusChange?: (focused: boolean) => void;
+  onSearch?: (searchTerm: string) => void;
+  placeholder?: string;
+  navigateOnEnter?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
 };
 
-const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
-  const [value, setValue] = useState('');
+const SearchBar = ({
+  onFocusChange,
+  onSearch,
+  placeholder = UI_STRINGS.COMMON.SEARCH_PLACEHOLDER,
+  navigateOnEnter = true,
+  value: controlledValue,
+  onChange
+}: SearchBarProps) => {
+  const [internalValue, setInternalValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const { goToProducts } = useAppNavigation();
+
+  // Support both controlled and uncontrolled modes
+  const isControlled = controlledValue !== undefined;
+  const value = isControlled ? controlledValue : internalValue;
+
+  const setValue = (newValue: string) => {
+    if (isControlled) {
+      onChange?.(newValue);
+    } else {
+      setInternalValue(newValue);
+    }
+  };
 
   const clearInput = () => {
     setValue('');
@@ -19,34 +42,36 @@ const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && navigateOnEnter) {
       handleExecuteSearch();
     }
     if (e.key === 'Escape') {
       inputRef.current?.blur();
-      onFocusChange(false);
+      onFocusChange?.(false);
     }
   };
 
   const handleExecuteSearch = () => {
-    if (value.trim())
+    if (value.trim() && navigateOnEnter) {
       goToProducts(value);
-    // inputRef.current?.blur();
-    // onFocusChange(false);
-  };
-
-  const handleTypingSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-    if (onSearch) {
-      onSearch(value);
     }
   };
 
+  const handleTypingSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    onSearch?.(newValue);
+  };
+
   return (
-    <div className={`search-container`} role="search"
+    <div className="search-container" role="search"
       onClick={() => inputRef.current?.focus()}
     >
-      <div className="search-icon-leading" aria-hidden="true" onClick={handleExecuteSearch}>
+      <div
+        className="search-icon-leading"
+        aria-hidden="true"
+        onClick={navigateOnEnter ? handleExecuteSearch : undefined}
+      >
         <svg
           width="18"
           height="18"
@@ -66,10 +91,10 @@ const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
         ref={inputRef}
         type="text"
         className="search-input"
-        placeholder={UI_STRINGS.COMMON.SEARCH_PLACEHOLDER}
+        placeholder={placeholder}
         aria-label="Search"
-        onFocus={() => onFocusChange(true)}
-        onChange={(e) => handleTypingSearch(e)}
+        onFocus={() => onFocusChange?.(true)}
+        onChange={handleTypingSearch}
         value={value}
         onKeyDown={handleKeyDown}
         autoComplete="off"
@@ -85,7 +110,6 @@ const SearchBar = ({ onFocusChange, onSearch }: SearchBarProps) => {
           onClick={clearInput}
           className="clear-btn"
           aria-label="Clear search input"
-        // tabIndex={-1}
         >
           <svg
             width="18"
