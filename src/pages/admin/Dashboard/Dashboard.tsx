@@ -7,14 +7,15 @@ import { DashboardStats, LowStockAlert, QuickStatsGrid, RecentOrdersTable } from
 
 /**
  * Admin Dashboard - Main overview page
- * Using store selectors directly to avoid function reference issues
+ * 
+ * Note: Order fetching is delegated to RecentOrdersTable to avoid double-fetch.
+ * Dashboard only reads from the store state that RecentOrdersTable populates.
  */
 const Dashboard = () => {
   const { products, fetchProducts } = useProductStore();
   
-  // Access store state and actions separately to avoid re-render loops
+  // Access store state only - RecentOrdersTable handles fetching
   const orders = useOrderStore((state) => state.orders);
-  const fetchOrders = useOrderStore((state) => state.fetchOrders);
 
   // Fetch products on mount (only if empty)
   useEffect(() => {
@@ -23,12 +24,7 @@ const Dashboard = () => {
     }
   }, [products.length, fetchProducts]);
 
-  // Fetch orders on mount (only once)
-  useEffect(() => {
-    fetchOrders();
-  }, []); // Empty dependency - run once on mount
-
-  // Calculate stats using useMemo - no function calls inside
+  // Calculate stats using useMemo - derived from store state
   const stats = useMemo(() => {
     const lowStockCount = products.filter(p => p.stock < 10).length;
     const inventoryValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);
@@ -37,7 +33,7 @@ const Dashboard = () => {
     const pendingCount = orders.filter(o => o.status === 'pending').length;
     const totalOrders = orders.length;
     
-    // Calculate total revenue from completed orders
+    // Calculate total revenue from completed orders (paid or shipped)
     const totalRevenue = orders
       .filter(order => order.status === 'paid' || order.status === 'shipped')
       .reduce((sum, order) => sum + order.totalAmount, 0);
@@ -50,7 +46,7 @@ const Dashboard = () => {
       inventoryValue,
       pendingOrders: pendingCount,
     };
-  }, [products, orders]); // Only depend on data, not functions
+  }, [products, orders]);
 
   return (
     <>
@@ -62,7 +58,7 @@ const Dashboard = () => {
 
         {/* Main Dashboard Grid */}
         <div className="dashboard-grid">
-          {/* Recent Orders */}
+          {/* Recent Orders - handles its own data fetching */}
           <RecentOrdersTable />
 
           {/* Low Stock Alert */}
