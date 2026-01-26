@@ -5,9 +5,9 @@ import type { CreateOrderData, OrderStatus } from '../types/order.types';
 /**
  * Custom hook for order operations
  * Provides a clean API for working with orders
- * 
  * Reusing pattern from: src/features/cart/hooks/useCart.ts
  */
+
 export const useOrders = () => {
   const {
     orders,

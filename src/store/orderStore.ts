@@ -29,21 +29,21 @@ export const useOrderStore = create<OrderState>()(
        */
       fetchOrders: async () => {
         set({ isLoading: true, error: null });
-        
+
         try {
           const response = await orderApi.getAll();
-          set({ 
+          set({
             orders: response.data,
-            isLoading: false 
+            isLoading: false
           });
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to load orders');
           logError(error, 'orderStore.fetchOrders');
-          
-          set({ 
+
+          set({
             error: errorMessage,
             isLoading: false,
-            orders: [] 
+            orders: []
           });
         }
       },
@@ -53,22 +53,22 @@ export const useOrderStore = create<OrderState>()(
        */
       fetchOrderById: async (orderId: number) => {
         set({ isLoading: true, error: null });
-        
+
         try {
           const response = await orderApi.getById(orderId);
-          set({ 
+          set({
             currentOrder: response.data,
-            isLoading: false 
+            isLoading: false
           });
           return response.data;
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to load order details');
           logError(error, 'orderStore.fetchOrderById');
-          
-          set({ 
+
+          set({
             error: errorMessage,
             isLoading: false,
-            currentOrder: null 
+            currentOrder: null
           });
           throw error;
         }
@@ -80,27 +80,27 @@ export const useOrderStore = create<OrderState>()(
        */
       createOrder: async (orderData: CreateOrderData) => {
         set({ isLoading: true, error: null });
-        
+
         try {
           const response = await orderApi.create(orderData);
-          
+
           // Add new order to the beginning of orders array
-          set((state) => ({ 
+          set((state) => ({
             orders: [response.data, ...state.orders],
             currentOrder: response.data,
-            isLoading: false 
+            isLoading: false
           }));
-          
+
           return { success: true, order: response.data };
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to create order');
           logError(error, 'orderStore.createOrder');
-          
-          set({ 
+
+          set({
             error: errorMessage,
-            isLoading: false 
+            isLoading: false
           });
-          
+
           return { success: false, error: errorMessage };
         }
       },
@@ -110,31 +110,31 @@ export const useOrderStore = create<OrderState>()(
        */
       updateOrderStatus: async (orderId: number, status: Order['status']) => {
         set({ isLoading: true, error: null });
-        
+
         try {
           const response = await orderApi.updateStatus(orderId, status);
-          
+
           // Update order in state
           set((state) => ({
             orders: state.orders.map(order =>
               order.id === orderId ? response.data : order
             ),
-            currentOrder: state.currentOrder?.id === orderId 
-              ? response.data 
+            currentOrder: state.currentOrder?.id === orderId
+              ? response.data
               : state.currentOrder,
             isLoading: false
           }));
-          
+
           return { success: true, order: response.data };
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to update order status');
           logError(error, 'orderStore.updateOrderStatus');
-          
-          set({ 
+
+          set({
             error: errorMessage,
-            isLoading: false 
+            isLoading: false
           });
-          
+
           return { success: false, error: errorMessage };
         }
       },
@@ -197,10 +197,9 @@ export const useOrderStore = create<OrderState>()(
     }),
     {
       name: 'order-storage', // localStorage key
-      // Only persist orders, not loading/error states
-      partialize: (state) => ({ 
+      partialize: (state) => ({
         orders: state.orders,
-        currentOrder: state.currentOrder 
+        currentOrder: state.currentOrder
       })
     }
   )
