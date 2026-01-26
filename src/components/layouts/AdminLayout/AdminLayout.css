@@ -8,11 +8,16 @@
   margin-left: 240px;
   width: calc(100% - 240px);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-layout__main {
   padding: var(--spacing-xl);
-  padding-top: calc(70px + var(--spacing-xl));
+  padding-top: calc(70px + var(--spacing-xl)); /* AdminHeader height + spacing */
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Responsive */
