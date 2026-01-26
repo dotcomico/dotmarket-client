@@ -1,22 +1,21 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './ProductManagement.css';
-import { useProductStore, type Product } from '../../../features/products';
+import { useProductStore, productApi, type Product } from '../../../features/products';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
+import { ProductForm } from '../../../features/products/components/ProductForm/ProductForm';
 
 /**
  * ProductManagement - Admin page for managing products
- * 
- * Optimizations:
- * - useMemo for categories to prevent recomputation on every render
- * - useMemo for filtered products
- * - useCallback for event handlers
  */
 const ProductManagement = () => {
   const { products, fetchProducts, isLoading } = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [showAddModal, setShowAddModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<Product | null>(null);
 
   useEffect(() => {
     if (products.length === 0) {
@@ -54,25 +53,74 @@ const ProductManagement = () => {
     return { label: 'In Stock', class: 'stock-status--success' };
   }, []);
 
-  const handleEdit = useCallback((product: Product) => {
-    console.log('Edit product:', product);
-    // TODO: Implement edit modal
-  }, []);
-
-  const handleDelete = useCallback((product: Product) => {
-    if (window.confirm(`Are you sure you want to delete "${product.name}"?`)) {
-      console.log('Delete product:', product);
-      // TODO: Implement delete functionality
-    }
-  }, []);
-
+  // Open modal for adding new product
   const handleOpenAddModal = useCallback(() => {
-    setShowAddModal(true);
+    setEditingProduct(null);
+    setShowProductModal(true);
   }, []);
 
-  const handleCloseAddModal = useCallback(() => {
-    setShowAddModal(false);
+  // Open modal for editing existing product
+  const handleEdit = useCallback((product: Product) => {
+    setEditingProduct(product);
+    setShowProductModal(true);
   }, []);
+
+  // Close product modal
+  const handleCloseModal = useCallback(() => {
+    setShowProductModal(false);
+    setEditingProduct(null);
+  }, []);
+
+  // Handle form submission (create or update)
+  const handleProductSubmit = useCallback(async (formData: FormData): Promise<{ success: boolean; error?: string }> => {
+    setIsSubmitting(true);
+    
+    try {
+      if (editingProduct) {
+        // Update existing product
+        await productApi.update(editingProduct.id, formData);
+      } else {
+        // Create new product
+        await productApi.create(formData);
+      }
+      
+      // Refresh products list
+      await fetchProducts();
+      handleCloseModal();
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Failed to save product:', error);
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to save product' 
+      };
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [editingProduct, fetchProducts, handleCloseModal]);
+
+  // Open delete confirmation modal
+  const handleDeleteClick = useCallback((product: Product) => {
+    setDeleteConfirm(product);
+  }, []);
+
+  // Confirm and execute delete
+  const handleConfirmDelete = useCallback(async () => {
+    if (!deleteConfirm) return;
+    
+    setIsSubmitting(true);
+    try {
+      await productApi.delete(deleteConfirm.id);
+      await fetchProducts();
+      setDeleteConfirm(null);
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+      // Could add toast notification here
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [deleteConfirm, fetchProducts]);
 
   return (
     <>
@@ -97,7 +145,7 @@ const ProductManagement = () => {
 
           {/* Filters Section */}
           <div className="filters-section">
-            {/* Global SearchBar Component */}
+            {/* Global SearchBar Component - reusing from src/components/ui/SearchBar */}
             <div className="admin-search-wrapper">
               <SearchBar
                 placeholder="Search products..."
@@ -202,7 +250,7 @@ const ProductManagement = () => {
                             </button>
                             <button
                               className="action-btn action-btn--delete"
-                              onClick={() => handleDelete(product)}
+                              onClick={() => handleDeleteClick(product)}
                               title="Delete"
                             >
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -221,21 +269,70 @@ const ProductManagement = () => {
           )}
         </div>
 
-        {/* Add Product Modal Placeholder */}
-        {showAddModal && (
-          <div className="modal-overlay" onClick={handleCloseAddModal}>
+        {/* Add/Edit Product Modal */}
+        {showProductModal && (
+          <div className="modal-overlay" onClick={handleCloseModal}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
-                <h3>Add New Product</h3>
+                <h3>{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
                 <button 
                   className="modal-close"
-                  onClick={handleCloseAddModal}
+                  onClick={handleCloseModal}
                 >
                   ×
                 </button>
               </div>
               <div className="modal-body">
-                <p>Product form will be implemented here</p>
+                <ProductForm
+                  product={editingProduct}
+                  onSubmit={handleProductSubmit}
+                  onCancel={handleCloseModal}
+                  isLoading={isSubmitting}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Delete Confirmation Modal */}
+        {deleteConfirm && (
+          <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
+            <div className="modal modal--small" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Delete Product</h3>
+                <button 
+                  className="modal-close"
+                  onClick={() => setDeleteConfirm(null)}
+                >
+                  ×
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="delete-confirm">
+                  <div className="delete-confirm__icon">🗑️</div>
+                  <p className="delete-confirm__message">
+                    Are you sure you want to delete <strong>"{deleteConfirm.name}"</strong>?
+                  </p>
+                  <p className="delete-confirm__warning">
+                    This action cannot be undone.
+                  </p>
+                  <div className="delete-confirm__actions">
+                    <button
+                      className="btn-secondary"
+                      onClick={() => setDeleteConfirm(null)}
+                      disabled={isSubmitting}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="btn-danger"
+                      onClick={handleConfirmDelete}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Deleting...' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
