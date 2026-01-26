@@ -285,3 +285,66 @@
     white-space: nowrap;
   }
 }
+/* Order Items List in Modal */
+.order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.order-item__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-md);
+}
+
+.order-item__name {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-text);
+}
+
+.order-item__price {
+  font-weight: var(--font-weight-semibold);
+  color: var(--tertiary);
+}
+
+/* Error message styling */
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: rgba(211, 47, 47, 0.1);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--error);
+}
+
+.error-message .btn-link {
+  color: var(--error);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Admin search wrapper to match filter styling */
+.admin-search-wrapper {
+  flex: 1;
+  min-width: 250px;
+}
+
+.admin-search-wrapper .search-container {
+  max-width: none;
+}
