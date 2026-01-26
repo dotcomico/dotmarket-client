@@ -1,3 +1,11 @@
+/* Layout & Container */
+.admin-main {
+  padding: var(--spacing-xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Stats Summary Grid */
 .order-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -21,6 +29,7 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Stat Card Color Variants */
 .order-stat-card--pending {
   border-color: #fef3c7;
   background: linear-gradient(135deg, #fffbeb 0%, white 100%);
@@ -50,7 +59,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Order Management Header */
+/* Header & Information */
 .order-management-header {
   display: flex;
   justify-content: space-between;
@@ -66,7 +75,19 @@
   color: var(--primary-text);
 }
 
-/* Status Filter */
+/* Filters Section */
+.filters-section {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  align-items: center;
+}
+
+.admin-search-wrapper {
+  flex: 1;
+  min-width: 250px;
+}
+
 .status-filter {
   min-width: 180px;
   padding: var(--spacing-md);
@@ -86,7 +107,7 @@
   box-shadow: 0 0 0 3px rgba(0, 76, 255, 0.1);
 }
 
-/* Customer Cell */
+/* Table Specific Styles */
 .customer-cell {
   display: flex;
   flex-direction: column;
@@ -103,7 +124,6 @@
   color: var(--secondary-text);
 }
 
-/* Table Cells */
 .order-id {
   color: var(--tertiary);
   font-weight: var(--font-weight-semibold);
@@ -124,7 +144,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* Status Select Dropdown */
+/* Status Select Dropdown (Inside Table) */
 .status-select {
   padding: 6px 12px;
   border-radius: var(--radius-pill);
@@ -146,30 +166,20 @@
   outline-offset: 2px;
 }
 
-.status-select.status--completed {
-  background-color: #d1fae5;
-  color: #065f46;
-}
+.status-select.status--completed { background-color: #d1fae5; color: #065f46; }
+.status-select.status--processing { background-color: #dbeafe; color: #1e40af; }
+.status-select.status--pending { background-color: #fef3c7; color: #92400e; }
+.status-select.status--cancelled { background-color: #fee2e2; color: #991b1b; }
 
-.status-select.status--processing {
-  background-color: #dbeafe;
-  color: #1e40af;
-}
-
-.status-select.status--pending {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.status-select.status--cancelled {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-/* View Action Button */
+/* Actions */
 .action-btn--view {
   background-color: rgba(0, 76, 255, 0.1);
   color: var(--tertiary);
+  border: none;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
 }
 
 .action-btn--view:hover {
@@ -177,64 +187,33 @@
   transform: scale(1.1);
 }
 
-/* Modal Large Variant */
-.modal--large {
-  max-width: 700px;
-}
-
-/* Order Details Grid */
-.order-details-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-xl);
-}
-
-.order-detail-section {
-  background-color: var(--surface-color);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-lg);
-}
-
-.order-detail-section h4 {
-  margin: 0 0 var(--spacing-md) 0;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--primary-text);
-  padding-bottom: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.detail-row {
+/* States (Error, Loading, Empty) */
+.error-message {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-sm) 0;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: rgba(211, 47, 47, 0.1);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--error);
 }
 
-.detail-label {
-  color: var(--secondary-text);
-  font-size: var(--font-size-sm);
+.loading-state, .empty-state {
+  text-align: center;
+  padding: var(--spacing-xxl);
 }
 
-.detail-value {
-  font-weight: var(--font-weight-medium);
-  color: var(--primary-text);
+.empty-state__icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
 }
 
-.detail-value--highlight {
-  font-size: var(--font-size-lg);
-  color: var(--tertiary);
-  font-weight: var(--font-weight-bold);
-}
-
-/* Responsive */
+/* Responsive Design */
 @media (max-width: 1024px) {
   .order-stats {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .order-details-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -250,101 +229,14 @@
 
   .filters-section {
     flex-direction: column;
+    align-items: stretch;
   }
 
-  .status-filter {
-    min-width: auto;
-  }
-
-  /* Hide less important columns on mobile */
-  .admin-table th:nth-child(3),
+  /* Hide less critical columns on small screens */
+  .admin-table th:nth-child(3), 
   .admin-table td:nth-child(3),
-  .admin-table th:nth-child(5),
-  .admin-table td:nth-child(5) {
-    display: none;
+  .admin-table th:nth-child(5), 
+  .admin-table td:nth-child(5) { 
+    display: none; 
   }
-}
-
-@media (max-width: 480px) {
-  .order-stat-card {
-    padding: var(--spacing-md);
-  }
-
-  .order-stat-card__value {
-    font-size: var(--font-size-xxl);
-  }
-
-  .customer-cell {
-    max-width: 120px;
-  }
-
-  .customer-name,
-  .customer-email {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-/* Order Items List in Modal */
-.order-items-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
-}
-
-.order-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md);
-  background-color: var(--primary);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-}
-
-.order-item__info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: var(--spacing-md);
-}
-
-.order-item__name {
-  font-weight: var(--font-weight-medium);
-  color: var(--primary-text);
-}
-
-.order-item__price {
-  font-weight: var(--font-weight-semibold);
-  color: var(--tertiary);
-}
-
-/* Error message styling */
-.error-message {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-md);
-  background-color: rgba(211, 47, 47, 0.1);
-  border: 1px solid var(--error);
-  border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-lg);
-  color: var(--error);
-}
-
-.error-message .btn-link {
-  color: var(--error);
-  font-weight: var(--font-weight-semibold);
-}
-
-/* Admin search wrapper to match filter styling */
-.admin-search-wrapper {
-  flex: 1;
-  min-width: 250px;
-}
-
-.admin-search-wrapper .search-container {
-  max-width: none;
 }
