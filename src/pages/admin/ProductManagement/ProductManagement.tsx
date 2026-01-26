@@ -19,7 +19,7 @@ const ProductManagement = () => {
 
   useEffect(() => {
     if (products.length === 0) {
-      fetchProducts();
+        fetchProducts({ limit: 1000 });
     }
   }, [products.length, fetchProducts]);
 
