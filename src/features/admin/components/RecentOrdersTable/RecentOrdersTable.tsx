@@ -23,7 +23,7 @@ export const RecentOrdersTable = () => {
     if (orders.length === 0) {
       fetchOrders();
     }
-  }, []); // Empty dependency - run once on mount
+  }, [fetchOrders, orders.length]); // Empty dependency - run once on mount
 
   // Get only the 5 most recent orders
   const recentOrders = orders.slice(0, 5);
