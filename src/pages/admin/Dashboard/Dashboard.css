@@ -2,6 +2,8 @@
 .admin-main {
   max-width: 1400px;
   margin: 0 auto;
+  /* Ensure content doesn't get cut off */
+  padding-bottom: var(--spacing-xl);
 }
 
 /* Dashboard Grid Layouts */
@@ -20,6 +22,8 @@
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
   transition: var(--transition-fast);
+  /* Ensure content is fully visible */
+  overflow: visible;
 }
 
 .admin-card:hover {
