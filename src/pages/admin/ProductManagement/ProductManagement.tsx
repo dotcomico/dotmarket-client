@@ -1,9 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import './ProductManagement.css';
 import { useProductStore, type Product } from '../../../features/products';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 
+/**
+ * ProductManagement - Admin page for managing products
+ * 
+ * Optimizations:
+ * - useMemo for categories to prevent recomputation on every render
+ * - useMemo for filtered products
+ * - useCallback for event handlers
+ */
 const ProductManagement = () => {
   const { products, fetchProducts, isLoading } = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,36 +24,55 @@ const ProductManagement = () => {
     }
   }, [products.length, fetchProducts]);
 
-  // Filter products based on search and category
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || 
-                           product.category?.name === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
+  // Memoize categories to prevent recomputation on every render
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(
+      products
+        .map(p => p.category?.name)
+        .filter((name): name is string => Boolean(name))
+    );
+    return ['all', ...Array.from(uniqueCategories)];
+  }, [products]);
 
-  // Get unique categories
-  const categories = ['all', ...new Set(products.map(p => p.category?.name).filter(Boolean))];
+  // Memoize filtered products
+  const filteredProducts = useMemo(() => {
+    return products.filter(product => {
+      const matchesSearch = 
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = 
+        selectedCategory === 'all' || 
+        product.category?.name === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, searchQuery, selectedCategory]);
 
-  const getStockStatus = (stock: number) => {
+  const getStockStatus = useCallback((stock: number) => {
     if (stock === 0) return { label: 'Out of Stock', class: 'stock-status--critical' };
     if (stock < 10) return { label: 'Low Stock', class: 'stock-status--warning' };
     return { label: 'In Stock', class: 'stock-status--success' };
-  };
+  }, []);
 
-  const handleEdit = (product: Product) => {
+  const handleEdit = useCallback((product: Product) => {
     console.log('Edit product:', product);
     // TODO: Implement edit modal
-  };
+  }, []);
 
-  const handleDelete = (product: Product) => {
+  const handleDelete = useCallback((product: Product) => {
     if (window.confirm(`Are you sure you want to delete "${product.name}"?`)) {
       console.log('Delete product:', product);
       // TODO: Implement delete functionality
     }
-  };
+  }, []);
+
+  const handleOpenAddModal = useCallback(() => {
+    setShowAddModal(true);
+  }, []);
+
+  const handleCloseAddModal = useCallback(() => {
+    setShowAddModal(false);
+  }, []);
 
   return (
     <>
@@ -61,7 +88,7 @@ const ProductManagement = () => {
             </div>
             <button 
               className="btn-primary"
-              onClick={() => setShowAddModal(true)}
+              onClick={handleOpenAddModal}
             >
               <span className="btn-icon">+</span>
               New Product
@@ -196,13 +223,13 @@ const ProductManagement = () => {
 
         {/* Add Product Modal Placeholder */}
         {showAddModal && (
-          <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
+          <div className="modal-overlay" onClick={handleCloseAddModal}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>Add New Product</h3>
                 <button 
                   className="modal-close"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={handleCloseAddModal}
                 >
                   ×
                 </button>
