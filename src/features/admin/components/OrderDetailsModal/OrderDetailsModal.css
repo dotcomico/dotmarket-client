@@ -1,0 +1,92 @@
+/* Modal Large Variant */
+.modal--large {
+  max-width: 700px;
+}
+
+/* Order Details Grid */
+.order-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-xl);
+}
+
+.order-detail-section {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.order-detail-section h4 {
+  margin: 0 0 var(--spacing-md) 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) 0;
+}
+
+.detail-label {
+  color: var(--secondary-text);
+  font-size: var(--font-size-sm);
+}
+
+.detail-value {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-text);
+}
+
+.detail-value--highlight {
+  font-size: var(--font-size-lg);
+  color: var(--tertiary);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Order Items List in Modal */
+.order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--primary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.order-item__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: var(--spacing-md);
+}
+
+.order-item__name {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-text);
+}
+
+.order-item__price {
+  font-weight: var(--font-weight-semibold);
+  color: var(--tertiary);
+}
+
+/* Responsive for Modal */
+@media (max-width: 1024px) {
+  .order-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
