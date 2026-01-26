@@ -28,6 +28,9 @@ export const useOrderStore = create<OrderState>()(
        * Admins/Managers see all orders via API
        */
       fetchOrders: async () => {
+        // Prevent duplicate fetches
+        if (get().isLoading) return;
+        
         set({ isLoading: true, error: null });
 
         try {
@@ -155,10 +158,11 @@ export const useOrderStore = create<OrderState>()(
 
       /**
        * Calculate total spent across all completed orders
+       * Note: Backend uses 'paid' and 'shipped' for fulfilled orders
        */
       getTotalSpent: () => {
         return get().orders
-          .filter(order => order.status === 'paid')
+          .filter(order => order.status === 'paid' || order.status === 'shipped')
           .reduce((total, order) => total + order.totalAmount, 0);
       },
 
