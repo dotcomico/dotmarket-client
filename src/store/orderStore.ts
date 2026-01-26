@@ -158,7 +158,7 @@ export const useOrderStore = create<OrderState>()(
        */
       getTotalSpent: () => {
         return get().orders
-          .filter(order => order.status === 'completed')
+          .filter(order => order.status === 'paid')
           .reduce((total, order) => total + order.totalAmount, 0);
       },
 
