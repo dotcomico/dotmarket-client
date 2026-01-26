@@ -51,6 +51,52 @@
   font-weight: bold;
 }
 
+/* Secondary Button */
+.btn-secondary {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: transparent;
+  color: var(--secondary-text);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--surface-color-hover);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Danger Button */
+.btn-danger {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--error);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.btn-danger:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Filters Section */
 .filters-section {
   display: flex;
@@ -58,6 +104,10 @@
   margin-bottom: var(--spacing-xl);
 }
 
+.admin-search-wrapper {
+  flex: 1;
+  min-width: 250px;
+}
 
 .category-filter {
   min-width: 200px;
@@ -297,6 +347,10 @@
   animation: slideUp 0.3s ease-out;
 }
 
+.modal--small {
+  max-width: 420px;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(20px);
@@ -348,6 +402,34 @@
   padding: var(--spacing-xl);
 }
 
+/* Delete Confirmation */
+.delete-confirm {
+  text-align: center;
+}
+
+.delete-confirm__icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.delete-confirm__message {
+  font-size: var(--font-size-lg);
+  color: var(--primary-text);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.delete-confirm__warning {
+  font-size: var(--font-size-sm);
+  color: var(--error);
+  margin: 0 0 var(--spacing-xl) 0;
+}
+
+.delete-confirm__actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
 
@@ -384,6 +466,15 @@
   .product-thumbnail {
     width: 40px;
     height: 40px;
+  }
+  
+  .modal {
+    margin: var(--spacing-md);
+    max-height: calc(100vh - var(--spacing-lg) * 2);
+  }
+  
+  .delete-confirm__actions {
+    flex-direction: column;
   }
 }
 
