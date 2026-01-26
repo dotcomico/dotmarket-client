@@ -1,18 +1,23 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import { useOrderStore } from '../../../store/orderStore';
 import { formatDate } from '../../../utils/formatters';
+import { 
+  getStatusClass, 
+  getStatusLabel, 
+  getOrderItemCount,
+  ORDER_STATUS_OPTIONS 
+} from '../../../features/orders/utils/orderUtils';
 import type { Order, OrderStatus } from '../../../features/orders/types/order.types';
 import './OrderManagement.css';
 
 /**
  * OrderManagement - Admin page for managing all orders
- * Using store selectors directly to avoid infinite loops
+ * 
+ * Reusing orderUtils from: src/features/orders/utils/orderUtils.ts
+ * to avoid code duplication with RecentOrdersTable
  */
-
-type DisplayStatus = 'completed' | 'processing' | 'pending' | 'cancelled';
-
 const OrderManagement = () => {
   // Access store with individual selectors to prevent re-render loops
   const orders = useOrderStore((state) => state.orders);
@@ -24,18 +29,17 @@ const OrderManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | OrderStatus>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  
+  // Track if initial fetch has been attempted to prevent infinite loops
+  const hasFetchedRef = useRef(false);
 
-  // Load orders on mount (only once)
+  // Load orders on mount - only once
   useEffect(() => {
-    fetchOrders();
-  }, []); // Empty dependency - run once on mount
-
-  // Map backend status to display status
-  const mapStatusForDisplay = (status: OrderStatus): DisplayStatus => {
-    if (status === 'paid') return 'completed';
-    if (status === 'shipped') return 'processing';
-    return status as 'pending' | 'cancelled';
-  };
+    if (!hasFetchedRef.current && orders.length === 0) {
+      hasFetchedRef.current = true;
+      fetchOrders();
+    }
+  }, [orders.length, fetchOrders]);
 
   // Filter orders based on search and status
   const filteredOrders = useMemo(() => {
@@ -52,7 +56,7 @@ const OrderManagement = () => {
     });
   }, [orders, searchQuery, statusFilter]);
 
-  // Calculate stats from orders array directly
+  // Calculate stats from orders array
   const stats = useMemo(() => ({
     total: orders.length,
     pending: orders.filter(o => o.status === 'pending').length,
@@ -60,17 +64,6 @@ const OrderManagement = () => {
     completed: orders.filter(o => o.status === 'paid').length,
     cancelled: orders.filter(o => o.status === 'cancelled').length,
   }), [orders]);
-
-  const getStatusClass = (status: OrderStatus) => {
-    const displayStatus = mapStatusForDisplay(status);
-    const classes: Record<DisplayStatus, string> = {
-      completed: 'status--completed',
-      processing: 'status--processing',
-      pending: 'status--pending',
-      cancelled: 'status--cancelled'
-    };
-    return classes[displayStatus];
-  };
 
   // Memoized handler to prevent recreation on each render
   const handleStatusChange = useCallback(async (orderId: number, newStatus: OrderStatus) => {
@@ -80,23 +73,17 @@ const OrderManagement = () => {
     }
   }, [updateOrderStatus]);
 
-  const handleViewDetails = (order: Order) => {
+  const handleViewDetails = useCallback((order: Order) => {
     setSelectedOrder(order);
-  };
+  }, []);
 
-  const handleRetry = () => {
+  const handleCloseModal = useCallback(() => {
+    setSelectedOrder(null);
+  }, []);
+
+  const handleRetry = useCallback(() => {
     fetchOrders();
-  };
-
-  const getItemCount = (order: Order): number => {
-    if (order.OrderItems) {
-      return order.OrderItems.reduce((sum, item) => sum + item.quantity, 0);
-    }
-    if (order.Products) {
-      return order.Products.length;
-    }
-    return 0;
-  };
+  }, [fetchOrders]);
 
   return (
     <>
@@ -105,19 +92,31 @@ const OrderManagement = () => {
       <main className="admin-main">
         {/* Stats Summary */}
         <div className="order-stats">
-          <div className="order-stat-card" onClick={() => setStatusFilter('all')}>
+          <div 
+            className="order-stat-card" 
+            onClick={() => setStatusFilter('all')}
+          >
             <div className="order-stat-card__value">{stats.total}</div>
             <div className="order-stat-card__label">Total Orders</div>
           </div>
-          <div className="order-stat-card order-stat-card--pending" onClick={() => setStatusFilter('pending')}>
+          <div 
+            className="order-stat-card order-stat-card--pending" 
+            onClick={() => setStatusFilter('pending')}
+          >
             <div className="order-stat-card__value">{stats.pending}</div>
             <div className="order-stat-card__label">Pending</div>
           </div>
-          <div className="order-stat-card order-stat-card--processing" onClick={() => setStatusFilter('shipped')}>
+          <div 
+            className="order-stat-card order-stat-card--processing" 
+            onClick={() => setStatusFilter('shipped')}
+          >
             <div className="order-stat-card__value">{stats.processing}</div>
             <div className="order-stat-card__label">Shipped</div>
           </div>
-          <div className="order-stat-card order-stat-card--completed" onClick={() => setStatusFilter('paid')}>
+          <div 
+            className="order-stat-card order-stat-card--completed" 
+            onClick={() => setStatusFilter('paid')}
+          >
             <div className="order-stat-card__value">{stats.completed}</div>
             <div className="order-stat-card__label">Completed</div>
           </div>
@@ -147,10 +146,11 @@ const OrderManagement = () => {
               onChange={(e) => setStatusFilter(e.target.value as 'all' | OrderStatus)}
             >
               <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="shipped">Shipped</option>
-              <option value="paid">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              {ORDER_STATUS_OPTIONS.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -196,23 +196,34 @@ const OrderManagement = () => {
                       <td className="order-id">#{order.id}</td>
                       <td>
                         <div className="customer-cell">
-                          <div className="customer-name">{order.User?.username || 'Unknown'}</div>
-                          <div className="customer-email">{order.User?.email || '—'}</div>
+                          <div className="customer-name">
+                            {order.User?.username || 'Unknown'}
+                          </div>
+                          <div className="customer-email">
+                            {order.User?.email || '—'}
+                          </div>
                         </div>
                       </td>
-                      <td className="items-cell">{getItemCount(order)} items</td>
-                      <td className="amount-cell">${order.totalAmount.toFixed(2)}</td>
-                      <td className="date-cell">{formatDate(order.createdAt)}</td>
+                      <td className="items-cell">
+                        {getOrderItemCount(order)} items
+                      </td>
+                      <td className="amount-cell">
+                        ${order.totalAmount.toFixed(2)}
+                      </td>
+                      <td className="date-cell">
+                        {formatDate(order.createdAt)}
+                      </td>
                       <td>
                         <select
                           className={`status-select ${getStatusClass(order.status)}`}
                           value={order.status}
                           onChange={(e) => handleStatusChange(order.id, e.target.value as OrderStatus)}
                         >
-                          <option value="pending">Pending</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="paid">Completed</option>
-                          <option value="cancelled">Cancelled</option>
+                          {ORDER_STATUS_OPTIONS.map(option => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
                         </select>
                       </td>
                       <td>
@@ -239,81 +250,111 @@ const OrderManagement = () => {
 
         {/* Order Details Modal */}
         {selectedOrder && (
-          <div className="modal-overlay" onClick={() => setSelectedOrder(null)}>
-            <div className="modal modal--large" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>Order #{selectedOrder.id}</h3>
-                <button className="modal-close" onClick={() => setSelectedOrder(null)}>×</button>
-              </div>
-              <div className="modal-body">
-                <div className="order-details-grid">
-                  <div className="order-detail-section">
-                    <h4>Customer Information</h4>
-                    <div className="detail-row">
-                      <span className="detail-label">Name:</span>
-                      <span className="detail-value">{selectedOrder.User?.username || 'Unknown'}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Email:</span>
-                      <span className="detail-value">{selectedOrder.User?.email || '—'}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Address:</span>
-                      <span className="detail-value">{selectedOrder.address || '—'}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="order-detail-section">
-                    <h4>Order Information</h4>
-                    <div className="detail-row">
-                      <span className="detail-label">Items:</span>
-                      <span className="detail-value">{getItemCount(selectedOrder)} items</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Total:</span>
-                      <span className="detail-value detail-value--highlight">
-                        ${selectedOrder.totalAmount.toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Status:</span>
-                      <span className={`status ${getStatusClass(selectedOrder.status)}`}>
-                        {mapStatusForDisplay(selectedOrder.status).charAt(0).toUpperCase() + 
-                         mapStatusForDisplay(selectedOrder.status).slice(1)}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Created:</span>
-                      <span className="detail-value">{formatDate(selectedOrder.createdAt)}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Last Updated:</span>
-                      <span className="detail-value">{formatDate(selectedOrder.updatedAt)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {selectedOrder.Products && selectedOrder.Products.length > 0 && (
-                  <div className="order-detail-section" style={{ marginTop: 'var(--spacing-xl)' }}>
-                    <h4>Order Items</h4>
-                    <div className="order-items-list">
-                      {selectedOrder.Products.map(product => (
-                        <div key={product.id} className="order-item">
-                          <div className="order-item__info">
-                            <span className="order-item__name">{product.name}</span>
-                            <span className="order-item__price">${product.price.toFixed(2)}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <OrderDetailsModal 
+            order={selectedOrder} 
+            onClose={handleCloseModal} 
+          />
         )}
       </main>
     </>
+  );
+};
+
+/**
+ * Order Details Modal - Extracted as separate component for cleaner code
+ */
+interface OrderDetailsModalProps {
+  order: Order;
+  onClose: () => void;
+}
+
+const OrderDetailsModal = ({ order, onClose }: OrderDetailsModalProps) => {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal modal--large" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h3>Order #{order.id}</h3>
+          <button className="modal-close" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-body">
+          <div className="order-details-grid">
+            <div className="order-detail-section">
+              <h4>Customer Information</h4>
+              <div className="detail-row">
+                <span className="detail-label">Name:</span>
+                <span className="detail-value">
+                  {order.User?.username || 'Unknown'}
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Email:</span>
+                <span className="detail-value">
+                  {order.User?.email || '—'}
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Address:</span>
+                <span className="detail-value">
+                  {order.address || '—'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="order-detail-section">
+              <h4>Order Information</h4>
+              <div className="detail-row">
+                <span className="detail-label">Items:</span>
+                <span className="detail-value">
+                  {getOrderItemCount(order)} items
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Total:</span>
+                <span className="detail-value detail-value--highlight">
+                  ${order.totalAmount.toFixed(2)}
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Status:</span>
+                <span className={`status ${getStatusClass(order.status)}`}>
+                  {getStatusLabel(order.status)}
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Created:</span>
+                <span className="detail-value">
+                  {formatDate(order.createdAt)}
+                </span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">Last Updated:</span>
+                <span className="detail-value">
+                  {formatDate(order.updatedAt)}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {order.Products && order.Products.length > 0 && (
+            <div className="order-detail-section" style={{ marginTop: 'var(--spacing-xl)' }}>
+              <h4>Order Items</h4>
+              <div className="order-items-list">
+                {order.Products.map(product => (
+                  <div key={product.id} className="order-item">
+                    <div className="order-item__info">
+                      <span className="order-item__name">{product.name}</span>
+                      <span className="order-item__price">
+                        ${product.price.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
