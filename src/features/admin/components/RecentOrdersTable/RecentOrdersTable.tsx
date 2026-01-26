@@ -6,51 +6,68 @@ import { PATHS } from '../../../../routes/paths';
 import type { OrderStatus } from '../../../../features/orders/types/order.types';
 import './RecentOrdersTable.css';
 
+// --- Helper Functions (Moved outside to keep component clean) ---
+
 /**
- * RecentOrdersTable - Displays recent orders on the admin dashboard
- * Using store selectors directly to avoid infinite loops
+ * Maps backend status to display status for CSS styling
  */
+const mapStatusForDisplay = (status: OrderStatus): 'completed' | 'processing' | 'pending' | 'cancelled' => {
+  if (status === 'paid') return 'completed';
+  if (status === 'shipped') return 'processing';
+  return status as 'pending' | 'cancelled';
+};
+
+/**
+ * Returns the CSS class based on order status
+ */
+const getStatusClass = (status: OrderStatus) => {
+  const displayStatus = mapStatusForDisplay(status);
+  const classes = {
+    completed: 'status--completed',
+    processing: 'status--processing',
+    pending: 'status--pending',
+    cancelled: 'status--cancelled'
+  };
+  return classes[displayStatus];
+};
+
+/**
+ * Capitalizes the first letter for display
+ */
+const getStatusLabel = (status: OrderStatus) => {
+  const displayStatus = mapStatusForDisplay(status);
+  return displayStatus.charAt(0).toUpperCase() + displayStatus.slice(1);
+};
+
+
+// --- Main Component ---
+
 export const RecentOrdersTable = () => {
   const navigate = useNavigate();
   
-  // Access store state and actions with individual selectors
+  // Store Selectors
   const orders = useOrderStore((state) => state.orders);
   const isLoading = useOrderStore((state) => state.isLoading);
   const fetchOrders = useOrderStore((state) => state.fetchOrders);
 
-  // Load orders on mount (only once)
+  // SAFE EFFECT: Only runs if orders are empty. 
+  // Does NOT depend on isLoading, preventing the infinite loop.
   useEffect(() => {
     if (orders.length === 0) {
       fetchOrders();
     }
-  }, [fetchOrders, orders.length]); // Empty dependency - run once on mount
+  }, [fetchOrders, orders.length]);
 
-  // Get only the 5 most recent orders
+  // Derived State
   const recentOrders = orders.slice(0, 5);
-
-  // Map backend status to display status
-  const mapStatusForDisplay = (status: OrderStatus): 'completed' | 'processing' | 'pending' | 'cancelled' => {
-    if (status === 'paid') return 'completed';
-    if (status === 'shipped') return 'processing';
-    return status as 'pending' | 'cancelled';
-  };
-
-  const getStatusClass = (status: OrderStatus) => {
-    const displayStatus = mapStatusForDisplay(status);
-    const classes = {
-      completed: 'status--completed',
-      processing: 'status--processing',
-      pending: 'status--pending',
-      cancelled: 'status--cancelled'
-    };
-    return classes[displayStatus];
-  };
+  const hasOrders = recentOrders.length > 0;
 
   const handleViewAll = () => {
     navigate(PATHS.ADMIN.ORDERS);
   };
 
-  if (isLoading && orders.length === 0) {
+  // 1. Loading State (Only show if we have no data yet)
+  if (isLoading && !hasOrders) {
     return (
       <div className="admin-card admin-card--large">
         <div className="admin-card__header">
@@ -64,6 +81,7 @@ export const RecentOrdersTable = () => {
     );
   }
 
+  // 2. Main Render
   return (
     <div className="admin-card admin-card--large">
       <div className="admin-card__header">
@@ -71,7 +89,7 @@ export const RecentOrdersTable = () => {
         <button className="btn-link" onClick={handleViewAll}>View All</button>
       </div>
       
-      {recentOrders.length === 0 ? (
+      {!hasOrders ? (
         <div className="empty-state">
           <div className="empty-state__icon">📋</div>
           <div className="empty-state__text">No orders yet</div>
@@ -97,7 +115,7 @@ export const RecentOrdersTable = () => {
                   <td className="amount">${order.totalAmount.toFixed(2)}</td>
                   <td>
                     <span className={`status ${getStatusClass(order.status)}`}>
-                      {mapStatusForDisplay(order.status).charAt(0).toUpperCase() + mapStatusForDisplay(order.status).slice(1)}
+                      {getStatusLabel(order.status)}
                     </span>
                   </td>
                 </tr>
