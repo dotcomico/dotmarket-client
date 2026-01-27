@@ -1,3 +1,4 @@
+/* style(admin): add theme toggle and profile dropdown styles */
 .admin-header {
   height: 70px;
   background-color: var(--primary);
@@ -25,42 +26,60 @@
 .admin-header__actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-md);
 }
 
-.admin-header__notification {
+/* Icon Buttons (Notifications, etc.) */
+.admin-header__icon-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
-  font-size: 20px;
+  border-radius: var(--radius-md);
+  color: var(--secondary-text);
   cursor: pointer;
   position: relative;
-  padding: var(--spacing-xs);
-  border-radius: var(--radius-md);
   transition: var(--transition-fast);
 }
 
-.admin-header__notification:hover {
+.admin-header__icon-btn:hover {
   background-color: var(--surface-color-hover);
+  color: var(--primary-text);
 }
 
+/* Notification Badge */
 .admin-header__badge {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   width: 8px;
   height: 8px;
   background-color: var(--error);
   border-radius: var(--radius-circle);
 }
 
-.admin-header__user {
+/* Profile Dropdown */
+.admin-header__profile {
+  position: relative;
+}
+
+.admin-header__profile-trigger {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-xs) var(--spacing-md);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
   background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  transition: background-color var(--transition-fast);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.admin-header__profile-trigger:hover {
+  background-color: var(--surface-color-hover);
 }
 
 .admin-header__avatar {
@@ -79,6 +98,7 @@
 .admin-header__info {
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .admin-header__username {
@@ -93,9 +113,113 @@
   text-transform: capitalize;
 }
 
+.admin-header__chevron {
+  color: var(--secondary-text);
+  transition: transform var(--transition-fast);
+}
+
+.admin-header__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.admin-header__dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-xs));
+  right: 0;
+  min-width: 200px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-xs);
+  z-index: 100;
+  animation: dropdownFadeIn 0.15s ease-out;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-header__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-main);
+  color: var(--primary-text);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-align: left;
+}
+
+.admin-header__dropdown-item:hover {
+  background-color: var(--surface-color-hover);
+}
+
+.admin-header__dropdown-item svg {
+  color: var(--secondary-text);
+}
+
+.admin-header__dropdown-item:hover svg {
+  color: var(--tertiary);
+}
+
+.admin-header__dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: var(--spacing-xs) 0;
+}
+
+.admin-header__dropdown-item--danger {
+  color: var(--error);
+}
+
+.admin-header__dropdown-item--danger svg {
+  color: var(--error);
+}
+
+.admin-header__dropdown-item--danger:hover {
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .admin-header {
     left: 0;
+  }
+
+  .admin-header__info {
+    display: none;
+  }
+
+  .admin-header__profile-trigger {
+    padding: var(--spacing-xs);
+  }
+
+  .admin-header__chevron {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 0 var(--spacing-md);
+  }
+
+  .admin-header__title {
+    font-size: var(--font-size-lg);
   }
 }
