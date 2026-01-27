@@ -4,17 +4,19 @@
   color: white;
   min-width: 200px;
   box-shadow: var(--shadow-md);
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .stat-card:hover {
   transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-card__title {
   font-size: var(--font-size-sm);
   opacity: 0.9;
   margin-bottom: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
 }
 
 .stat-card__value {
@@ -26,4 +28,5 @@
 .stat-card__change {
   font-size: 13px;
   opacity: 0.85;
+  font-weight: var(--font-weight-medium);
 }

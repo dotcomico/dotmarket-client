@@ -1,11 +1,4 @@
-/* Layout & Container */
-.admin-main {
-  padding: var(--spacing-xl);
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Stats Summary Grid */
+/* Order Stats Summary Grid */
 .order-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -14,7 +7,7 @@
 }
 
 .order-stat-card {
-  background-color: white;
+  background-color: var(--surface-color);
   border-radius: var(--radius-xl);
   padding: var(--spacing-lg);
   box-shadow: var(--shadow-sm);
@@ -31,18 +24,18 @@
 
 /* Stat Card Color Variants */
 .order-stat-card--pending {
-  border-color: #fef3c7;
-  background: linear-gradient(135deg, #fffbeb 0%, white 100%);
+  border-color: rgba(237, 108, 2, 0.3);
+  background: linear-gradient(135deg, rgba(237, 108, 2, 0.05) 0%, var(--surface-color) 100%);
 }
 
 .order-stat-card--processing {
-  border-color: #dbeafe;
-  background: linear-gradient(135deg, #eff6ff 0%, white 100%);
+  border-color: rgba(0, 64, 255, 0.3);
+  background: linear-gradient(135deg, rgba(0, 64, 255, 0.05) 0%, var(--surface-color) 100%);
 }
 
 .order-stat-card--completed {
-  border-color: #d1fae5;
-  background: linear-gradient(135deg, #ecfdf5 0%, white 100%);
+  border-color: rgba(46, 125, 50, 0.3);
+  background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, var(--surface-color) 100%);
 }
 
 .order-stat-card__value {
@@ -59,7 +52,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Header & Information */
+/* Header */
 .order-management-header {
   display: flex;
   justify-content: space-between;
@@ -75,19 +68,7 @@
   color: var(--primary-text);
 }
 
-/* Filters Section */
-.filters-section {
-  display: flex;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-  align-items: center;
-}
-
-.admin-search-wrapper {
-  flex: 1;
-  min-width: 250px;
-}
-
+/* Status Filter */
 .status-filter {
   min-width: 180px;
   padding: var(--spacing-md);
@@ -104,10 +85,10 @@
 .status-filter:focus {
   outline: none;
   border-color: var(--tertiary);
-  box-shadow: 0 0 0 3px rgba(0, 76, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(0, 64, 255, 0.1);
 }
 
-/* Table Specific Styles */
+/* Table Cells */
 .customer-cell {
   display: flex;
   flex-direction: column;
@@ -144,7 +125,7 @@
   font-size: var(--font-size-sm);
 }
 
-/* Status Select Dropdown (Inside Table) */
+/* Status Select Dropdown */
 .status-select {
   padding: 6px 12px;
   border-radius: var(--radius-pill);
@@ -166,28 +147,62 @@
   outline-offset: 2px;
 }
 
-.status-select.status--completed { background-color: #d1fae5; color: #065f46; }
-.status-select.status--processing { background-color: #dbeafe; color: #1e40af; }
-.status-select.status--pending { background-color: #fef3c7; color: #92400e; }
-.status-select.status--cancelled { background-color: #fee2e2; color: #991b1b; }
+/* Status Colors */
+.status--completed,
+.status-select.status--completed {
+  background-color: rgba(46, 125, 50, 0.15);
+  color: var(--success);
+}
 
-/* Actions */
+.status--processing,
+.status-select.status--processing {
+  background-color: rgba(0, 64, 255, 0.15);
+  color: var(--tertiary);
+}
+
+.status--pending,
+.status-select.status--pending {
+  background-color: rgba(237, 108, 2, 0.15);
+  color: var(--warning);
+}
+
+.status--cancelled,
+.status-select.status--cancelled {
+  background-color: rgba(211, 47, 47, 0.15);
+  color: var(--error);
+}
+
+/* Status Badge (non-select) */
+.status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+}
+
+/* Action Button */
 .action-btn--view {
-  background-color: rgba(0, 76, 255, 0.1);
+  background-color: rgba(0, 64, 255, 0.1);
   color: var(--tertiary);
   border: none;
-  padding: var(--spacing-xs);
-  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .action-btn--view:hover {
-  background-color: rgba(0, 76, 255, 0.2);
+  background-color: rgba(0, 64, 255, 0.2);
   transform: scale(1.1);
 }
 
-/* States (Error, Loading, Empty) */
+/* Error Message */
 .error-message {
   display: flex;
   align-items: center;
@@ -200,17 +215,7 @@
   color: var(--error);
 }
 
-.loading-state, .empty-state {
-  text-align: center;
-  padding: var(--spacing-xxl);
-}
-
-.empty-state__icon {
-  font-size: 48px;
-  margin-bottom: var(--spacing-md);
-}
-
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 1024px) {
   .order-stats {
     grid-template-columns: repeat(2, 1fr);
@@ -232,11 +237,10 @@
     align-items: stretch;
   }
 
-  /* Hide less critical columns on small screens */
-  .admin-table th:nth-child(3), 
+  .admin-table th:nth-child(3),
   .admin-table td:nth-child(3),
-  .admin-table th:nth-child(5), 
-  .admin-table td:nth-child(5) { 
-    display: none; 
+  .admin-table th:nth-child(5),
+  .admin-table td:nth-child(5) {
+    display: none;
   }
 }

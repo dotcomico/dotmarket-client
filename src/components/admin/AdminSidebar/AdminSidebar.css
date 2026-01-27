@@ -1,7 +1,7 @@
 .admin-sidebar {
   width: 240px;
-  background-color: #1e293b;
-  color: white;
+  background-color: var(--surface-color);
+  color: var(--primary-text);
   height: 100vh;
   position: fixed;
   left: 0;
@@ -10,15 +10,18 @@
   flex-direction: column;
   box-shadow: var(--shadow-lg);
   z-index: 100;
+  border-right: 1px solid var(--border-color);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 .admin-sidebar__logo {
-  padding: 24px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  font-size: 20px;
+  padding: var(--spacing-lg) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-extrabold);
   cursor: pointer;
   transition: opacity var(--transition-fast);
+  color: var(--primary-text);
 }
 
 .admin-sidebar__logo:hover {
@@ -27,34 +30,37 @@
 
 .admin-sidebar__nav {
   flex: 1;
-  padding: 20px 0;
+  padding: var(--spacing-md) 0;
   overflow-y: auto;
 }
 
 .admin-sidebar__item {
   width: 100%;
-  padding: 12px 20px;
+  padding: var(--spacing-smd) var(--spacing-md);
   background-color: transparent;
   border: none;
   border-left: 3px solid transparent;
-  color: white;
+  color: var(--secondary-text);
   font-size: var(--font-size-md);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-smd);
   transition: all var(--transition-fast);
   text-align: left;
   font-family: var(--font-main);
 }
 
 .admin-sidebar__item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-color-hover);
+  color: var(--primary-text);
 }
 
 .admin-sidebar__item--active {
-  background-color: rgba(59, 130, 246, 0.2);
-  border-left-color: #3b82f6;
+  background-color: rgba(0, 64, 255, 0.1);
+  border-left-color: var(--tertiary);
+  color: var(--tertiary);
+  font-weight: var(--font-weight-medium);
 }
 
 .admin-sidebar__icon {
@@ -66,20 +72,33 @@
 }
 
 .admin-sidebar__logout {
-  padding: 16px 20px;
-  background-color: rgba(239, 68, 68, 0.1);
+  padding: var(--spacing-md) var(--spacing-md);
+  background-color: rgba(211, 47, 47, 0.05);
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: #ef4444;
+  border-top: 1px solid var(--border-color);
+  color: var(--error);
   font-size: var(--font-size-md);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-smd);
   font-family: var(--font-main);
   transition: var(--transition-fast);
 }
 
 .admin-sidebar__logout:hover {
-  background-color: rgba(239, 68, 68, 0.2);
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .admin-sidebar__item--active {
+  background-color: rgba(0, 64, 255, 0.15);
+}
+
+[data-theme="dark"] .admin-sidebar__logout {
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+[data-theme="dark"] .admin-sidebar__logout:hover {
+  background-color: rgba(211, 47, 47, 0.2);
 }

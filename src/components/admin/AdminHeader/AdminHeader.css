@@ -11,6 +11,7 @@
   right: 0;
   left: 240px;
   z-index: 50;
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
 }
 
 .admin-header__title {
@@ -39,7 +40,7 @@
 }
 
 .admin-header__notification:hover {
-  background-color: var(--surface-color);
+  background-color: var(--surface-color-hover);
 }
 
 .admin-header__badge {
@@ -59,6 +60,7 @@
   padding: var(--spacing-xs) var(--spacing-md);
   background-color: var(--surface-color);
   border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
 }
 
 .admin-header__avatar {
@@ -71,6 +73,7 @@
   justify-content: center;
   color: white;
   font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
 }
 
 .admin-header__info {
@@ -88,4 +91,11 @@
   font-size: 12px;
   color: var(--secondary-text);
   text-transform: capitalize;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .admin-header {
+    left: 0;
+  }
 }
