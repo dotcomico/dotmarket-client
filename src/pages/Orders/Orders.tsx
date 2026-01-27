@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOrders } from '../../features/orders/hooks/useOrders';
 import { formatDate } from '../../utils/formatters';
@@ -11,14 +11,9 @@ import { PATHS } from '../../routes/paths';
 import type { Order } from '../../features/orders/types/order.types';
 import './Orders.css';
 
-/**
+/*
  * Customer Orders Page
  * Displays user's order history with status tracking
- * 
- * Reusing:
- * - useOrders hook from src/features/orders/hooks/useOrders.ts
- * - formatDate from src/utils/formatters.ts
- * - orderUtils from src/features/orders/utils/orderUtils.ts
  */
 const Orders = () => {
   const navigate = useNavigate();
@@ -26,20 +21,27 @@ const Orders = () => {
     orders, 
     isLoading, 
     error, 
-    loadOrders, 
+    refreshOrders,
     getOrderStats,
     clearError 
   } = useOrders();
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  
+  // Track if we've already fetched to prevent duplicate calls
+  const hasFetchedRef = useRef(false);
 
-  // Load orders on mount
+  // Load orders on mount- Using ref to prevent infinite loops
   useEffect(() => {
-    loadOrders();
-  }, [loadOrders]);
+    // Only fetch once on mount, or if orders are empty (new user session)
+    if (!hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      refreshOrders();
+    }
+  }, [refreshOrders]);
 
-  // Get order statistics
-  const stats = useMemo(() => getOrderStats(), [orders, getOrderStats]);
+  // Get order statistics - memoized based on orders array
+  const stats = useMemo(() => getOrderStats(), [getOrderStats, orders]);
 
   // Handle empty cart redirect to shopping
   const handleStartShopping = () => {
@@ -49,7 +51,8 @@ const Orders = () => {
   // Handle retry on error
   const handleRetry = () => {
     clearError();
-    loadOrders();
+    hasFetchedRef.current = false; // Allow retry
+    refreshOrders();
   };
 
   return (
@@ -169,24 +172,15 @@ const Orders = () => {
                         ) : (
                           <span className="order-card__product-placeholder">📦</span>
                         )}
-                        {index === 3 && order.Products!.length > 4 && (
-                          <div className="order-card__product-more">
-                            +{order.Products!.length - 4}
-                          </div>
+                        {index === 3 && order.Products && order.Products.length > 4 && (
+                          <span className="order-card__more">
+                            +{order.Products.length - 4}
+                          </span>
                         )}
                       </div>
                     ))}
                   </div>
                 )}
-
-                <div className="order-card__footer">
-                  <button className="order-card__view-btn">
-                    View Details
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M9 18l6-6-6-6" />
-                    </svg>
-                  </button>
-                </div>
               </div>
             ))}
           </div>
@@ -206,24 +200,17 @@ const Orders = () => {
                 </button>
               </div>
 
-              <div className="order-modal__body">
-                {/* Status Banner */}
-                <div className={`order-modal__status-banner ${getStatusClass(selectedOrder.status)}`}>
-                  <span className="order-modal__status-icon">
-                    {selectedOrder.status === 'paid' && '✓'}
-                    {selectedOrder.status === 'shipped' && '🚚'}
-                    {selectedOrder.status === 'pending' && '⏳'}
-                    {selectedOrder.status === 'cancelled' && '✕'}
-                  </span>
-                  <span className="order-modal__status-text">
-                    {getStatusLabel(selectedOrder.status)}
-                  </span>
-                </div>
-
+              <div className="order-modal__content">
                 {/* Order Info */}
                 <div className="order-modal__section">
-                  <h3>Order Information</h3>
+                  <h3>Order Details</h3>
                   <div className="order-modal__info-grid">
+                    <div className="order-modal__info-item">
+                      <span className="order-modal__info-label">Status</span>
+                      <span className={`order-modal__info-value ${getStatusClass(selectedOrder.status)}`}>
+                        {getStatusLabel(selectedOrder.status)}
+                      </span>
+                    </div>
                     <div className="order-modal__info-item">
                       <span className="order-modal__info-label">Order Date</span>
                       <span className="order-modal__info-value">
