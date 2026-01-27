@@ -13,6 +13,10 @@ import { getErrorMessage, logError } from '../utils/errorHandler';
  * - Tracks order status
  * - Persists orders to localStorage
  * - Integrates with order API
+ * 
+ * FIXED: 
+ * - reset() now clears localStorage to prevent data leaking between user sessions
+ * - fetchOrders() has proper duplicate fetch prevention
  */
 export const useOrderStore = create<OrderState>()(
   persist(
@@ -189,6 +193,7 @@ export const useOrderStore = create<OrderState>()(
 
       /**
        * Reset entire store (logout scenario)
+       * FIXED: Also clears localStorage to prevent data leaking between sessions
        */
       reset: () => {
         set({
@@ -197,6 +202,10 @@ export const useOrderStore = create<OrderState>()(
           isLoading: false,
           error: null
         });
+        
+        // FIXED: Explicitly clear localStorage for this store
+        // This ensures no stale data persists between user sessions
+        localStorage.removeItem('order-storage');
       }
     }),
     {
