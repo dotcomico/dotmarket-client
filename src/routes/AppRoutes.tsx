@@ -15,6 +15,8 @@ import OrderManagement from "../pages/admin/OrderManagement/OrderManagement";
 import UserManagement from "../pages/admin/UserManagements/UserManagement";
 import ProductManagement from "../pages/admin/ProductManagement/ProductManagement";
 import Dashboard from "../pages/admin/Dashboard/Dashboard";
+import Orders from "../pages/Orders/Orders";
+import Checkout from "../pages/Checkout/Checkout";
 
 const AppRoutes = () => {
   return (
@@ -24,15 +26,15 @@ const AppRoutes = () => {
       <Route path={PATHS.LOGIN} element={<Login />} />
       <Route path={PATHS.REGISTER} element={<Register />} />
       <Route path={PATHS.PRODUCTS} element={<Products />} />
-      <Route path="/categories/:slug/products" element={<Products />} />
+      <Route path={PATHS.CATEGORY_PRODUCTS} element={<Products />} />
       <Route path={PATHS.CATEGORY_DETAILS} element={<Categorys />} />
 
       {/* Protected routes (authenticated users) */}
       <Route element={<ProtectedRoute />}>
         <Route path={PATHS.PROFILE} element={<Profile />} />
-        <Route path={PATHS.ORDERS} element={<div>Orders Page</div>} />
+        <Route path={PATHS.ORDERS} element={<Orders />} />
         <Route path={PATHS.CART} element={<Cart />} />
-        <Route path={PATHS.CHECKOUT} element={<div>Checkout</div>} />
+        <Route path={PATHS.CHECKOUT} element={<Checkout />} />
       </Route>
 
       {/* Admin routes (admin & manager only) with AdminLayout */}
