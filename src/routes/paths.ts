@@ -7,6 +7,7 @@ export const PATHS = {
   PRODUCT_DETAILS: '/product/:id',
   CHECKOUT: '/checkout',
   CATEGORY_DETAILS: '/categories/:slug',
+  CATEGORY_PRODUCTS: '/categories/:slug/products',
   // Admin routes
   ADMIN: {
     DASHBOARD: '/admin',
