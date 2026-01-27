@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import { useOrderStore } from '../../../store/orderStore';
@@ -25,16 +25,13 @@ const OrderManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | OrderStatus>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  
-  // Prevention of infinite fetch loops
-  const hasFetchedRef = useRef(false);
 
+  /**
+   * Always fresh orders
+   */
   useEffect(() => {
-    if (!hasFetchedRef.current && orders.length === 0) {
-      hasFetchedRef.current = true;
-      fetchOrders();
-    }
-  }, [orders.length, fetchOrders]);
+    fetchOrders();
+  }, [fetchOrders]);
 
   // Derived Data: Filtering
   const filteredOrders = useMemo(() => {
@@ -67,7 +64,7 @@ const OrderManagement = () => {
     }
   }, [updateOrderStatus]);
 
-  const handleRetry = useCallback(() => {
+  const handleRefresh = useCallback(() => {
     fetchOrders();
   }, [fetchOrders]);
 
@@ -102,6 +99,15 @@ const OrderManagement = () => {
               <h2>Orders</h2>
               <p className="subtitle">{filteredOrders.length} orders found</p>
             </div>
+            
+            {/* Manual Refresh Button */}
+            <button 
+              className="btn btn--secondary" 
+              onClick={handleRefresh}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Refreshing...' : '🔄 Refresh'}
+            </button>
           </div>
 
           <div className="filters-section">
@@ -131,7 +137,7 @@ const OrderManagement = () => {
           {error && (
             <div className="error-message">
               <span>⚠️ {error}</span>
-              <button onClick={handleRetry} className="btn-link">Retry</button>
+              <button onClick={handleRefresh} className="btn-link">Retry</button>
             </div>
           )}
 
@@ -205,15 +211,16 @@ const OrderManagement = () => {
             </div>
           )}
         </div>
-
-        {/* Modal Component */}
-        {selectedOrder && (
-          <OrderDetailsModal
-            order={selectedOrder} 
-            onClose={() => setSelectedOrder(null)} 
-          />
-        )}
       </main>
+
+      {/* Modal Component */}
+      {selectedOrder && (
+        <OrderDetailsModal
+          order={selectedOrder} 
+          onClose={() => setSelectedOrder(null)} 
+          // onStatusChange={handleStatusChange}
+        />
+      )}
     </>
   );
 };
