@@ -11,17 +11,13 @@ interface AuthState {
 
     // Actions
     setAuth: (token: string, user: User) => void;
+    updateUser: (user: User) => void;
     logout: () => void;
     clearAuth: () => void;
 }
 
 /*
 Auth Store - Manages authentication state across the app
-
-Features:
-- Persists to localStorage automatically 
-- Provides login/logout functionality
-- Tracks authentication status
 */
 export const useAuthStore = create<AuthState>()(
     persist(
@@ -39,6 +35,10 @@ export const useAuthStore = create<AuthState>()(
                     isAuthenticated: true
                 });
             },
+            // sync role changes from the server
+            updateUser: (user) => {
+                set({ user });
+            },
 
             // Logout (clears everything)
             logout: () => {
@@ -47,7 +47,6 @@ export const useAuthStore = create<AuthState>()(
                     user: null,
                     isAuthenticated: false
                 });
-                // Also remove from localStorage
                 localStorage.removeItem('token');
             },
 
