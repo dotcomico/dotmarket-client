@@ -6,6 +6,13 @@ export { QuickStatsGrid } from './components/QuickStatsGrid/QuickStatsGrid';
 
 // Hooks
 export { useAdminAccess } from './hooks/useAdminAccess';
+export { useUsers } from './hooks/useUsers';
+
+// Store
+export { useUserStore } from './store/userStore';
+
+// API
+export { userApi } from './api/userApi';
 
 // Types
 export type { 

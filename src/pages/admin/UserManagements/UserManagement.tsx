@@ -3,6 +3,7 @@ import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import type { User, UserRole } from '../../../types';
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
+import { userApi } from '../../../features/admin/api/userApi';
 import './UserManagement.css';
 
 // Extended User type with timestamps for admin view
@@ -13,25 +14,38 @@ interface AdminUser extends User {
   lastActive: string;
 }
 
-// Mock data - will be replaced with API calls
-const mockUsers: AdminUser[] = [
-  { id: 1, username: 'john_doe', email: 'john@email.com', role: 'customer', createdAt: '2025-06-15T10:30:00', ordersCount: 12, totalSpent: 1250.00, lastActive: '2026-01-24T08:00:00' },
-  { id: 2, username: 'jane_smith', email: 'jane@email.com', role: 'customer', createdAt: '2025-08-20T14:15:00', ordersCount: 8, totalSpent: 890.50, lastActive: '2026-01-23T16:30:00' },
-  { id: 3, username: 'admin_mark', email: 'mark@dotmarket.com', role: 'admin', createdAt: '2025-01-01T09:00:00', ordersCount: 0, totalSpent: 0, lastActive: '2026-01-24T10:00:00' },
-  { id: 4, username: 'manager_lisa', email: 'lisa@dotmarket.com', role: 'manager', createdAt: '2025-03-10T11:45:00', ordersCount: 0, totalSpent: 0, lastActive: '2026-01-24T09:15:00' },
-  { id: 5, username: 'bob_wilson', email: 'bob@email.com', role: 'customer', createdAt: '2025-09-05T16:20:00', ordersCount: 25, totalSpent: 2340.00, lastActive: '2026-01-22T12:00:00' },
-  { id: 6, username: 'alice_brown', email: 'alice@email.com', role: 'customer', createdAt: '2025-11-12T08:30:00', ordersCount: 3, totalSpent: 156.75, lastActive: '2026-01-20T14:45:00' },
-  { id: 7, username: 'charlie_davis', email: 'charlie@email.com', role: 'customer', createdAt: '2025-12-01T13:00:00', ordersCount: 1, totalSpent: 45.00, lastActive: '2026-01-15T10:30:00' },
-];
-
 const UserManagement = () => {
   const { isAdmin } = useAdminAccess();
-  const [users, setUsers] = useState<AdminUser[]>(mockUsers);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | UserRole>('all');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [showRoleModal, setShowRoleModal] = useState<AdminUser | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await userApi.getAll();
+        const mappedUsers: AdminUser[] = response.data.map((user) => ({
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          createdAt: user.createdAt,
+          ordersCount: 0,
+          totalSpent: 0,
+          lastActive: user.updatedAt || user.createdAt,
+        }));
+        setUsers(mappedUsers);
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   // Filter users based on search and role
   const filteredUsers = users.filter(user => {
@@ -75,12 +89,16 @@ const UserManagement = () => {
     return classes[role];
   };
 
-  const handleRoleChange = (userId: number, newRole: UserRole) => {
-    setUsers(prev => prev.map(user => 
-      user.id === userId ? { ...user, role: newRole } : user
-    ));
-    setShowRoleModal(null);
-    // TODO: API call to update user role
+  const handleRoleChange = async (userId: number, newRole: UserRole) => {
+    try {
+      await userApi.updateRole(userId, newRole);
+      setUsers(prev => prev.map(user => 
+        user.id === userId ? { ...user, role: newRole } : user
+      ));
+      setShowRoleModal(null);
+    } catch (error) {
+      console.error('Failed to update role:', error);
+    }
   };
 
   const handleViewDetails = (user: AdminUser) => {
@@ -141,7 +159,7 @@ const UserManagement = () => {
             </div>
           </div>
 
-          {/* Filters Section - Reusing SearchBar component */}
+          {/* Filters Section */}
           <div className="filters-section">
             <div className="admin-search-wrapper">
               <SearchBar
