@@ -1,11 +1,13 @@
-.app{
-    /* RED JUST FOR DEVELOPING */
+.app { 
+    /* for dev only!!!!!!!!!!!!!! */
     background-color: red;  
-    /* background-color: var(--primary);   */
-    
     /* Use CSS variable set by Header component */
     padding-top: var(--header-height, 72px);
     /* Fallback to 72px if variable not set yet */
-    
     transition: padding-top 0.3s ease;
+}
+
+/* Override padding for admin routes (AdminLayout handles its own spacing) */
+.app:has(.admin-layout) {
+    padding-top: 0;
 }
