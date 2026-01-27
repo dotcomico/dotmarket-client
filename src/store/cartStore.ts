@@ -1,8 +1,11 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { CartState, CartItem } from '../features/cart/types/cart.types';
+import type { CartState } from '../features/cart/types/cart.types';
 import type { Product } from '../features/products/types/product.types';
 
+/*
+ * Cart Store - Manages shopping cart state
+ */
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
@@ -56,9 +59,12 @@ export const useCartStore = create<CartState>()(
         }));
       },
 
-      // Clear entire cart
+      /**
+       * Clear entire cart
+       */
       clearCart: () => {
         set({ items: [] });
+        localStorage.removeItem('cart-storage');
       },
 
       // Get total number of items
