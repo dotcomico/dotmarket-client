@@ -19,7 +19,7 @@ interface AxiosError {
 /**
  * Type guard to check if error is an Axios error
  */
-function isAxiosError(error: unknown): error is AxiosError {
+export function isAxiosError(error: unknown): error is AxiosError {
   return (
     typeof error === 'object' &&
     error !== null &&
