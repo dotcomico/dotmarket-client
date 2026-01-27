@@ -4,19 +4,8 @@ import type { Order, OrderState, CreateOrderData } from '../features/orders/type
 import { orderApi } from '../features/orders/api/orderApi';
 import { getErrorMessage, logError } from '../utils/errorHandler';
 
-/**
+/*
  * Order Store - Manages user orders and order history
- * 
- * Features:
- * - Fetches user's order history
- * - Creates new orders (checkout)
- * - Tracks order status
- * - Persists orders to localStorage
- * - Integrates with order API
- * 
- * FIXED: 
- * - reset() now clears localStorage to prevent data leaking between user sessions
- * - fetchOrders() has proper duplicate fetch prevention
  */
 export const useOrderStore = create<OrderState>()(
   persist(
@@ -27,9 +16,8 @@ export const useOrderStore = create<OrderState>()(
       isLoading: false,
       error: null,
 
-      /**
+      /*
        * Fetch all orders for the current user
-       * Admins/Managers see all orders via API
        */
       fetchOrders: async () => {
         // Prevent duplicate fetches
@@ -55,7 +43,7 @@ export const useOrderStore = create<OrderState>()(
         }
       },
 
-      /**
+      /*
        * Fetch specific order by ID
        */
       fetchOrderById: async (orderId: number) => {
@@ -81,16 +69,13 @@ export const useOrderStore = create<OrderState>()(
         }
       },
 
-      /**
+      /*
        * Create new order (Checkout)
-       * Clears cart on success
        */
       createOrder: async (orderData: CreateOrderData) => {
         set({ isLoading: true, error: null });
-
         try {
           const response = await orderApi.create(orderData);
-
           // Add new order to the beginning of orders array
           set((state) => ({
             orders: [response.data, ...state.orders],
@@ -102,17 +87,15 @@ export const useOrderStore = create<OrderState>()(
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to create order');
           logError(error, 'orderStore.createOrder');
-
           set({
             error: errorMessage,
             isLoading: false
           });
-
           return { success: false, error: errorMessage };
         }
       },
 
-      /**
+      /*
        * Update order status (Admin/Manager only)
        */
       updateOrderStatus: async (orderId: number, status: Order['status']) => {
@@ -136,33 +119,30 @@ export const useOrderStore = create<OrderState>()(
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to update order status');
           logError(error, 'orderStore.updateOrderStatus');
-
           set({
             error: errorMessage,
             isLoading: false
           });
-
           return { success: false, error: errorMessage };
         }
       },
 
-      /**
+      /*
        * Get order by ID from state (no API call)
        */
       getOrderById: (orderId: number) => {
         return get().orders.find(order => order.id === orderId);
       },
 
-      /**
+      /*
        * Get orders by status
        */
       getOrdersByStatus: (status: Order['status']) => {
         return get().orders.filter(order => order.status === status);
       },
 
-      /**
+      /*
        * Calculate total spent across all completed orders
-       * Note: Backend uses 'paid' and 'shipped' for fulfilled orders
        */
       getTotalSpent: () => {
         return get().orders
@@ -170,30 +150,29 @@ export const useOrderStore = create<OrderState>()(
           .reduce((total, order) => total + order.totalAmount, 0);
       },
 
-      /**
+      /*
        * Get orders count
        */
       getOrdersCount: () => {
         return get().orders.length;
       },
 
-      /**
+      /*
        * Clear error state
        */
       clearError: () => {
         set({ error: null });
       },
 
-      /**
+      /*
        * Clear current order
        */
       clearCurrentOrder: () => {
         set({ currentOrder: null });
       },
 
-      /**
+      /*
        * Reset entire store (logout scenario)
-       * FIXED: Also clears localStorage to prevent data leaking between sessions
        */
       reset: () => {
         set({
@@ -202,9 +181,6 @@ export const useOrderStore = create<OrderState>()(
           isLoading: false,
           error: null
         });
-        
-        // FIXED: Explicitly clear localStorage for this store
-        // This ensures no stale data persists between user sessions
         localStorage.removeItem('order-storage');
       }
     }),
