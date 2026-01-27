@@ -17,11 +17,9 @@ const ProductManagement = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<Product | null>(null);
 
-  useEffect(() => {
-    if (products.length === 0) {
-        fetchProducts({ limit: 1000 });
-    }
-  }, [products.length, fetchProducts]);
+ useEffect(() => {
+    fetchProducts({ limit: 1000 });
+}, [fetchProducts]);
 
   // Memoize categories to prevent recomputation on every render
   const categories = useMemo(() => {
