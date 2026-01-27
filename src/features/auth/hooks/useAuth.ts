@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/authStore';
 import { useOrderStore } from '../../../store/orderStore';
@@ -6,14 +6,15 @@ import { useCartStore } from '../../../store/cartStore';
 import { authApi, type LoginCredentials, type RegisterData } from '../api/authApi';
 import { PATHS } from '../../../routes/paths';
 import { getErrorMessage, logError } from '../../../utils/errorHandler';
+import { isAxiosError } from 'axios';
 
-/**
+/*
  * Custom hook for authentication logic
- * const { login, register, logout, isLoading, error } = useAuth();
+ * const { login, register, logout, refreshUser, isLoading, error } = useAuth();
  */
 export const useAuth = () => {
   const navigate = useNavigate();
-  const { setAuth, logout: clearAuth, isAuthenticated, user } = useAuthStore();
+  const { setAuth, updateUser, logout: clearAuth, isAuthenticated, user } = useAuthStore();
 
   // Get reset functions from other stores
   const resetOrders = useOrderStore((state) => state.reset);
@@ -83,7 +84,10 @@ export const useAuth = () => {
   /*
    * Logout function
    */
-  const logout = () => {
+ /*
+   * Logout function - Wrapped in useCallback to prevent dependency loops
+   */
+  const logout = useCallback(() => {
     // Clear auth state
     clearAuth();
     // Clear user-specific data from other stores
@@ -96,7 +100,26 @@ export const useAuth = () => {
     authApi.logout();
     // Redirect to login
     navigate(PATHS.LOGIN);
-  };
+  }, [clearAuth, resetOrders, clearCart, navigate]); // These are the stable dependencies
+  /*
+   * Refresh user data from server
+   */
+  const refreshUser = useCallback(async () => {
+    if (!isAuthenticated) return { success: false };
+
+    try {
+      const freshUser = await authApi.getMe();
+      updateUser(freshUser);
+      return { success: true, user: freshUser };
+    } catch (err) {
+      logError(err, 'useAuth.refreshUser');
+      // If 401, token is invalid - logout
+      if (isAxiosError(err) && err.response?.status === 401) {
+        logout();
+      }
+      return { success: false };
+    }
+  }, [isAuthenticated, updateUser, logout]);
 
   return {
     // State
@@ -107,6 +130,7 @@ export const useAuth = () => {
     // Actions
     login,
     register,
-    logout
+    logout,
+    refreshUser,  
   };
 };
