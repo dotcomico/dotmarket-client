@@ -74,9 +74,9 @@ const Orders = () => {
         )}
 
         {selectedOrder && (
-          <OrderDetailsModal 
-            order={selectedOrder} 
-            onClose={() => setSelectedOrder(null)} 
+          <OrderDetailsModal
+            order={selectedOrder}
+            onClose={() => setSelectedOrder(null)}
             onContinueShopping={handleStartShopping}
           />
         )}
