@@ -1,11 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Order, OrderState, CreateOrderData } from '../features/orders/types/order.types';
+import type { OrderState, CreateOrderData } from '../features/orders/types/order.types';
 import { orderApi } from '../features/orders/api/orderApi';
 import { getErrorMessage, logError } from '../utils/errorHandler';
 
 /*
- * Order Store - Manages user orders and order history
+ * Order Store - Manages orders state
+  - orders: All orders (admin/manager)
+  - currentUserOrders: user orders only (customer )
  */
 export const useOrderStore = create<OrderState>()(
   persist(
@@ -18,12 +20,11 @@ export const useOrderStore = create<OrderState>()(
       error: null,
 
       /*
-       * Fetch all orders for the current user
+       * Fetch all orders (Admin/Manager)
        */
       fetchOrders: async () => {
-        // Prevent duplicate fetches
         if (get().isLoading) return;
-        
+
         set({ isLoading: true, error: null });
 
         try {
@@ -44,28 +45,32 @@ export const useOrderStore = create<OrderState>()(
         }
       },
 
+      /*
+       * Fetch current user's orders 
+       */
       fetchOrdersOfCurrentUser: async () => {
         if (get().isLoading) return;
-        
+
         set({ isLoading: true, error: null });
 
         try {
           const response = await orderApi.getAllOfCurrentUser();
           set({
-            orders: response.data,
+            currentUserOrders: response.data,
             isLoading: false
           });
         } catch (error) {
-          const errorMessage = getErrorMessage(error, 'Failed to load orders');
-          logError(error, 'orderStore.fetchOrders');
+          const errorMessage = getErrorMessage(error, 'Failed to load your orders');
+          logError(error, 'orderStore.fetchOrdersOfCurrentUser');
 
           set({
             error: errorMessage,
             isLoading: false,
-            orders: []
+            currentUserOrders: []
           });
         }
       },
+
       /*
        * Fetch specific order by ID
        */
@@ -93,125 +98,117 @@ export const useOrderStore = create<OrderState>()(
       },
 
       /*
-       * Create new order (Checkout)
+       * Create new order
        */
       createOrder: async (orderData: CreateOrderData) => {
         set({ isLoading: true, error: null });
+
         try {
           const response = await orderApi.create(orderData);
-          // Add new order to the beginning of orders array
-          set((state) => ({
-            orders: [response.data, ...state.orders],
-            currentOrder: response.data,
+          const newOrder = response.data;
+
+          set(state => ({
+            orders: [newOrder, ...state.orders],
+            currentUserOrders: [newOrder, ...state.currentUserOrders],
+            currentOrder: newOrder,
             isLoading: false
           }));
 
-          return { success: true, order: response.data };
+          return { success: true, order: newOrder };
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to create order');
           logError(error, 'orderStore.createOrder');
+
           set({
             error: errorMessage,
             isLoading: false
           });
+
           return { success: false, error: errorMessage };
         }
       },
 
       /*
-       * Update order status (Admin/Manager only)
+       * Update order status (Admin/Manager)
        */
-      updateOrderStatus: async (orderId: number, status: Order['status']) => {
-        set({ isLoading: true, error: null });
+      updateOrderStatus: async (orderId: number, status) => {
+        set({ error: null });
 
         try {
           const response = await orderApi.updateStatus(orderId, status);
+          const updatedOrder = response.data;
 
-          // Update order in state
-          set((state) => ({
+          set(state => ({
             orders: state.orders.map(order =>
-              order.id === orderId ? response.data : order
+              order.id === orderId ? updatedOrder : order
+            ),
+            currentUserOrders: state.currentUserOrders.map(order =>
+              order.id === orderId ? updatedOrder : order
             ),
             currentOrder: state.currentOrder?.id === orderId
-              ? response.data
-              : state.currentOrder,
-            isLoading: false
+              ? updatedOrder
+              : state.currentOrder
           }));
 
-          return { success: true, order: response.data };
+          return { success: true, order: updatedOrder };
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to update order status');
           logError(error, 'orderStore.updateOrderStatus');
-          set({
-            error: errorMessage,
-            isLoading: false
-          });
+
+          set({ error: errorMessage });
           return { success: false, error: errorMessage };
         }
       },
 
-      /*
-       * Get order by ID from state (no API call)
-       */
+      //  Helpers (Admin) 
+
       getOrderById: (orderId: number) => {
-        return get().orders.find(order => order.id === orderId);
+        const { orders, currentUserOrders } = get();
+        return orders.find(o => o.id === orderId)
+          || currentUserOrders.find(o => o.id === orderId);
       },
 
-      /*
-       * Get orders by status
-       */
-      getOrdersByStatus: (status: Order['status']) => {
+      getOrdersByStatus: (status) => {
         return get().orders.filter(order => order.status === status);
       },
 
-      /*
-       * Calculate total spent across all completed orders
-       */
       getTotalSpent: () => {
-        return get().orders
-          .filter(order => order.status === 'paid' || order.status === 'shipped')
-          .reduce((total, order) => total + order.totalAmount, 0);
+        return get().orders.reduce((sum, order) => sum + order.totalAmount, 0);
       },
 
-      /*
-       * Get orders count
-       */
-      getOrdersCount: () => {
-        return get().orders.length;
+      getOrdersCount: () => get().orders.length,
+
+      //  Helpers ( User ) 
+
+      getCurrentUserOrdersByStatus: (status) => {
+        return get().currentUserOrders.filter(order => order.status === status);
       },
 
-      /*
-       * Clear error state
-       */
-      clearError: () => {
-        set({ error: null });
+      getCurrentUserTotalSpent: () => {
+        return get().currentUserOrders.reduce((sum, order) => sum + order.totalAmount, 0);
       },
 
-      /*
-       * Clear current order
-       */
-      clearCurrentOrder: () => {
-        set({ currentOrder: null });
-      },
+      getCurrentUserOrdersCount: () => get().currentUserOrders.length,
 
-      /*
-       * Reset entire store (logout scenario)
-       */
-      reset: () => {
-        set({
-          orders: [],
-          currentOrder: null,
-          isLoading: false,
-          error: null
-        });
-        localStorage.removeItem('order-storage');
-      }
+      //////////////////
+
+      clearError: () => set({ error: null }),
+
+      clearCurrentOrder: () => set({ currentOrder: null }),
+
+      reset: () => set({
+        orders: [],
+        currentUserOrders: [],
+        currentOrder: null,
+        isLoading: false,
+        error: null
+      })
     }),
     {
-      name: 'order-storage', // localStorage key
+      name: 'order-storage',
       partialize: (state) => ({
         orders: state.orders,
-        currentOrder: state.currentOrder
+        currentUserOrders: state.currentUserOrders
       })
     }
   )

@@ -1,28 +1,25 @@
 import type { Product } from '../../products/types/product.types';
 import type { User } from '../../../types';
 
-/**
- * Order Status
- * Maps to backend ORDER_STATUS enum in src/config/constants.js
- */
+
+// Order Status
+
 export type OrderStatus = 'pending' | 'paid' | 'shipped' | 'cancelled';
 
-/**
- * Order Item - Individual product in an order
- * Maps to OrderItem model in backend
- */
+
+// Order Item - Individual product
+
 export interface OrderItem {
   id: number;
   quantity: number;
-  priceAtPurchase: number; // Price when order was placed
+  priceAtPurchase: number;
   ProductId: number;
   Product: Product;
 }
 
-/**
- * Order - Complete order with items
- * Maps to Order model in backend
- */
+
+ // Order - Complete order with items
+ 
 export interface Order {
   id: number;
   totalAmount: number;
@@ -31,15 +28,14 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
   UserId: number;
-  User?: User; // Only included for admin/manager views
-  Products?: Product[]; // Many-to-many relationship
-  OrderItems?: OrderItem[]; // Junction table with quantity/price
+  User?: User;
+  Products?: Product[];
+  OrderItems?: OrderItem[];
 }
 
-/**
- * Create Order Data - Payload for creating new order
- * Used in checkout process
- */
+
+ // Create Order Data - for creating new order
+ 
 export interface CreateOrderData {
   items: Array<{
     productId: number;
@@ -48,13 +44,13 @@ export interface CreateOrderData {
   address: string;
 }
 
-/**
- * Order State - Zustand store interface
- */
+
+//order State - order store zustand
+
 export interface OrderState {
   // State
   orders: Order[];
-  currentUserOrders: [];
+  currentUserOrders: Order[];
   currentOrder: Order | null;
   isLoading: boolean;
   error: string | null;
@@ -77,8 +73,11 @@ export interface OrderState {
   // Helpers
   getOrderById: (orderId: number) => Order | undefined;
   getOrdersByStatus: (status: OrderStatus) => Order[];
+  getCurrentUserOrdersByStatus: (status: OrderStatus) => Order[];
   getTotalSpent: () => number;
+  getCurrentUserTotalSpent: () => number;
   getOrdersCount: () => number;
+  getCurrentUserOrdersCount: () => number;
   clearError: () => void;
   clearCurrentOrder: () => void;
   reset: () => void;

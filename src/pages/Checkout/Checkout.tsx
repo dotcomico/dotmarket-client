@@ -1,29 +1,18 @@
 import { useState, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../features/cart/hooks/useCart';
-import { useOrders } from '../../features/orders/hooks/useOrders';
 import { PATHS } from '../../routes/paths';
 import { UI_STRINGS } from '../../constants/uiStrings';
 import './Checkout.css';
+import { useCheckout } from '../../features/orders/hooks/useCheckout';
 
-/**
- * Checkout Page
- * Completes the purchase flow with address input
- * 
- * Reusing:
- * - useCart hook from src/features/cart/hooks/useCart.ts
- * - useOrders hook (placeOrder) from src/features/orders/hooks/useOrders.ts
- * - UI_STRINGS from src/constants/uiStrings.ts
- */
-
-// Shipping cost constants (same as CartSummary)
 const SHIPPING_FEE = 5.99;
 const FREE_SHIPPING_THRESHOLD = 50;
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, cartTotal, itemCount } = useCart();
-  const { placeOrder, isLoading, error, clearError } = useOrders();
+  const { placeOrder, isLoading, error, clearError } = useCheckout();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -76,27 +65,22 @@ const Checkout = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     // Clear error when user types
     if (formErrors[name]) {
       setFormErrors(prev => ({ ...prev, [name]: '' }));
     }
-    
+
     // Clear API error
     if (error) {
       clearError();
     }
   };
-
-  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
-
-    // Build full address string
     const fullAddress = `${formData.fullName}, ${formData.address}, ${formData.city}, ${formData.postalCode}, Phone: ${formData.phone}`;
-
     const result = await placeOrder(fullAddress);
 
     if (result.success && result.order) {
@@ -105,7 +89,7 @@ const Checkout = () => {
     }
   };
 
-  // Redirect to cart if empty (and not showing success)
+  // Redirect to cart if empty
   if (items.length === 0 && !orderSuccess) {
     return (
       <div className="checkout-page">

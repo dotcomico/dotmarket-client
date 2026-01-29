@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOrders } from '../../features/orders/hooks/useOrders';
+import { useMyOrders } from '../../features/orders/hooks/useMyOrders';
 import { formatDate } from '../../utils/formatters';
 import { 
   getStatusClass, 
@@ -13,7 +13,9 @@ import './Orders.css';
 
 /*
  * Customer Orders Page
- * Displays user's order history with status tracking
+ * Displays current user's order history with status tracking
+ * 
+ * Reusing useMyOrders from src/features/orders/hooks/useMyOrders.ts
  */
 const Orders = () => {
   const navigate = useNavigate();
@@ -24,16 +26,15 @@ const Orders = () => {
     refreshOrders,
     getOrderStats,
     clearError 
-  } = useOrders();
+  } = useMyOrders();
 
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   
   // Track if we've already fetched to prevent duplicate calls
   const hasFetchedRef = useRef(false);
 
-  // Load orders on mount- Using ref to prevent infinite loops
+  // Load orders on mount - Using ref to prevent infinite loops
   useEffect(() => {
-    // Only fetch once on mount, or if orders are empty (new user session)
     if (!hasFetchedRef.current) {
       hasFetchedRef.current = true;
       refreshOrders();
@@ -51,7 +52,7 @@ const Orders = () => {
   // Handle retry on error
   const handleRetry = () => {
     clearError();
-    hasFetchedRef.current = false; // Allow retry
+    hasFetchedRef.current = false;
     refreshOrders();
   };
 
