@@ -3,15 +3,15 @@ import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import { useOrderStore } from '../../../store/orderStore';
 import { formatDate } from '../../../utils/formatters';
-import { 
-  getStatusClass, 
+import {
+  getStatusClass,
   getOrderItemCount,
-  ORDER_STATUS_OPTIONS 
+  ORDER_STATUS_OPTIONS
 } from '../../../features/orders/utils/orderUtils';
 import type { Order, OrderStatus } from '../../../features/orders/types/order.types';
 
 import './OrderManagement.css';
-import OrderDetailsModal from '../../../features/admin/components/OrderDetailsModal/OrderDetailsModal';
+import OrderDetailsModal from '../../../features/orders/components/OrderDetailsModal/OrderDetailsModal';
 
 const OrderManagement = () => {
   // Store Access
@@ -20,7 +20,7 @@ const OrderManagement = () => {
   const error = useOrderStore((state) => state.error);
   const fetchOrders = useOrderStore((state) => state.fetchOrders);
   const updateOrderStatus = useOrderStore((state) => state.updateOrderStatus);
-  
+
   // Local State
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | OrderStatus>('all');
@@ -36,14 +36,14 @@ const OrderManagement = () => {
   // Derived Data: Filtering
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
-      const matchesSearch = 
+      const matchesSearch =
         order.id.toString().includes(searchQuery) ||
         order.User?.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.User?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         order.address?.toLowerCase().includes(searchQuery.toLowerCase());
-      
+
       const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-      
+
       return matchesSearch && matchesStatus;
     });
   }, [orders, searchQuery, statusFilter]);
@@ -71,7 +71,7 @@ const OrderManagement = () => {
   return (
     <>
       <AdminHeader title="Order Management" />
-      
+
       <main className="admin-main">
         {/* Stats Summary Cards */}
         <div className="order-stats">
@@ -99,10 +99,10 @@ const OrderManagement = () => {
               <h2>Orders</h2>
               <p className="subtitle">{filteredOrders.length} orders found</p>
             </div>
-            
+
             {/* Manual Refresh Button */}
-            <button 
-              className="btn btn--secondary" 
+            <button
+              className="btn btn--secondary"
               onClick={handleRefresh}
               disabled={isLoading}
             >
@@ -216,9 +216,9 @@ const OrderManagement = () => {
       {/* Modal Component */}
       {selectedOrder && (
         <OrderDetailsModal
-          order={selectedOrder} 
-          onClose={() => setSelectedOrder(null)} 
-          // onStatusChange={handleStatusChange}
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
+          variant="admin"
         />
       )}
     </>

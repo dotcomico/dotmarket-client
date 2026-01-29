@@ -146,10 +146,8 @@
   gap: var(--spacing-lg);
 }
 
-/* ==================== */
-/* Responsive Design    */
-/* ==================== */
 
+/* Responsive Design    */
 @media (max-width: 768px) {
   .orders-page {
     padding: var(--spacing-lg);

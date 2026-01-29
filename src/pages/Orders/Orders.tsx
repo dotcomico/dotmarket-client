@@ -73,10 +73,11 @@ const Orders = () => {
           </div>
         )}
 
-        {selectedOrder && (
+         {selectedOrder && (
           <OrderDetailsModal
             order={selectedOrder}
             onClose={() => setSelectedOrder(null)}
+            variant="customer"
             onContinueShopping={handleStartShopping}
           />
         )}
