@@ -1,7 +1,7 @@
 import React from 'react';
-import type { Order } from '../../../orders';
-import { getStatusClass, getStatusLabel } from '../../../orders/utils/orderUtils';
+import { getStatusClass, getStatusLabel } from '../../utils/orderUtils';
 import { formatDate } from '../../../../utils/formatters';
+import type { Order } from '../../types/order.types';
 
 interface OrderDetailsModalProps {
   order: Order;
@@ -18,7 +18,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose, o
           <button className="order-modal__close" onClick={onClose}>×</button>
         </div>
 
-        <div className="order-modal__content">
+        <div className="order-modal__body">
           <div className="order-modal__section">
             <h3>Order Details</h3>
             <div className="order-modal__info-grid">
@@ -52,11 +52,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose, o
                 {order.Products.map(product => (
                   <div key={product.id} className="order-modal__item">
                     <div className="order-modal__item-image">
-                      {product.image ? (
-                        <img src={product.image} alt={product.name} />
-                      ) : (
-                        <span className="order-modal__item-placeholder">📦</span>
-                      )}
+                      {product.image ? <img src={product.image} alt={product.name} /> : <span className="order-modal__item-placeholder">📦</span>}
                     </div>
                     <div className="order-modal__item-info">
                       <span className="order-modal__item-name">{product.name}</span>
@@ -70,12 +66,8 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose, o
         </div>
 
         <div className="order-modal__footer">
-          <button className="order-modal__btn order-modal__btn--secondary" onClick={onClose}>
-            Close
-          </button>
-          <button className="order-modal__btn order-modal__btn--primary" onClick={onContinueShopping}>
-            Continue Shopping
-          </button>
+          <button className="order-modal__btn order-modal__btn--secondary" onClick={onClose}>Close</button>
+          <button className="order-modal__btn order-modal__btn--primary" onClick={onContinueShopping}>Continue Shopping</button>
         </div>
       </div>
     </div>
