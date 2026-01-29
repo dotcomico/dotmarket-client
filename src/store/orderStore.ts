@@ -12,6 +12,7 @@ export const useOrderStore = create<OrderState>()(
     (set, get) => ({
       // State
       orders: [],
+      currentUserOrders: [],
       currentOrder: null,
       isLoading: false,
       error: null,
@@ -43,6 +44,28 @@ export const useOrderStore = create<OrderState>()(
         }
       },
 
+      fetchOrdersOfCurrentUser: async () => {
+        if (get().isLoading) return;
+        
+        set({ isLoading: true, error: null });
+
+        try {
+          const response = await orderApi.getAllOfCurrentUser();
+          set({
+            orders: response.data,
+            isLoading: false
+          });
+        } catch (error) {
+          const errorMessage = getErrorMessage(error, 'Failed to load orders');
+          logError(error, 'orderStore.fetchOrders');
+
+          set({
+            error: errorMessage,
+            isLoading: false,
+            orders: []
+          });
+        }
+      },
       /*
        * Fetch specific order by ID
        */

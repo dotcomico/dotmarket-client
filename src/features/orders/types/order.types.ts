@@ -54,12 +54,14 @@ export interface CreateOrderData {
 export interface OrderState {
   // State
   orders: Order[];
+  currentUserOrders: [];
   currentOrder: Order | null;
   isLoading: boolean;
   error: string | null;
 
   // Actions
   fetchOrders: () => Promise<void>;
+  fetchOrdersOfCurrentUser: () => Promise<void>;
   fetchOrderById: (orderId: number) => Promise<Order>;
   createOrder: (orderData: CreateOrderData) => Promise<{
     success: boolean;

@@ -16,6 +16,10 @@ export const orderApi = {
     const response = await axiosInstance.get<Order[]>(API_ENDPOINTS.ORDERS);
     return response;
   },
+  getAllOfCurrentUser: async () => {
+    const response = await axiosInstance.get<Order[]>(API_ENDPOINTS.ORDERS_BY_CURRENT_USER);
+    return response;
+  },
 
   /**
    * Get specific order by ID
