@@ -42,7 +42,7 @@ const Orders = () => {
   }, [refreshOrders]);
 
   // Get order statistics - memoized based on orders array
-  const stats = useMemo(() => getOrderStats(), [getOrderStats, orders]);
+  const stats = useMemo(() => getOrderStats(), [getOrderStats]);
 
   // Handle empty cart redirect to shopping
   const handleStartShopping = () => {
