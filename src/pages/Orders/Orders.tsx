@@ -6,7 +6,7 @@ import type { Order } from '../../features/orders/types/order.types';
 import './Orders.css';
 import OrderStats from '../../features/orders/components/OrderStats/OrderStats';
 import OrderCard from '../../features/orders/components/OrderCard/OrderCard';
-import OrderDetailsModal from '../../features/admin/components/OrderDetailsModal/OrderDetailsModal';
+import OrderDetailsModal from '../../features/orders/components/OrderDetailsModal/OrderDetailsModal';
 
 const Orders = () => {
   const navigate = useNavigate();
