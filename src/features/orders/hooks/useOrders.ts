@@ -10,11 +10,12 @@ import type { CreateOrderData, OrderStatus } from '../types/order.types';
 
 export const useOrders = () => {
   const {
-    orders,
+    orders,currentUserOrders,
     currentOrder,
     isLoading,
     error,
     fetchOrders,
+    fetchOrdersOfCurrentUser,
     fetchOrderById,
     createOrder,
     updateOrderStatus,
