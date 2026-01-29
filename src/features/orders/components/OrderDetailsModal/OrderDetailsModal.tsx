@@ -13,7 +13,6 @@ interface OrderDetailsModalProps {
   onContinueShopping?: () => void;
 }
 
-
 const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   order,
   onClose,
@@ -24,14 +23,16 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
   return (
     <div className="order-modal-overlay" onClick={onClose}>
-      <div
-        className={`order-modal ${isAdmin ? 'order-modal--admin' : ''}`}
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="order-modal" onClick={(e) => e.stopPropagation()}>
         {/* Header */}
         <div className="order-modal__header">
-          <h2>Order #{order.id}</h2>
-          <button className="order-modal__close" onClick={onClose}>
+          <div className="order-modal__header-content">
+            <h2>Order #{order.id}</h2>
+            <span className={`order-modal__status-badge ${getStatusClass(order.status)}`}>
+              {getStatusLabel(order.status)}
+            </span>
+          </div>
+          <button className="order-modal__close" onClick={onClose} aria-label="Close modal">
             ×
           </button>
         </div>
@@ -41,7 +42,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           {/* Admin-only: Customer Information */}
           {isAdmin && (
             <div className="order-modal__section">
-              <h3>Customer Information</h3>
+              <h3 className="order-modal__section-title">Customer Information</h3>
               <div className="order-modal__info-grid">
                 <div className="order-modal__info-item">
                   <span className="order-modal__info-label">Name</span>
@@ -61,14 +62,8 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
           {/* Order Details - Both variants */}
           <div className="order-modal__section">
-            <h3>Order Details</h3>
+            <h3 className="order-modal__section-title">Order Details</h3>
             <div className="order-modal__info-grid">
-              <div className="order-modal__info-item">
-                <span className="order-modal__info-label">Status</span>
-                <span className={`order-modal__info-value ${getStatusClass(order.status)}`}>
-                  {getStatusLabel(order.status)}
-                </span>
-              </div>
               <div className="order-modal__info-item">
                 <span className="order-modal__info-label">Order Date</span>
                 <span className="order-modal__info-value">
@@ -93,20 +88,17 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
           {/* Order Items - Both variants */}
           {order.Products && order.Products.length > 0 && (
             <div className="order-modal__section">
-              <h3>Items ({order.Products.length})</h3>
+              <h3 className="order-modal__section-title">Items ({order.Products.length})</h3>
               <div className="order-modal__items">
                 {order.Products.map((product) => (
                   <div key={product.id} className="order-modal__item">
-                    {/* Customer variant shows images */}
-                    {!isAdmin && (
-                      <div className="order-modal__item-image">
-                        {product.image ? (
-                          <img src={product.image} alt={product.name} />
-                        ) : (
-                          <span className="order-modal__item-placeholder">📦</span>
-                        )}
-                      </div>
-                    )}
+                    <div className="order-modal__item-image">
+                      {product.image ? (
+                        <img src={product.image} alt={product.name} />
+                      ) : (
+                        <span className="order-modal__item-placeholder">📦</span>
+                      )}
+                    </div>
                     <div className="order-modal__item-info">
                       <span className="order-modal__item-name">{product.name}</span>
                       <span className="order-modal__item-price">
