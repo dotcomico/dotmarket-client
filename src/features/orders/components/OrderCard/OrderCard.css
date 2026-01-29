@@ -1,0 +1,218 @@
+/* Order Card */
+.order-card {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.order-card:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: var(--tertiary);
+}
+
+.order-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--primary);
+}
+
+.order-card__id {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+}
+
+.order-card__status {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Status Colors */
+.order-card__status.status--completed {
+  background-color: rgba(46, 125, 50, 0.15);
+  color: var(--success);
+}
+
+.order-card__status.status--processing {
+  background-color: rgba(0, 64, 255, 0.15);
+  color: var(--tertiary);
+}
+
+.order-card__status.status--pending {
+  background-color: rgba(237, 108, 2, 0.15);
+  color: var(--warning);
+}
+
+.order-card__status.status--cancelled {
+  background-color: rgba(211, 47, 47, 0.15);
+  color: var(--error);
+}
+
+.order-card__body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--spacing-lg);
+  gap: var(--spacing-lg);
+}
+
+.order-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.order-card__row {
+  display: flex;
+  gap: var(--spacing-md);
+}
+
+.order-card__label {
+  min-width: 70px;
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+}
+
+.order-card__value {
+  font-size: var(--font-size-sm);
+  color: var(--primary-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.order-card__value--truncate {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-card__total {
+  text-align: right;
+}
+
+.order-card__total-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.order-card__total-value {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--tertiary);
+}
+
+/* Product Thumbnails */
+.order-card__products {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: 0 var(--spacing-lg) var(--spacing-md);
+}
+
+.order-card__product-thumb {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-color: var(--secondary);
+  border: 1px solid var(--border-color);
+}
+
+.order-card__product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.order-card__product-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: var(--font-size-lg);
+}
+
+.order-card__product-more {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.order-card__footer {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  background-color: var(--primary);
+}
+
+.order-card__view-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background: none;
+  border: none;
+  color: var(--tertiary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  padding: 0;
+  transition: var(--transition-fast);
+}
+
+.order-card__view-btn:hover {
+  opacity: 0.8;
+}
+
+.order-card__view-btn svg {
+  transition: transform var(--transition-fast);
+}
+
+.order-card:hover .order-card__view-btn svg {
+  transform: translateX(4px);
+}
+
+/* ==================== */
+/* Responsive Design    */
+/* ==================== */
+
+@media (max-width: 768px) {
+  .order-card__body {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .order-card__total {
+    text-align: left;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+@media (max-width: 480px) {
+  .order-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .order-card__value--truncate {
+    max-width: 150px;
+  }
+}
