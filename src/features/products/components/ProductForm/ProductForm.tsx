@@ -21,8 +21,6 @@ interface FormState {
 export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: ProductFormProps) => {
   const { categories, fetchCategories } = useCategoryStore();
 
-  // 1. Initialize state directly from props.
-  // This avoids the "cascading render" error caused by useEffect + setState.
   const [formData, setFormData] = useState<FormState>({
     name: product?.name || '',
     description: product?.description || '',
@@ -31,21 +29,25 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
     categoryId: product?.categoryId.toString() || '',
   });
 
+  // Main image state
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(product?.image || null);
+  
+  // 360° image state
+  const [image360File, setImage360File] = useState<File | null>(null);
+  const [image360Preview, setImage360Preview] = useState<string | null>(product?.image360 || null);
+  
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Partial<FormState>>({});
 
   const isEditMode = Boolean(product);
 
-  // Fetch categories only if they aren't loaded
   useEffect(() => {
     if (categories.length === 0) {
       fetchCategories();
     }
   }, [categories.length, fetchCategories]);
 
-  // 2. Memoize the recursive flattening to prevent heavy re-calculation on every keystroke
   const flatCategories = useMemo(() => {
     const flatten = (cats: Category[], depth = 0): { id: number; name: string; depth: number }[] => {
       return cats.reduce((acc, cat) => {
@@ -63,13 +65,13 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Clear validation error for this field as the user types
     if (validationErrors[name as keyof FormState]) {
       setValidationErrors(prev => ({ ...prev, [name]: undefined }));
     }
     setError(null);
   };
 
+  // Main image handler
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -89,9 +91,33 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
     }
   };
 
+  // 360° image handler (GIF only)
+  const handleImage360Change = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.type !== 'image/gif') {
+        setError('360° view must be a GIF file');
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        setError('360° image must be less than 10MB');
+        return;
+      }
+
+      setImage360File(file);
+      setImage360Preview(URL.createObjectURL(file));
+      setError(null);
+    }
+  };
+
   const removeImage = () => {
     setImageFile(null);
     setImagePreview(null);
+  };
+
+  const removeImage360 = () => {
+    setImage360File(null);
+    setImage360Preview(null);
   };
 
   const validate = (): boolean => {
@@ -136,6 +162,10 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
     if (imageFile) {
       submitData.append('image', imageFile);
     }
+    
+    if (image360File) {
+      submitData.append('image360', image360File);
+    }
 
     const result = await onSubmit(submitData);
 
@@ -152,37 +182,75 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
         </div>
       )}
 
-      {/* Image Upload */}
-      <div className="product-form__image-section">
-        <label className="product-form__label">Product Image</label>
-        <div className="product-form__image-upload">
-          {imagePreview ? (
-            <div className="product-form__image-preview">
-              <img src={imagePreview} alt="Preview" />
-              <button 
-                type="button" 
-                className="product-form__image-remove"
-                onClick={removeImage}
-                aria-label="Remove image"
-              >
-                ×
-              </button>
-            </div>
-          ) : (
-            <label className="product-form__image-dropzone">
-              <input
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
-                onChange={handleImageChange}
-                disabled={isLoading}
-              />
-              <div className="product-form__image-placeholder">
-                <span className="product-form__image-icon">📷</span>
-                <span>Click to upload image</span>
-                <span className="product-form__image-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
+      {/* Images Row */}
+      <div className="product-form__images-row">
+        {/* Main Image Upload */}
+        <div className="product-form__image-section">
+          <label className="product-form__label">Product Image</label>
+          <div className="product-form__image-upload">
+            {imagePreview ? (
+              <div className="product-form__image-preview">
+                <img src={imagePreview} alt="Preview" />
+                <button 
+                  type="button" 
+                  className="product-form__image-remove"
+                  onClick={removeImage}
+                  aria-label="Remove image"
+                >
+                  ×
+                </button>
               </div>
-            </label>
-          )}
+            ) : (
+              <label className="product-form__image-dropzone">
+                <input
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                  onChange={handleImageChange}
+                  disabled={isLoading}
+                />
+                <div className="product-form__image-placeholder">
+                  <span className="product-form__image-icon">📷</span>
+                  <span>Product Photo</span>
+                  <span className="product-form__image-hint">JPEG, PNG, GIF, WebP (max 5MB)</span>
+                </div>
+              </label>
+            )}
+          </div>
+        </div>
+
+        {/* 360° Image Upload */}
+        <div className="product-form__image-section">
+          <label className="product-form__label">360° View (Optional)</label>
+          <div className="product-form__image-upload">
+            {image360Preview ? (
+              <div className="product-form__image-preview product-form__image-preview--360">
+                <img src={image360Preview} alt="360° Preview" />
+                <button 
+                  type="button" 
+                  className="product-form__image-remove"
+                  onClick={removeImage360}
+                  aria-label="Remove 360° image"
+                >
+                  ×
+                </button>
+                <span className="product-form__360-badge">360°</span>
+              </div>
+            ) : (
+              <label className="product-form__image-dropzone product-form__image-dropzone--360">
+                <input
+                  type="file"
+                  accept="image/gif"
+                  onChange={handleImage360Change}
+                  disabled={isLoading}
+                />
+                <div className="product-form__image-placeholder">
+                  <span className="product-form__image-icon">🔄</span>
+                  <span>360° GIF</span>
+                  <span className="product-form__image-hint">GIF only (max 10MB)</span>
+                </div>
+              </label>
+            )}
+          </div>
         </div>
       </div>
 

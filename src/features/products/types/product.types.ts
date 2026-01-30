@@ -5,6 +5,7 @@ export interface Product {
   price: number;
   stock: number;
   image: string | null;
+  image360: string | null;
   categoryId: number;
   category?: {
     id: number;
