@@ -17,6 +17,7 @@ import ProductManagement from "../pages/admin/ProductManagement/ProductManagemen
 import Dashboard from "../pages/admin/Dashboard/Dashboard";
 import Orders from "../pages/Orders/Orders";
 import Checkout from "../pages/Checkout/Checkout";
+import ProductDetails from "../pages/ProductDetails";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
       <Route path={PATHS.LOGIN} element={<Login />} />
       <Route path={PATHS.REGISTER} element={<Register />} />
       <Route path={PATHS.PRODUCTS} element={<Products />} />
+      <Route path={PATHS.PRODUCT} element={<ProductDetails />} />
       <Route path={PATHS.CATEGORY_PRODUCTS} element={<Products />} />
       <Route path={PATHS.CATEGORY_DETAILS} element={<Categorys />} />
 
