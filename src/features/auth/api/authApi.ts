@@ -1,5 +1,6 @@
 import axiosInstance from '../../../api/axiosInstance';
 import { API_ENDPOINTS } from '../../../api/apiConfig';
+import type { User } from '../../../types';
 
 // TypeScript interfaces for type safety
 interface LoginCredentials {
@@ -16,23 +17,10 @@ interface RegisterData {
 interface AuthResponse {
   message: string;
   token: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    role: 'admin' | 'manager' | 'customer';
-  };
+  user: User;
 }
 
-/**
- * Auth API Service
- * Handles all authentication-related API calls
- */
 export const authApi = {
-  /**
-   * Login user
-   * POST /api/auth/login
-   */
   login: async (credentials: LoginCredentials) => {
     const response = await axiosInstance.post<AuthResponse>(
       API_ENDPOINTS.LOGIN,
@@ -41,10 +29,6 @@ export const authApi = {
     return response.data;
   },
 
-  /**
-   * Register new user
-   * POST /api/auth/register
-   */
   register: async (data: RegisterData) => {
     const response = await axiosInstance.post<AuthResponse>(
       API_ENDPOINTS.REGISTER,
@@ -53,19 +37,11 @@ export const authApi = {
     return response.data;
   },
 
-  /**
-   * Get current user info
-   * GET /api/auth/me
-   * Requires authentication token
-   */
   getMe: async () => {
     const response = await axiosInstance.get(API_ENDPOINTS.ME);
     return response.data;
   },
 
-  /**
-   * Logout (client-side only, clears token)
-   */
   logout: () => {
     localStorage.removeItem('token');
   }

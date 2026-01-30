@@ -2,10 +2,7 @@ import axiosInstance from '../../../api/axiosInstance';
 import { API_ENDPOINTS } from '../../../api/apiConfig';
 import type { UserRole } from '../types/admin.types';
 
-/*
- * User Admin API Service
- * Handles all admin user management API calls
- */
+/* User Admin API Service */
 
 // Response type for get all users
 interface UsersResponse {
@@ -18,9 +15,7 @@ interface UsersResponse {
 }
 
 export const userApi = {
-  /*
-   * Admin only
-   */
+  /* Admin only */
   getAll: async () => {
     const response = await axiosInstance.get<UsersResponse[]>(
       API_ENDPOINTS.ADMIN_USERS
