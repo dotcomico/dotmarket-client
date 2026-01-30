@@ -32,11 +32,11 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
   // Main image state
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(product?.image || null);
-  
+
   // 360° image state
   const [image360File, setImage360File] = useState<File | null>(null);
   const [image360Preview, setImage360Preview] = useState<string | null>(product?.image360 || null);
-  
+
   const [error, setError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Partial<FormState>>({});
 
@@ -64,7 +64,7 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     if (validationErrors[name as keyof FormState]) {
       setValidationErrors(prev => ({ ...prev, [name]: undefined }));
     }
@@ -110,14 +110,24 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
     }
   };
 
+  const [imageRemoved, setImageRemoved] = useState(false);
+  const [image360Removed, setImage360Removed] = useState(false);
+
+  // Update removeImage functions
   const removeImage = () => {
     setImageFile(null);
     setImagePreview(null);
+    if (isEditMode && product?.image) {
+      setImageRemoved(true);
+    }
   };
 
   const removeImage360 = () => {
     setImage360File(null);
     setImage360Preview(null);
+    if (isEditMode && product?.image360) {
+      setImage360Removed(true);
+    }
   };
 
   const validate = (): boolean => {
@@ -161,10 +171,15 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
 
     if (imageFile) {
       submitData.append('image', imageFile);
+    } else if (imageRemoved) {
+      // Signal backend to remove the image
+      submitData.append('removeImage', 'true');
     }
-    
+
     if (image360File) {
       submitData.append('image360', image360File);
+    } else if (image360Removed) {
+      submitData.append('removeImage360', 'true');
     }
 
     const result = await onSubmit(submitData);
@@ -191,8 +206,8 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
             {imagePreview ? (
               <div className="product-form__image-preview">
                 <img src={imagePreview} alt="Preview" />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="product-form__image-remove"
                   onClick={removeImage}
                   aria-label="Remove image"
@@ -225,8 +240,8 @@ export const ProductForm = ({ product, onSubmit, onCancel, isLoading = false }: 
             {image360Preview ? (
               <div className="product-form__image-preview product-form__image-preview--360">
                 <img src={image360Preview} alt="360° Preview" />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="product-form__image-remove"
                   onClick={removeImage360}
                   aria-label="Remove 360° image"
