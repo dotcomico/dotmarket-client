@@ -19,40 +19,38 @@ export const AdminSidebar = () => {
   const { logout } = useAuth();
 
   const navigationItems: NavItem[] = [
-    { 
-      id: 'dashboard', 
-      path: PATHS.ADMIN.DASHBOARD, 
-      icon: '📊', 
-      label: 'Dashboard', 
-      roles: ['admin', 'manager'] 
+    {
+      id: 'dashboard',
+      path: PATHS.ADMIN.DASHBOARD,
+      icon: '📊',
+      label: 'Dashboard',
+      roles: ['admin', 'manager']
     },
-    { 
-      id: 'categories', 
-      path: PATHS.ADMIN.CATEGORIES, 
-      icon: '🏷️', 
-      label: 'Categories', 
-      roles: ['admin', 'manager'] 
+    {
+      id: 'orders',
+      path: PATHS.ADMIN.ORDERS,
+      icon: '🛒',
+      label: 'Orders',
+      roles: ['admin', 'manager']
+    }, {
+      id: 'products',
+      path: PATHS.ADMIN.PRODUCTS,
+      icon: '📦',
+      label: 'Products',
+      roles: ['admin', 'manager']
+    }, {
+      id: 'categories',
+      path: PATHS.ADMIN.CATEGORIES,
+      icon: '🏷️',
+      label: 'Categories',
+      roles: ['admin', 'manager']
     },
-    { 
-      id: 'products', 
-      path: PATHS.ADMIN.PRODUCTS, 
-      icon: '📦', 
-      label: 'Products', 
-      roles: ['admin', 'manager'] 
-    },
-    { 
-      id: 'orders', 
-      path: PATHS.ADMIN.ORDERS, 
-      icon: '🛒', 
-      label: 'Orders', 
-      roles: ['admin', 'manager'] 
-    },
-    { 
-      id: 'users', 
-      path: PATHS.ADMIN.USERS, 
-      icon: '👥', 
-      label: 'Users', 
-      roles: ['admin'] 
+    {
+      id: 'users',
+      path: PATHS.ADMIN.USERS,
+      icon: '👥',
+      label: 'Users',
+      roles: ['admin']
     },
   ];
 
