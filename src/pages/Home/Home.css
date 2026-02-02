@@ -2,5 +2,6 @@
 	background-color: var(--primary);
 	min-height: 100vh;
 	overflow: auto;
-	 padding-top: var(--spacing-xl);
+	padding-top: var(--spacing-xl);
+	padding: var(--spacing-xl);
 }
