@@ -18,7 +18,11 @@
   color: var(--secondary-text);
   font-size: var(--font-size-sm);
 }
-
+.product-management-header__actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
 /* Primary Button */
 .btn-primary {
   display: flex;

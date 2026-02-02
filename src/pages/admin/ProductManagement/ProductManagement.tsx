@@ -4,10 +4,8 @@ import { useProductStore, productApi, type Product } from '../../../features/pro
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import { ProductForm } from '../../../features/products/components/ProductForm/ProductForm';
+import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
-/**
- * ProductManagement - Admin page for managing products
- */
 const ProductManagement = () => {
   const { products, fetchProducts, isLoading } = useProductStore();
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,11 +15,10 @@ const ProductManagement = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<Product | null>(null);
 
- useEffect(() => {
+  useEffect(() => {
     fetchProducts({ limit: 1000 });
-}, [fetchProducts]);
+  }, [fetchProducts]);
 
-  // Memoize categories to prevent recomputation on every render
   const categories = useMemo(() => {
     const uniqueCategories = new Set(
       products
@@ -31,16 +28,16 @@ const ProductManagement = () => {
     return ['all', ...Array.from(uniqueCategories)];
   }, [products]);
 
-  // Memoize filtered products
+  // filtered products
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
-      const matchesSearch = 
+      const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = 
-        selectedCategory === 'all' || 
+      const matchesCategory =
+        selectedCategory === 'all' ||
         product.category?.name === selectedCategory;
-      
+
       return matchesSearch && matchesCategory;
     });
   }, [products, searchQuery, selectedCategory]);
@@ -72,7 +69,7 @@ const ProductManagement = () => {
   // Handle form submission (create or update)
   const handleProductSubmit = useCallback(async (formData: FormData): Promise<{ success: boolean; error?: string }> => {
     setIsSubmitting(true);
-    
+
     try {
       if (editingProduct) {
         // Update existing product
@@ -81,17 +78,17 @@ const ProductManagement = () => {
         // Create new product
         await productApi.create(formData);
       }
-      
+
       // Refresh products list
       await fetchProducts();
       handleCloseModal();
-      
+
       return { success: true };
     } catch (error) {
       console.error('Failed to save product:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Failed to save product' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to save product'
       };
     } finally {
       setIsSubmitting(false);
@@ -106,7 +103,7 @@ const ProductManagement = () => {
   // Confirm and execute delete
   const handleConfirmDelete = useCallback(async () => {
     if (!deleteConfirm) return;
-    
+
     setIsSubmitting(true);
     try {
       await productApi.delete(deleteConfirm.id);
@@ -123,7 +120,7 @@ const ProductManagement = () => {
   return (
     <>
       <AdminHeader title="Product Management" />
-      
+
       <main className="admin-main">
         <div className="admin-card">
           {/* Header Section */}
@@ -132,13 +129,16 @@ const ProductManagement = () => {
               <h2>Product Catalog</h2>
               <p className="subtitle">{filteredProducts.length} products found</p>
             </div>
-            <button 
-              className="btn-primary"
-              onClick={handleOpenAddModal}
-            >
-              <span className="btn-icon">+</span>
-              New Product
-            </button>
+            <div className="product-management-header__actions">
+              <RefreshButton onClick={fetchProducts} isLoading={isLoading} />
+              <button
+                className="btn-primary"
+                onClick={handleOpenAddModal}
+              >
+                <span className="btn-icon">+</span>
+                New Product
+              </button>
+            </div>
           </div>
 
           {/* Filters Section */}
@@ -195,14 +195,14 @@ const ProductManagement = () => {
                 <tbody>
                   {filteredProducts.map(product => {
                     const stockStatus = getStockStatus(product.stock);
-                    
+
                     return (
                       <tr key={product.id}>
                         <td>
                           <div className="product-cell">
                             {product.image ? (
-                              <img 
-                                src={product.image} 
+                              <img
+                                src={product.image}
                                 alt={product.name}
                                 className="product-thumbnail"
                               />
@@ -273,7 +273,7 @@ const ProductManagement = () => {
             <div className="modal" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
-                <button 
+                <button
                   className="modal-close"
                   onClick={handleCloseModal}
                 >
@@ -298,7 +298,7 @@ const ProductManagement = () => {
             <div className="modal modal--small" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>Delete Product</h3>
-                <button 
+                <button
                   className="modal-close"
                   onClick={() => setDeleteConfirm(null)}
                 >

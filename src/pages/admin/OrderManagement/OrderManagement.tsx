@@ -9,9 +9,9 @@ import {
   ORDER_STATUS_OPTIONS
 } from '../../../features/orders/utils/orderUtils';
 import type { Order, OrderStatus } from '../../../features/orders/types/order.types';
-
 import './OrderManagement.css';
 import OrderDetailsModal from '../../../features/orders/components/OrderDetailsModal/OrderDetailsModal';
+import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
 const OrderManagement = () => {
   // Store Access
@@ -26,9 +26,6 @@ const OrderManagement = () => {
   const [statusFilter, setStatusFilter] = useState<'all' | OrderStatus>('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  /**
-   * Always fresh orders
-   */
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
@@ -100,14 +97,7 @@ const OrderManagement = () => {
               <p className="subtitle">{filteredOrders.length} orders found</p>
             </div>
 
-            {/* Manual Refresh Button */}
-            <button
-              className="btn btn--secondary"
-              onClick={handleRefresh}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Refreshing...' : '🔄 Refresh'}
-            </button>
+           <RefreshButton onClick={handleRefresh} isLoading={isLoading} />
           </div>
 
           <div className="filters-section">

@@ -5,8 +5,8 @@ import type { User, UserRole } from '../../../types';
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
 import { userApi } from '../../../features/admin/api/userApi';
 import './UserManagement.css';
+import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
-// Extended User type with timestamps for admin view
 interface AdminUser extends User {
   createdAt: string;
   ordersCount: number;
@@ -23,44 +23,46 @@ const UserManagement = () => {
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [showRoleModal, setShowRoleModal] = useState<AdminUser | null>(null);
 
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await userApi.getAll();
+      const mappedUsers: AdminUser[] = response.data.map((user) => ({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+        ordersCount: 0,
+        totalSpent: 0,
+        lastActive: user.updatedAt || user.createdAt,
+      }));
+      setUsers(mappedUsers);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await userApi.getAll();
-        const mappedUsers: AdminUser[] = response.data.map((user) => ({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          createdAt: user.createdAt,
-          ordersCount: 0,
-          totalSpent: 0,
-          lastActive: user.updatedAt || user.createdAt,
-        }));
-        setUsers(mappedUsers);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchUsers();
   }, []);
 
   // Filter users based on search and role
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+    const matchesSearch =
       user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-    
+
     return matchesSearch && matchesRole;
   });
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
       day: 'numeric',
       year: 'numeric'
     });
@@ -92,7 +94,7 @@ const UserManagement = () => {
   const handleRoleChange = async (userId: number, newRole: UserRole) => {
     try {
       await userApi.updateRole(userId, newRole);
-      setUsers(prev => prev.map(user => 
+      setUsers(prev => prev.map(user =>
         user.id === userId ? { ...user, role: newRole } : user
       ));
       setShowRoleModal(null);
@@ -116,7 +118,7 @@ const UserManagement = () => {
   return (
     <>
       <AdminHeader title="User Management" />
-      
+
       <main className="admin-main">
         {/* Stats Summary */}
         <div className="user-stats">
@@ -157,6 +159,7 @@ const UserManagement = () => {
               <h2>Users</h2>
               <p className="subtitle">{filteredUsers.length} users found</p>
             </div>
+            <RefreshButton onClick={fetchUsers} isLoading={isLoading} />
           </div>
 
           {/* Filters Section */}
@@ -275,7 +278,7 @@ const UserManagement = () => {
             <div className="modal modal--large" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>User Details</h3>
-                <button 
+                <button
                   className="modal-close"
                   onClick={() => setSelectedUser(null)}
                 >
@@ -312,7 +315,7 @@ const UserManagement = () => {
                       <span className="detail-value">{getRelativeTime(selectedUser.lastActive)}</span>
                     </div>
                   </div>
-                  
+
                   <div className="user-detail-section">
                     <h4>Activity</h4>
                     <div className="detail-row">
@@ -328,7 +331,7 @@ const UserManagement = () => {
                     <div className="detail-row">
                       <span className="detail-label">Avg. Order Value:</span>
                       <span className="detail-value">
-                        {selectedUser.ordersCount > 0 
+                        {selectedUser.ordersCount > 0
                           ? `$${(selectedUser.totalSpent / selectedUser.ordersCount).toFixed(2)}`
                           : '—'
                         }
@@ -347,7 +350,7 @@ const UserManagement = () => {
             <div className="modal" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3>Change User Role</h3>
-                <button 
+                <button
                   className="modal-close"
                   onClick={() => setShowRoleModal(null)}
                 >
@@ -367,9 +370,9 @@ const UserManagement = () => {
 
                 <div className="role-selection">
                   <label className="role-option">
-                    <input 
-                      type="radio" 
-                      name="role" 
+                    <input
+                      type="radio"
+                      name="role"
                       value="customer"
                       checked={showRoleModal.role === 'customer'}
                       onChange={() => handleRoleChange(showRoleModal.id, 'customer')}
@@ -384,9 +387,9 @@ const UserManagement = () => {
                   </label>
 
                   <label className="role-option">
-                    <input 
-                      type="radio" 
-                      name="role" 
+                    <input
+                      type="radio"
+                      name="role"
                       value="manager"
                       checked={showRoleModal.role === 'manager'}
                       onChange={() => handleRoleChange(showRoleModal.id, 'manager')}
@@ -401,9 +404,9 @@ const UserManagement = () => {
                   </label>
 
                   <label className="role-option">
-                    <input 
-                      type="radio" 
-                      name="role" 
+                    <input
+                      type="radio"
+                      name="role"
                       value="admin"
                       checked={showRoleModal.role === 'admin'}
                       onChange={() => handleRoleChange(showRoleModal.id, 'admin')}
