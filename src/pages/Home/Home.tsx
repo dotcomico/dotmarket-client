@@ -14,7 +14,7 @@ const Home = () => {
 
   return (
     <div className='Home'>
-      <CategoryList variant="grid" limit={9} showChildren={false} />
+      <CategoryList variant="grid" limit={100} showChildren={false} />
       <ProductGrid 
         products={products} 
         isLoading={isLoading}
