@@ -1,0 +1,62 @@
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--surface-color);
+  color: var(--secondary-text);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background-color: var(--surface-color-hover);
+  border-color: var(--secondary-text);
+  color: var(--primary-text);
+}
+
+.refresh-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Icon */
+.refresh-btn__icon {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+/* Spinning animation when loading */
+.refresh-btn--loading .refresh-btn__icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hide label on small screens */
+@media (max-width: 480px) {
+  .refresh-btn__label {
+    display: none;
+  }
+  
+  .refresh-btn {
+    padding: var(--spacing-sm);
+  }
+}
