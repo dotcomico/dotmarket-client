@@ -8,14 +8,20 @@ const Home = () => {
 
   useEffect(() => {
     if (products.length === 0) {
-      fetchProducts({ limit:1  });
+      fetchProducts({ limit: 1000 }); // Fetch all products
     }
   }, [products.length, fetchProducts]);
 
   return (
     <div className='Home'>
       <CategoryList variant="grid" limit={9} showChildren={false} />
-      <ProductGrid products={products} isLoading={isLoading} />
+      <ProductGrid 
+        products={products} 
+        isLoading={isLoading}
+        limit={20}
+        showMoreEnabled={true}
+        showMoreLabel="Load More Products"
+      />
     </div>
   );
 };
