@@ -24,7 +24,8 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
   return (
     <>
       <nav className="header-actions" aria-label="Main navigation">
-        <ThemeToggle />
+       {!isAuthenticated && <ThemeToggle />}
+       
 
         {isAuthenticated ? (
           <>
@@ -41,21 +42,6 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
               />
             </NavLink>
 
-            {/* Admin Dashboard Link - Only for admin/manager */}
-            {(user?.role === 'admin' || user?.role === 'manager') && (
-              <NavLink
-                to={PATHS.ADMIN.DASHBOARD}
-                className="icon-btn"
-                aria-label="Admin Dashboard"
-              >
-                <img
-                  src="https://img.icons8.com/material-outlined/24/000000/control-panel.png"
-                  alt=""
-                  aria-hidden="true"
-                />
-              </NavLink>
-            )}
-            
             {/* Cart Link */}
             <NavLink
               to={PATHS.CART}
@@ -74,7 +60,20 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
                 </span>
               )}
             </NavLink>
-
+            {/* Admin Dashboard Link - Only for admin/manager */}
+            {(user?.role === 'admin' || user?.role === 'manager') && (
+              <NavLink
+                to={PATHS.ADMIN.DASHBOARD}
+                className="icon-btn"
+                aria-label="Admin Dashboard"
+              >
+                <img
+                  src="https://img.icons8.com/material-outlined/24/000000/control-panel.png"
+                  alt=""
+                  aria-hidden="true"
+                />
+              </NavLink>
+            )}
             {/* Profile Dropdown with Popup */}
             {user && <ProfileDropdown user={user} onLogout={handleLogout} />}
           </>
