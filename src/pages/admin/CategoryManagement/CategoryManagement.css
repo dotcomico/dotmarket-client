@@ -1,0 +1,326 @@
+/* src/pages/admin/CategoryManagement/CategoryManagement.css */
+
+/* ============================================
+   Category Stats Grid
+   Reusing pattern from UserManagement
+   ============================================ */
+.category-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.category-stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  cursor: default;
+  transition: var(--transition-fast);
+}
+
+.category-stat-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.category-stat-card__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.category-stat-card--total .category-stat-card__icon {
+  background-color: rgba(0, 64, 255, 0.1);
+}
+
+.category-stat-card--parent .category-stat-card__icon {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.category-stat-card--child .category-stat-card__icon {
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.category-stat-card__content {
+  flex: 1;
+}
+
+.category-stat-card__value {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-text);
+  line-height: 1;
+}
+
+.category-stat-card__label {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+  margin-top: var(--spacing-xxs);
+}
+
+/* ============================================
+   Header Section
+   Reusing pattern from ProductManagement
+   ============================================ */
+.category-management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--spacing-xl);
+  gap: var(--spacing-lg);
+}
+
+.category-management-header__info h2 {
+  margin: 0 0 var(--spacing-xs) 0;
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+}
+
+/* ============================================
+   Error Message
+   ============================================ */
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  background-color: rgba(211, 47, 47, 0.1);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  color: var(--error);
+}
+
+.error-message__close {
+  background: none;
+  border: none;
+  color: var(--error);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* ============================================
+   Category Table Cell
+   ============================================ */
+.category-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.category-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  object-fit: cover;
+  flex-shrink: 0;
+  background-color: var(--surface-color);
+}
+
+.category-thumbnail--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  border: 1px solid var(--border-color);
+}
+
+.category-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.category-name {
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-text);
+}
+
+.category-icon-display {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+}
+
+/* Slug display */
+.category-slug {
+  font-family: 'Courier New', monospace;
+  font-size: var(--font-size-sm);
+  background-color: var(--surface-color);
+  padding: var(--spacing-xxs) var(--spacing-xs);
+  border-radius: var(--radius-sm);
+  color: var(--secondary-text);
+}
+
+/* Parent cell */
+.parent-cell {
+  color: var(--secondary-text);
+}
+
+/* Type Badge */
+.type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+}
+
+.type-badge--parent {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: var(--success);
+}
+
+.type-badge--child {
+  background-color: rgba(255, 152, 0, 0.15);
+  color: var(--warning);
+}
+
+/* ============================================
+   Action Buttons
+   Reusing pattern from ProductManagement
+   ============================================ */
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.action-btn--edit {
+  background-color: rgba(0, 64, 255, 0.1);
+  color: var(--tertiary);
+}
+
+.action-btn--edit:hover:not(:disabled) {
+  background-color: rgba(0, 64, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.action-btn--delete {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: var(--error);
+}
+
+.action-btn--delete:hover:not(:disabled) {
+  background-color: rgba(211, 47, 47, 0.2);
+  transform: scale(1.1);
+}
+
+/* ============================================
+   Delete Confirmation Modal
+   Reusing from ProductManagement
+   ============================================ */
+.delete-confirm {
+  text-align: center;
+  padding: var(--spacing-md) 0;
+}
+
+.delete-confirm__icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.delete-confirm__message {
+  font-size: var(--font-size-lg);
+  color: var(--primary-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.delete-confirm__warning {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+  margin-bottom: var(--spacing-xl);
+}
+
+.delete-confirm__actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+@media (max-width: 1024px) {
+  .category-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .category-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .category-management-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-table th:nth-child(2),
+  .admin-table td:nth-child(2),
+  .admin-table th:nth-child(3),
+  .admin-table td:nth-child(3) {
+    display: none;
+  }
+
+  .delete-confirm__actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-stat-card {
+    padding: var(--spacing-md);
+  }
+
+  .category-stat-card__icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+
+  .category-cell {
+    gap: var(--spacing-sm);
+  }
+
+  .category-thumbnail {
+    width: 32px;
+    height: 32px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}
