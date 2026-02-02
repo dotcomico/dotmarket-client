@@ -1,4 +1,3 @@
-import React from 'react';
 import './Fotter.css';
 import { UI_STRINGS } from '../../../../constants/uiStrings';
 
