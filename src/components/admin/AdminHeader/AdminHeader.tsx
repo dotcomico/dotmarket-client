@@ -5,6 +5,7 @@ import { useAuth } from '../../../features/auth/hooks/useAuth';
 import { PATHS } from '../../../routes/paths';
 import ThemeToggle from '../../ui/ThemeToggle/ThemeToggle';
 import './AdminHeader.css';
+import { useUIStore } from '../../../store/uiStore';
 
 interface AdminHeaderProps {
   title: string;
@@ -14,6 +15,8 @@ export const AdminHeader = ({ title }: AdminHeaderProps) => {
   const { user } = useAdminAccess();
   const { logout } = useAuth();
   const navigate = useNavigate();
+
+  const { isSidebarCollapsed } = useUIStore();
   
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -47,8 +50,8 @@ export const AdminHeader = ({ title }: AdminHeaderProps) => {
   if (!user) return null;
 
   return (
-    <div className="admin-header">
-      <h1 className="admin-header__title">{title}</h1>
+    <div className={`admin-header ${isSidebarCollapsed ? 'admin-header--sidebar-collapsed' : ''}`}>
+    <h1 className="admin-header__title">{title}</h1>
 
       <div className="admin-header__actions">
         {/* Reusing shared ThemeToggle component */}
