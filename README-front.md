@@ -2,15 +2,17 @@
 
 React + TypeScript frontend for the Supermarket e-commerce application.
 
-## 🚀 Quick Start
+## 🐳 Docker Hub
 
-### Run with Docker
+**https://hub.docker.com/r/dotcoms/supermarket-frontend**
+
 ```bash
 docker pull dotcoms/supermarket-frontend:latest
 docker run -p 80:80 dotcoms/supermarket-frontend:latest
 ```
 
-### Run Locally
+## 🚀 Quick Start (Local)
+
 ```bash
 cd frontend
 npm install
@@ -79,16 +81,6 @@ npm run dev      # Development server
 npm run build    # Production build
 npm run preview  # Preview build
 npm run lint     # Run ESLint
-```
-
-## 🐳 Docker
-
-```bash
-# Build
-docker build -t supermarket-frontend .
-
-# Run
-docker run -p 80:80 supermarket-frontend
 ```
 
 ## 🔐 Test Credentials
