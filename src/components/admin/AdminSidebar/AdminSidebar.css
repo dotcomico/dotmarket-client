@@ -1,6 +1,6 @@
 .admin-sidebar {
   width: 240px;
-  background-color: var(--surface-color);
+  background-color: var(--primary);
   color: var(--primary-text);
   height: 100vh;
   position: fixed;
@@ -101,4 +101,81 @@
 
 [data-theme="dark"] .admin-sidebar__logout:hover {
   background-color: rgba(211, 47, 47, 0.2);
+}
+
+/* Toggle Button */
+.admin-sidebar__toggle {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-sm);
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  color: var(--secondary-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+  z-index: 10;
+}
+
+.admin-sidebar__toggle:hover {
+  background-color: var(--surface-color-hover);
+  color: var(--primary-text);
+}
+
+/* Collapsed State */
+.admin-sidebar--collapsed {
+  width: 70px;
+}
+
+.admin-sidebar--collapsed .admin-sidebar__logo {
+  font-size: var(--font-size-xl);
+  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-xs);
+}
+
+.admin-sidebar--collapsed .admin-sidebar__item,
+.admin-sidebar--collapsed .admin-sidebar__logout {
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-xs);
+}
+
+.admin-sidebar--collapsed .admin-sidebar__icon {
+  width: auto;
+}
+
+/* Adjust AdminLayout when sidebar is collapsed */
+@media (min-width: 1025px) {
+  .admin-sidebar--collapsed ~ .admin-layout__content {
+    margin-left: 70px;
+    width: calc(100% - 70px);
+  }
+}
+
+/* Mobile: Force collapsed by default */
+@media (max-width: 1024px) {
+  .admin-sidebar {
+    width: 70px;
+  }
+  
+  .admin-sidebar__logo {
+    font-size: var(--font-size-xl);
+    text-align: center;
+    padding: var(--spacing-lg) var(--spacing-xs);
+  }
+  
+  .admin-sidebar__item,
+  .admin-sidebar__logout {
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xs);
+  }
+  
+  .admin-sidebar__item span:not(.admin-sidebar__icon),
+  .admin-sidebar__logout span:not(.admin-sidebar__icon) {
+    display: none;
+  }
 }

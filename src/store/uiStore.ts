@@ -4,6 +4,10 @@ interface UIState {
   isDark: boolean;
   toggleTheme: () => void;
   initializeTheme: () => void;
+  isSidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+  collapseSidebar: () => void;
+  expandSidebar: () => void;
 }
 
 // Initialize theme from localStorage BEFORE creating store
@@ -32,11 +36,20 @@ export const useUIStore = create<UIState>((set) => ({
     return { isDark: newMode };
   }),
 
-  // Manual initialization function (backup/optional)
   initializeTheme: () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
   },
+
+  // Sidebar methods
+  isSidebarCollapsed: false,
+  
+  toggleSidebar: () => set((state) => ({ 
+    isSidebarCollapsed: !state.isSidebarCollapsed 
+  })),
+  
+  collapseSidebar: () => set({ isSidebarCollapsed: true }),
+  expandSidebar: () => set({ isSidebarCollapsed: false }),
 }));

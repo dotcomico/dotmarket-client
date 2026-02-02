@@ -3,6 +3,8 @@ import { PATHS } from '../../../routes/paths';
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
 import { useAuth } from '../../../features/auth/hooks/useAuth';
 import './AdminSidebar.css';
+import { useUIStore } from '../../../store/uiStore';
+import { useEffect } from 'react';
 
 interface NavItem {
   id: string;
@@ -17,6 +19,23 @@ export const AdminSidebar = () => {
   const location = useLocation();
   const { user } = useAdminAccess();
   const { logout } = useAuth();
+
+   // collapse state
+  const { isSidebarCollapsed, toggleSidebar, collapseSidebar } = useUIStore();
+
+  // Auto-collapse on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1024) {
+        collapseSidebar();
+      }
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [collapseSidebar]);
+
 
   const navigationItems: NavItem[] = [
     {
@@ -57,10 +76,25 @@ export const AdminSidebar = () => {
   if (!user) return null;
 
   return (
-    <div className="admin-sidebar">
-      {/* Logo */}
+    <div className={`admin-sidebar ${isSidebarCollapsed ? 'admin-sidebar--collapsed' : ''}`}>
+      {/* Toggle button */}
+      <button 
+        className="admin-sidebar__toggle"
+        onClick={toggleSidebar}
+        aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          {isSidebarCollapsed ? (
+            <path d="M9 18l6-6-6-6" />
+          ) : (
+            <path d="M15 18l-6-6 6-6" />
+          )}
+        </svg>
+      </button>
+
+      {/* Logo - hide text when collapsed */}
       <div className="admin-sidebar__logo" onClick={() => navigate(PATHS.HOME)}>
-        🛒 DotMarket
+        {isSidebarCollapsed ? '🛒' : '🛒 DotMarket'}
       </div>
 
       {/* Navigation */}
@@ -75,18 +109,23 @@ export const AdminSidebar = () => {
               key={item.id}
               onClick={() => navigate(item.path)}
               className={`admin-sidebar__item ${isActive ? 'admin-sidebar__item--active' : ''}`}
+              title={isSidebarCollapsed ? item.label : undefined}
             >
               <span className="admin-sidebar__icon">{item.icon}</span>
-              <span>{item.label}</span>
+              {!isSidebarCollapsed && <span>{item.label}</span>}
             </button>
           );
         })}
       </nav>
 
       {/* Sign Out */}
-      <button onClick={logout} className="admin-sidebar__logout">
+      <button 
+        onClick={logout} 
+        className="admin-sidebar__logout"
+        title={isSidebarCollapsed ? 'Sign Out' : undefined}
+      >
         <span className="admin-sidebar__icon">🚪</span>
-        <span>Sign Out</span>
+        {!isSidebarCollapsed && <span>Sign Out</span>}
       </button>
     </div>
   );
