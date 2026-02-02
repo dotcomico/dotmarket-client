@@ -20,7 +20,7 @@ export const AdminSidebar = () => {
   const { user } = useAdminAccess();
   const { logout } = useAuth();
 
-   // collapse state
+  // collapse state
   const { isSidebarCollapsed, toggleSidebar, collapseSidebar } = useUIStore();
 
   // Auto-collapse on mobile
@@ -77,8 +77,8 @@ export const AdminSidebar = () => {
 
   return (
     <div className={`admin-sidebar ${isSidebarCollapsed ? 'admin-sidebar--collapsed' : ''}`}>
-      {/* Toggle button */}
-      <button 
+      {/* 🆕 Toggle button */}
+      <button
         className="admin-sidebar__toggle"
         onClick={toggleSidebar}
         aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -92,7 +92,7 @@ export const AdminSidebar = () => {
         </svg>
       </button>
 
-      {/* Logo - hide text when collapsed */}
+      {/* 🆕 Brand logo instead of Dashboard */}
       <div className="admin-sidebar__logo" onClick={() => navigate(PATHS.HOME)}>
         {isSidebarCollapsed ? '🛒' : '🛒 DotMarket'}
       </div>
@@ -119,8 +119,8 @@ export const AdminSidebar = () => {
       </nav>
 
       {/* Sign Out */}
-      <button 
-        onClick={logout} 
+      <button
+        onClick={logout}
         className="admin-sidebar__logout"
         title={isSidebarCollapsed ? 'Sign Out' : undefined}
       >
