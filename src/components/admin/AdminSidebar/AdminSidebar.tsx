@@ -27,6 +27,13 @@ export const AdminSidebar = () => {
       roles: ['admin', 'manager'] 
     },
     { 
+      id: 'categories', 
+      path: PATHS.ADMIN.CATEGORIES, 
+      icon: '🏷️', 
+      label: 'Categories', 
+      roles: ['admin', 'manager'] 
+    },
+    { 
       id: 'products', 
       path: PATHS.ADMIN.PRODUCTS, 
       icon: '📦', 

@@ -29,18 +29,18 @@ export interface CategoryDetail extends Category {
 }
 
 export const categoryApi = {
-  getTree: () => 
+  getTree: () =>
     axiosInstance.get<Category[]>(API_ENDPOINTS.CATEGORIES_TREE),
-  
-  getAll: () => 
+
+  getAll: () =>
     axiosInstance.get<Category[]>(API_ENDPOINTS.CATEGORIES),
-  
-  getById: (id: number) => 
+
+  getById: (id: number) =>
     axiosInstance.get<Category>(API_ENDPOINTS.CATEGORY_BY_ID(id)),
-  
+
   getBySlug: (slug: string) =>
     axiosInstance.get<CategoryDetail>(`/categories/${slug}`),
-  
+
   getProducts: (slug: string, params?: {
     page?: number;
     limit?: number;
@@ -48,5 +48,17 @@ export const categoryApi = {
     maxPrice?: number;
     search?: string;
   }) =>
-    axiosInstance.get<CategoryProductsResponse>(`/categories/${slug}/products`, { params })
+    axiosInstance.get<CategoryProductsResponse>(`/categories/${slug}/products`, { params }),
+  create: (formData: FormData) =>
+    axiosInstance.post<Category>(API_ENDPOINTS.CATEGORIES, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+
+  update: (id: number, formData: FormData) =>
+    axiosInstance.put<Category>(API_ENDPOINTS.CATEGORY_BY_ID(id), formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    }),
+
+  delete: (id: number) =>
+    axiosInstance.delete(API_ENDPOINTS.CATEGORY_BY_ID(id))
 };
