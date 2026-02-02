@@ -53,9 +53,7 @@ export const ProfileSettings = ({ user }: ProfileSettingsProps) => {
 
     try {
       // TODO: Implement API call to update user profile
-      // const response = await userApi.updateProfile(formData);
       
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
