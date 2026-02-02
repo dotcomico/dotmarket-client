@@ -35,10 +35,18 @@ const CategoryManagement = () => {
         fetchCategories();
     }, [fetchCategories]);
 
-    // Get flattened categories list for display
-    const flatCategories = useMemo(() => getFlatCategories(), [getFlatCategories]);
-    const parentCategories = useMemo(() => getParentCategories(), [getParentCategories]);
-    const stats = useMemo(() => getCategoryStats(), [getCategoryStats]);
+    const flatCategories = useMemo(() => {
+        return getFlatCategories();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [categories, getFlatCategories]);
+
+    const parentCategories = useMemo(() => {
+        return getParentCategories();
+    }, [getParentCategories]);
+
+    const stats = useMemo(() => {
+        return getCategoryStats();
+    }, [getCategoryStats]);
 
     // Filtered categories based on search
     const filteredCategories = useMemo(() => {
