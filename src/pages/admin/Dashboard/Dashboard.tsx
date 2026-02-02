@@ -5,26 +5,18 @@ import { useOrderStore } from '../../../store/orderStore';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import { DashboardStats, LowStockAlert, QuickStatsGrid, RecentOrdersTable } from '../../../features/admin';
 
-/**
- * Admin Dashboard - Main overview page
- * 
- * Note: Order fetching is delegated to RecentOrdersTable to avoid double-fetch.
- * Dashboard only reads from the store state that RecentOrdersTable populates.
- */
 const Dashboard = () => {
   const { products, fetchProducts } = useProductStore();
   
-  // Access store state only - RecentOrdersTable handles fetching
   const orders = useOrderStore((state) => state.orders);
 
-  // Fetch products on mount (only if empty)
+  // Fetch products 
   useEffect(() => {
     if (products.length === 0) {
       fetchProducts();
     }
   }, [products.length, fetchProducts]);
 
-  // Calculate stats using useMemo - derived from store state
   const stats = useMemo(() => {
     const lowStockCount = products.filter(p => p.stock < 10).length;
     const inventoryValue = products.reduce((sum, p) => sum + (p.price * p.stock), 0);

@@ -1,4 +1,3 @@
-// src/pages/admin/CategoryManagement/CategoryManagement.tsx
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './CategoryManagement.css';
 import { useCategoryStore } from '../../../features/categories/categoryStore';
@@ -7,17 +6,6 @@ import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import { CategoryForm } from '../../../features/categories/components/CategoryForm/CategoryForm';
 import type { Category } from '../../../features/categories/types/category.types';
 
-/**
- * CategoryManagement - Admin page for managing product categories
- * 
- * Features:
- * - View all categories in a hierarchical tree
- * - Search and filter categories
- * - Create, edit, and delete categories
- * - Visual parent-child relationships
- * 
- * Reusing patterns from ProductManagement for consistency
- */
 const CategoryManagement = () => {
   // Store
   const {

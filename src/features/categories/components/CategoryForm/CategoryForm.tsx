@@ -1,4 +1,3 @@
-// src/features/categories/components/CategoryForm/CategoryForm.tsx
 import { useState, useEffect, useMemo } from 'react';
 import type { Category } from '../../types/category.types';
 import './CategoryForm.css';
@@ -97,7 +96,9 @@ export const CategoryForm = ({
     const formData = new FormData();
     formData.append('name', name.trim());
     
-    if (parentId) {
+    if (isEditing) {
+      formData.append('parentId', parentId);
+    } else if (parentId) {
       formData.append('parentId', parentId);
     }
     
@@ -120,7 +121,6 @@ export const CategoryForm = ({
     }
   };
 
-  // 3. OPTIMIZATION: Memoize this filter so it doesn't run on every keystroke
   const availableParents = useMemo(() => {
     return parentCategories.filter(
       cat => !category || cat.id !== category.id
