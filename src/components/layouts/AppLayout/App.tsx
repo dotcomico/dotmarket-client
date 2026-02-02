@@ -7,15 +7,15 @@ import Header from "./Header/Header";
 import { useAuthStore } from "../../../store/authStore";
 import { authApi } from "../../../features/auth/api/authApi";
 import { isAxiosError } from "axios";
+import { useScrollToTop } from "../../../hooks/useScrollToTop";
 
-/**
- * Inner component that has access to router context
- * Conditionally renders Header/Footer based on current route
- */
+
 const AppContent = () => {
   const location = useLocation();
   const { isAuthenticated, updateUser, logout } = useAuthStore();
   
+    useScrollToTop();
+
   // Check if current route is an admin route
   const isAdminRoute = location.pathname.startsWith('/admin');
 
