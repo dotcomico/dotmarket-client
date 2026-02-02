@@ -74,7 +74,7 @@ const Products = () => {
         setCategoryInfo(null);
         setCategoryDetail(null);
         fetchProducts({
-          search: searchTerm,
+          search: searchTerm, limit:30, page: 1,
           categoryId: categoryId ? parseInt(categoryId) : undefined
         });
       }
@@ -196,6 +196,9 @@ const Products = () => {
         products={products}
         isLoading={isLoading}
         emptyMessage={getEmptyMessage()}
+        limit={20}
+        showMoreEnabled={true}
+        showMoreLabel="Load More Products"
       />
     </div>
   );
