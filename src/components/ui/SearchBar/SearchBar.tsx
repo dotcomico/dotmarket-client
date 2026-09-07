@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { UI_STRINGS } from '../../../constants/uiStrings';
 import './SearchBar.css';
-import { useAppNavigation } from '../../../hooks/useAppNavigation ';
+import { useAppNavigation } from '../../../hooks/useAppNavigation';
 
 type SearchBarProps = {
   onFocusChange?: (focused: boolean) => void;
