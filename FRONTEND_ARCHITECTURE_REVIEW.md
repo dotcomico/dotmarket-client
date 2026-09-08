@@ -119,8 +119,10 @@ Do this **one page per PR**, in size order, so each is easy to review:
    split into `features/categories/components/CategoryTable`,
    `CategoryFormModal`, and `DeleteCategoryModal`; page keeps only store
    calls, local UI state, and composition.
-   **Still open: `ProductManagement.tsx` (342)** — same pattern (`Table` +
-   `Modal(s)` extracted, page stays thin).
+   ✅ **Done (ProductManagement).** Split into
+   `features/products/components/ProductTable`, `ProductFormModal`, and
+   `DeleteProductModal`; page keeps only store calls, local UI state
+   (`getStockStatus`, filters), and composition.
 4. `ProductDetails.tsx` (277) / `CategoryForm.tsx` (262) → lower priority,
    revisit only if touched for other reasons.
 
