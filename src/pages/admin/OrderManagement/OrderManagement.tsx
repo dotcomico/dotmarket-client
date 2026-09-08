@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
-import { useOrderStore } from '../../../store/orderStore';
+import { useOrders } from '../../../features/orders/hooks/useOrders';
 import { formatDate } from '../../../utils/formatters';
 import {
   getStatusClass,
@@ -15,12 +15,8 @@ import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton
 import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 
 const OrderManagement = () => {
-  // Store Access
-  const orders = useOrderStore((state) => state.orders);
-  const isLoading = useOrderStore((state) => state.isLoading);
-  const error = useOrderStore((state) => state.error);
-  const fetchOrders = useOrderStore((state) => state.fetchOrders);
-  const updateOrderStatus = useOrderStore((state) => state.updateOrderStatus);
+  // Hook (wraps useOrderStore)
+  const { orders, isLoading, error, fetchOrders, updateOrderStatus, filterOrders, getOrderStats } = useOrders();
 
   // Local State
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,27 +28,13 @@ const OrderManagement = () => {
   }, [fetchOrders]);
 
   // Derived Data: Filtering
-  const filteredOrders = useMemo(() => {
-    return orders.filter(order => {
-      const matchesSearch =
-        order.id.toString().includes(searchQuery) ||
-        order.User?.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.User?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.address?.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-
-      return matchesSearch && matchesStatus;
-    });
-  }, [orders, searchQuery, statusFilter]);
+  const filteredOrders = useMemo(
+    () => filterOrders(searchQuery, statusFilter),
+    [filterOrders, searchQuery, statusFilter]
+  );
 
   // Derived Data: Statistics
-  const stats = useMemo(() => ({
-    total: orders.length,
-    pending: orders.filter(o => o.status === 'pending').length,
-    processing: orders.filter(o => o.status === 'shipped').length,
-    completed: orders.filter(o => o.status === 'paid').length,
-  }), [orders]);
+  const stats = useMemo(() => getOrderStats(), [getOrderStats]);
 
   // Handlers
   const handleStatusChange = useCallback(async (orderId: number, newStatus: OrderStatus) => {
