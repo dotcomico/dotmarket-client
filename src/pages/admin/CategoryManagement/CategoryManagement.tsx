@@ -1,10 +1,14 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './CategoryManagement.css';
-import { useCategoryStore } from '../../../features/categories/categoryStore';
+import {
+    useCategoryStore,
+    CategoryTable,
+    CategoryFormModal,
+    DeleteCategoryModal
+} from '../../../features/categories';
+import type { Category } from '../../../features/categories';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
-import { CategoryForm } from '../../../features/categories/components/CategoryForm/CategoryForm';
-import type { Category } from '../../../features/categories/types/category.types';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 
@@ -65,6 +69,11 @@ const CategoryManagement = () => {
         if (!parentId) return '—';
         const parent = flatCategories.find(c => c.id === parentId);
         return parent?.name || '—';
+    }, [flatCategories]);
+
+    // Check if category has children (can't delete)
+    const hasChildren = useCallback((categoryId: number) => {
+        return flatCategories.some(c => c.parentId === categoryId);
     }, [flatCategories]);
 
     // Modal handlers
@@ -134,11 +143,6 @@ const CategoryManagement = () => {
             setIsSubmitting(false);
         }
     }, [deleteConfirm, deleteCategory]);
-
-    // Check if category has children (can't delete)
-    const hasChildren = useCallback((categoryId: number) => {
-        return flatCategories.some(c => c.parentId === categoryId);
-    }, [flatCategories]);
 
     return (
         <>
@@ -222,153 +226,33 @@ const CategoryManagement = () => {
                             </p>
                         </div>
                     ) : (
-                        <div className="table-wrapper">
-                            <table className="admin-table">
-                                <thead>
-                                    <tr>
-                                        <th>Category</th>
-                                        <th>Slug</th>
-                                        <th>Parent</th>
-                                        <th>Type</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredCategories.map(category => (
-                                        <tr key={category.id}>
-                                            <td>
-                                                <div className="category-cell">
-                                                    {category.image ? (
-                                                        <img
-                                                            src={category.image}
-                                                            alt={category.name}
-                                                            className="category-thumbnail"
-                                                        />
-                                                    ) : (
-                                                        <div className="category-thumbnail category-thumbnail--placeholder">
-                                                            {category.icon || '📁'}
-                                                        </div>
-                                                    )}
-                                                    <div className="category-info">
-                                                        <div className="category-name">{category.name}</div>
-                                                        {category.icon && (
-                                                            <div className="category-icon-display">{category.icon}</div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <code className="category-slug">{category.slug}</code>
-                                            </td>
-                                            <td className="parent-cell">
-                                                {getParentName(category.parentId)}
-                                            </td>
-                                            <td>
-                                                <span className={`type-badge ${category.parentId ? 'type-badge--child' : 'type-badge--parent'}`}>
-                                                    {category.parentId ? 'Subcategory' : 'Parent'}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div className="action-buttons">
-                                                    <button
-                                                        className="action-btn action-btn--edit"
-                                                        onClick={() => handleEdit(category)}
-                                                        title="Edit"
-                                                    >
-                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                                        </svg>
-                                                    </button>
-                                                    <button
-                                                        className="action-btn action-btn--delete"
-                                                        onClick={() => handleDeleteClick(category)}
-                                                        title={hasChildren(category.id) ? "Cannot delete: has subcategories" : "Delete"}
-                                                        disabled={hasChildren(category.id)}
-                                                    >
-                                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                            <polyline points="3 6 5 6 21 6" />
-                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                        <CategoryTable
+                            categories={filteredCategories}
+                            getParentName={getParentName}
+                            hasChildren={hasChildren}
+                            onEdit={handleEdit}
+                            onDelete={handleDeleteClick}
+                        />
                     )}
                 </div>
 
-                {/* Add/Edit Category Modal */}
                 {showCategoryModal && (
-                    <div className="modal-overlay" onClick={handleCloseModal}>
-                        <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <div className="modal-header">
-                                <h3>{editingCategory ? 'Edit Category' : 'Add New Category'}</h3>
-                                <button
-                                    className="modal-close"
-                                    onClick={handleCloseModal}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <CategoryForm
-                                    category={editingCategory}
-                                    parentCategories={parentCategories}
-                                    onSubmit={handleCategorySubmit}
-                                    onCancel={handleCloseModal}
-                                    isLoading={isSubmitting}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <CategoryFormModal
+                        category={editingCategory}
+                        parentCategories={parentCategories}
+                        isSubmitting={isSubmitting}
+                        onSubmit={handleCategorySubmit}
+                        onClose={handleCloseModal}
+                    />
                 )}
 
-                {/* Delete Confirmation Modal */}
                 {deleteConfirm && (
-                    <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
-                        <div className="modal modal--small" onClick={(e) => e.stopPropagation()}>
-                            <div className="modal-header">
-                                <h3>Delete Category</h3>
-                                <button
-                                    className="modal-close"
-                                    onClick={() => setDeleteConfirm(null)}
-                                >
-                                    ×
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <div className="delete-confirm">
-                                    <div className="delete-confirm__icon">🗑️</div>
-                                    <p className="delete-confirm__message">
-                                        Are you sure you want to delete <strong>"{deleteConfirm.name}"</strong>?
-                                    </p>
-                                    <p className="delete-confirm__warning">
-                                        This action cannot be undone. Products in this category will become uncategorized.
-                                    </p>
-                                    <div className="delete-confirm__actions">
-                                        <button
-                                            className="btn-secondary"
-                                            onClick={() => setDeleteConfirm(null)}
-                                            disabled={isSubmitting}
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            className="btn-danger"
-                                            onClick={handleConfirmDelete}
-                                            disabled={isSubmitting}
-                                        >
-                                            {isSubmitting ? 'Deleting...' : 'Delete'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <DeleteCategoryModal
+                        category={deleteConfirm}
+                        isDeleting={isSubmitting}
+                        onConfirm={handleConfirmDelete}
+                        onClose={() => setDeleteConfirm(null)}
+                    />
                 )}
             </main>
         </>

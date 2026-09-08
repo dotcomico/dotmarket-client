@@ -112,11 +112,15 @@ Do this **one page per PR**, in size order, so each is easy to review:
      extracted children still pick it up). Note the duplicated
      `.admin-table` / `.modal-overlay` blocks across all 5 admin
      stylesheets — worth its own step after 6.3.
-2. `ProductForm.tsx` (396 lines) → split form sections (basic info / pricing /
-   images / category) into subcomponents if the form keeps growing; at minimum
-   extract validation into a small helper.
-3. `CategoryManagement.tsx` (379) / `ProductManagement.tsx` (342) → same
-   pattern as step 6.1: `Table` + `Modal(s)` extracted, page stays thin.
+2. ✅ **Done.** `ProductForm.tsx` (396 lines) split into `ProductForm.tsx` +
+   `ProductFormFields.tsx` + an upload piece, with validation extracted to
+   `features/products/utils/productFormValidation.ts`.
+3. ✅ **Done (CategoryManagement).** `CategoryManagement.tsx` (377 → 262 lines)
+   split into `features/categories/components/CategoryTable`,
+   `CategoryFormModal`, and `DeleteCategoryModal`; page keeps only store
+   calls, local UI state, and composition.
+   **Still open: `ProductManagement.tsx` (342)** — same pattern (`Table` +
+   `Modal(s)` extracted, page stays thin).
 4. `ProductDetails.tsx` (277) / `CategoryForm.tsx` (262) → lower priority,
    revisit only if touched for other reasons.
 

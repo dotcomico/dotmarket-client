@@ -1,7 +1,11 @@
 export { CategoryCarousel } from './components/CategoryCarousel/CategoryCarousel';
 export { CategoryNav } from './components/CategoryNav/CategoryNav';
-export { CategoryList } from './components/CategoryList/CategoryList'; 
+export { CategoryList } from './components/CategoryList/CategoryList';
 export { CategoryCard } from './components/CategoryCard/CategoryCard';
+export { CategoryForm } from './components/CategoryForm/CategoryForm';
+export { CategoryTable } from './components/CategoryTable/CategoryTable';
+export { CategoryFormModal } from './components/CategoryFormModal/CategoryFormModal';
+export { DeleteCategoryModal } from './components/DeleteCategoryModal/DeleteCategoryModal';
 export { useCategoryStore } from './categoryStore';
 export { flattenCategoryTree } from './utils/categoryTree';
 export type { Category, CategoryState } from './types/category.types';
