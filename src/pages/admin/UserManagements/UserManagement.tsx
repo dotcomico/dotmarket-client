@@ -4,6 +4,7 @@ import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import type { User, UserRole } from '../../../types';
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
 import { userApi } from '../../../features/admin/api/userApi';
+import { getRelativeTime as getRelativeTimeShared } from '../../../utils/formatters';
 import './UserManagement.css';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
@@ -68,19 +69,9 @@ const UserManagement = () => {
     });
   };
 
-  const getRelativeTime = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return formatDate(dateString);
-  };
+  // Fallback to this page's own formatDate (shows year, not time) for the
+  // >=7-day case, so output stays identical to before the dedupe.
+  const getRelativeTime = (dateString: string) => getRelativeTimeShared(dateString, formatDate);
 
   const getRoleBadgeClass = (role: UserRole) => {
     const classes: Record<UserRole, string> = {
