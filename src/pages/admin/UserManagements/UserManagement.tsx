@@ -1,64 +1,28 @@
 import { useState, useEffect } from 'react';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
-import type { User, UserRole } from '../../../types';
+import type { AdminUser, UserRole } from '../../../features/admin/types/admin.types';
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
-import { userApi } from '../../../features/admin/api/userApi';
+import { useUsers } from '../../../features/admin/hooks/useUsers';
 import { getRelativeTime as getRelativeTimeShared } from '../../../utils/formatters';
 import './UserManagement.css';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
-interface AdminUser extends User {
-  createdAt: string;
-  ordersCount: number;
-  totalSpent: number;
-  lastActive: string;
-}
-
 const UserManagement = () => {
   const { isAdmin } = useAdminAccess();
-  const [users, setUsers] = useState<AdminUser[]>([]);
+  const { isLoading, error, loadUsers, refreshUsers, changeRole, filterUsers, getStats } = useUsers();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | UserRole>('all');
-  const [isLoading, setIsLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
   const [showRoleModal, setShowRoleModal] = useState<AdminUser | null>(null);
 
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    try {
-      const response = await userApi.getAll();
-      const mappedUsers: AdminUser[] = response.data.map((user) => ({
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-        createdAt: user.createdAt,
-        ordersCount: 0,
-        totalSpent: 0,
-        lastActive: user.updatedAt || user.createdAt,
-      }));
-      setUsers(mappedUsers);
-    } catch (error) {
-      console.error('Failed to fetch users:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    loadUsers();
+  }, [loadUsers]);
 
-  // Filter users based on search and role
-  const filteredUsers = users.filter(user => {
-    const matchesSearch =
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-
-    return matchesSearch && matchesRole;
-  });
+  const filteredUsers = filterUsers(searchQuery, roleFilter);
+  const stats = getStats();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -83,27 +47,16 @@ const UserManagement = () => {
   };
 
   const handleRoleChange = async (userId: number, newRole: UserRole) => {
-    try {
-      await userApi.updateRole(userId, newRole);
-      setUsers(prev => prev.map(user =>
-        user.id === userId ? { ...user, role: newRole } : user
-      ));
+    const result = await changeRole(userId, newRole);
+    if (result.success) {
       setShowRoleModal(null);
-    } catch (error) {
-      console.error('Failed to update role:', error);
+    } else {
+      console.error('Failed to update role:', result.error);
     }
   };
 
   const handleViewDetails = (user: AdminUser) => {
     setSelectedUser(user);
-  };
-
-  // Calculate summary stats
-  const stats = {
-    total: users.length,
-    admins: users.filter(u => u.role === 'admin').length,
-    managers: users.filter(u => u.role === 'manager').length,
-    customers: users.filter(u => u.role === 'customer').length,
   };
 
   return (
@@ -150,7 +103,7 @@ const UserManagement = () => {
               <h2>Users</h2>
               <p className="subtitle">{filteredUsers.length} users found</p>
             </div>
-            <RefreshButton onClick={fetchUsers} isLoading={isLoading} />
+            <RefreshButton onClick={refreshUsers} isLoading={isLoading} />
           </div>
 
           {/* Filters Section */}
@@ -176,8 +129,15 @@ const UserManagement = () => {
             </select>
           </div>
 
+          {error && (
+            <div className="error-message">
+              <span>⚠️ {error}</span>
+              <button onClick={refreshUsers} className="btn-link">Retry</button>
+            </div>
+          )}
+
           {/* Users Table */}
-          {isLoading ? (
+          {isLoading && filteredUsers.length === 0 ? (
             <div className="loading-state">
               <div className="spinner" />
               <p>Loading users...</p>
@@ -221,12 +181,12 @@ const UserManagement = () => {
                           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                         </span>
                       </td>
-                      <td className="orders-cell">{user.ordersCount}</td>
+                      <td className="orders-cell">{user.ordersCount ?? 0}</td>
                       <td className="spent-cell">
-                        {user.totalSpent > 0 ? `$${user.totalSpent.toFixed(2)}` : '—'}
+                        {(user.totalSpent ?? 0) > 0 ? `$${(user.totalSpent ?? 0).toFixed(2)}` : '—'}
                       </td>
                       <td className="date-cell">{formatDate(user.createdAt)}</td>
-                      <td className="activity-cell">{getRelativeTime(user.lastActive)}</td>
+                      <td className="activity-cell">{getRelativeTime(user.lastActive ?? user.createdAt)}</td>
                       <td>
                         <div className="action-buttons">
                           <button
@@ -303,7 +263,7 @@ const UserManagement = () => {
                     </div>
                     <div className="detail-row">
                       <span className="detail-label">Last Active:</span>
-                      <span className="detail-value">{getRelativeTime(selectedUser.lastActive)}</span>
+                      <span className="detail-value">{getRelativeTime(selectedUser.lastActive ?? selectedUser.createdAt)}</span>
                     </div>
                   </div>
 
@@ -311,19 +271,19 @@ const UserManagement = () => {
                     <h4>Activity</h4>
                     <div className="detail-row">
                       <span className="detail-label">Total Orders:</span>
-                      <span className="detail-value">{selectedUser.ordersCount}</span>
+                      <span className="detail-value">{selectedUser.ordersCount ?? 0}</span>
                     </div>
                     <div className="detail-row">
                       <span className="detail-label">Total Spent:</span>
                       <span className="detail-value detail-value--highlight">
-                        ${selectedUser.totalSpent.toFixed(2)}
+                        ${(selectedUser.totalSpent ?? 0).toFixed(2)}
                       </span>
                     </div>
                     <div className="detail-row">
                       <span className="detail-label">Avg. Order Value:</span>
                       <span className="detail-value">
-                        {selectedUser.ordersCount > 0
-                          ? `$${(selectedUser.totalSpent / selectedUser.ordersCount).toFixed(2)}`
+                        {(selectedUser.ordersCount ?? 0) > 0
+                          ? `$${((selectedUser.totalSpent ?? 0) / (selectedUser.ordersCount ?? 1)).toFixed(2)}`
                           : '—'
                         }
                       </span>
