@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './CategoryManagement.css';
 import {
-    useCategoryStore,
+    useCategories,
     CategoryTable,
     CategoryFormModal,
     DeleteCategoryModal
@@ -13,7 +13,7 @@ import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton
 import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 
 const CategoryManagement = () => {
-    // Store
+    // Hook (wraps useCategoryStore)
     const {
         categories,
         isLoading,
@@ -25,8 +25,11 @@ const CategoryManagement = () => {
         getFlatCategories,
         getParentCategories,
         getCategoryStats,
+        filterCategories,
+        getParentName: getParentNameFrom,
+        hasChildren: hasChildrenFrom,
         clearError
-    } = useCategoryStore();
+    } = useCategories();
 
     // Local state
     const [searchQuery, setSearchQuery] = useState('');
@@ -54,27 +57,22 @@ const CategoryManagement = () => {
     }, [getCategoryStats]);
 
     // Filtered categories based on search
-    const filteredCategories = useMemo(() => {
-        if (!searchQuery.trim()) return flatCategories;
-
-        const query = searchQuery.toLowerCase();
-        return flatCategories.filter(cat =>
-            cat.name.toLowerCase().includes(query) ||
-            cat.slug.toLowerCase().includes(query)
-        );
-    }, [flatCategories, searchQuery]);
+    const filteredCategories = useMemo(
+        () => filterCategories(flatCategories, searchQuery),
+        [filterCategories, flatCategories, searchQuery]
+    );
 
     // Get parent name for display
-    const getParentName = useCallback((parentId: number | null) => {
-        if (!parentId) return '—';
-        const parent = flatCategories.find(c => c.id === parentId);
-        return parent?.name || '—';
-    }, [flatCategories]);
+    const getParentName = useCallback(
+        (parentId: number | null) => getParentNameFrom(flatCategories, parentId),
+        [flatCategories, getParentNameFrom]
+    );
 
     // Check if category has children (can't delete)
-    const hasChildren = useCallback((categoryId: number) => {
-        return flatCategories.some(c => c.parentId === categoryId);
-    }, [flatCategories]);
+    const hasChildren = useCallback(
+        (categoryId: number) => hasChildrenFrom(flatCategories, categoryId),
+        [flatCategories, hasChildrenFrom]
+    );
 
     // Modal handlers
     const handleOpenAddModal = useCallback(() => {
