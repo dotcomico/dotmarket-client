@@ -1,15 +1,19 @@
-/* Stat Tile color variants (base tile layout lives in shared StatTile.css) */
-.order-stat-card--pending {
+/* Stat Tile color variants (base tile layout lives in shared StatTile.css).
+   Chained onto .stat-tile so these outrank the shared base rules on
+   specificity rather than on stylesheet order — this page imports its CSS
+   before StatTile's, so plain .order-stat-card--* selectors would tie and
+   lose their border-color to .stat-tile--clickable's border shorthand. */
+.stat-tile.order-stat-card--pending {
   border-color: rgba(237, 108, 2, 0.3);
   background: linear-gradient(135deg, rgba(237, 108, 2, 0.05) 0%, var(--surface-color) 100%);
 }
 
-.order-stat-card--processing {
+.stat-tile.order-stat-card--processing {
   border-color: rgba(0, 64, 255, 0.3);
   background: linear-gradient(135deg, rgba(0, 64, 255, 0.05) 0%, var(--surface-color) 100%);
 }
 
-.order-stat-card--completed {
+.stat-tile.order-stat-card--completed {
   border-color: rgba(46, 125, 50, 0.3);
   background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, var(--surface-color) 100%);
 }
