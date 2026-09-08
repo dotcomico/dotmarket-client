@@ -32,9 +32,9 @@ into the path (`'../../../hooks/useAppNavigation '`). This currently "works"
 only because of Windows' lenient path resolution — it is a real risk on the
 Linux-based Docker/nginx build this project ships with.
 
-- [ ] Rename `useAppNavigation .ts` → `useAppNavigation.ts`
-- [ ] Fix the import in `SearchBar.tsx`
-- [ ] Rebuild once (`npm run build`) to confirm
+- [x] Rename `useAppNavigation .ts` → `useAppNavigation.ts`
+- [x] Fix the import in `SearchBar.tsx`
+- [x] Rebuild once (`npm run build`) to confirm
 
 ---
 
@@ -42,13 +42,13 @@ Linux-based Docker/nginx build this project ships with.
 
 Verified via repo-wide grep: zero imports anywhere.
 
-- [ ] `src/models/` (entire folder — `api.model.ts`, `cart.model.ts`,
+- [x] `src/models/` (entire folder — `api.model.ts`, `cart.model.ts`,
       `common.model.ts`, `order.model.ts`, `product.model.ts` — all 0 bytes)
-- [ ] `src/services/` (entire folder — `authServes.ts`,
+- [x] `src/services/` (entire folder — `authServes.ts`,
       `notificationService.ts`, `storageService.ts`, `validationService.ts` —
       all 0 bytes)
-- [ ] `src/utils/validators.ts` (0 bytes, unused)
-- [ ] Stray empty directory `src/components/admin/AdminSidebar.tsx`
+- [x] `src/utils/validators.ts` (0 bytes, unused)
+- [x] Stray empty directory `src/components/admin/AdminSidebar.tsx`
       (shadows the real `AdminSidebar/AdminSidebar.tsx` — confusing, unused)
 
 No behavior changes; this is pure cleanup. Good first PR.
@@ -57,7 +57,7 @@ No behavior changes; this is pure cleanup. Good first PR.
 
 ## Step 3 — De-duplicate small utility logic (30 min)
 
-- [ ] `UserManagement.tsx` defines its own local `formatDate` and
+- [x] `UserManagement.tsx` defines its own local `formatDate` and
       `getRelativeTime`. Move `getRelativeTime` into `utils/formatters.ts`
       (which already has `formatDate`, used elsewhere e.g.
       `OrderManagement.tsx`) and import both from there.
@@ -72,10 +72,10 @@ already implement `fetchUsers`, `filterUsers`, `changeRole`, `getStats`,
 `pages/admin/UserManagements/UserManagement.tsx` (431 lines, the largest file
 in the app) reimplements all of the same logic locally with `useState`.
 
-- [ ] Replace the local `users`/`isLoading`/`fetchUsers`/filtering/stats state
+- [x] Replace the local `users`/`isLoading`/`fetchUsers`/filtering/stats state
       in `UserManagement.tsx` with `useUsers()`
-- [ ] Delete the now-redundant local implementations
-- [ ] Confirm role-change flow still works end-to-end (manual test below)
+- [x] Delete the now-redundant local implementations
+- [x] Confirm role-change flow still works end-to-end (manual test below)
 
 This is the single highest-value fix — it removes ~150 lines of duplicated,
 unmaintained logic and makes the page consistent with how `Checkout`/`Login`/
@@ -90,11 +90,11 @@ unmaintained logic and makes the page consistent with how `Checkout`/`Login`/
 `CategoryManagement`, and `OrderManagement` each hand-roll a near-identical
 "stat card grid" (same markup shape, separate CSS).
 
-- [ ] Extend `StatCard` (or add a small `StatCardGrid` wrapper) to cover the
+- [x] Extend `StatCard` (or add a small `StatCardGrid` wrapper) to cover the
       variants needed (icon, value, label, optional active/click state used
       by `UserManagement`'s clickable filter cards)
-- [ ] Replace the 4 duplicated implementations with the shared component
-- [ ] Delete the duplicated CSS blocks once replaced
+- [x] Replace the 4 duplicated implementations with the shared component
+- [x] Delete the duplicated CSS blocks once replaced
 
 ---
 
@@ -102,11 +102,16 @@ unmaintained logic and makes the page consistent with how `Checkout`/`Login`/
 
 Do this **one page per PR**, in size order, so each is easy to review:
 
-1. `UserManagement.tsx` (431 lines) → split into:
-   - `UsersTable` (feature/admin/components)
-   - `UserDetailsModal`
-   - `ChangeRoleModal`
-   - page keeps only composition + `useUsers()`
+1. ✅ **Done.** `UserManagement.tsx` (388 → 160 lines) split into:
+   - `features/admin/components/UsersTable`
+   - `features/admin/components/UserDetailsModal`
+   - `features/admin/components/ChangeRoleModal`
+   - shared display helpers in `features/admin/utils/userDisplay.ts`
+   - page keeps only `useUsers()`, local UI state, and composition
+   - CSS deliberately left in `UserManagement.css` (global stylesheet, so
+     extracted children still pick it up). Note the duplicated
+     `.admin-table` / `.modal-overlay` blocks across all 5 admin
+     stylesheets — worth its own step after 6.3.
 2. `ProductForm.tsx` (396 lines) → split form sections (basic info / pricing /
    images / category) into subcomponents if the form keeps growing; at minimum
    extract validation into a small helper.
