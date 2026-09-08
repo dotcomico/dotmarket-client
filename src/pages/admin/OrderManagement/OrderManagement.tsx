@@ -12,6 +12,7 @@ import type { Order, OrderStatus } from '../../../features/orders/types/order.ty
 import './OrderManagement.css';
 import OrderDetailsModal from '../../../features/orders/components/OrderDetailsModal/OrderDetailsModal';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
+import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 
 const OrderManagement = () => {
   // Store Access
@@ -71,24 +72,32 @@ const OrderManagement = () => {
 
       <main className="admin-main">
         {/* Stats Summary Cards */}
-        <div className="order-stats">
-          <div className="order-stat-card" onClick={() => setStatusFilter('all')}>
-            <div className="order-stat-card__value">{stats.total}</div>
-            <div className="order-stat-card__label">Total Orders</div>
-          </div>
-          <div className="order-stat-card order-stat-card--pending" onClick={() => setStatusFilter('pending')}>
-            <div className="order-stat-card__value">{stats.pending}</div>
-            <div className="order-stat-card__label">Pending</div>
-          </div>
-          <div className="order-stat-card order-stat-card--processing" onClick={() => setStatusFilter('shipped')}>
-            <div className="order-stat-card__value">{stats.processing}</div>
-            <div className="order-stat-card__label">Shipped</div>
-          </div>
-          <div className="order-stat-card order-stat-card--completed" onClick={() => setStatusFilter('paid')}>
-            <div className="order-stat-card__value">{stats.completed}</div>
-            <div className="order-stat-card__label">Completed</div>
-          </div>
-        </div>
+        <StatTileGrid cols={4}>
+          <StatTile
+            value={stats.total}
+            label="Total Orders"
+            className="order-stat-card"
+            onClick={() => setStatusFilter('all')}
+          />
+          <StatTile
+            value={stats.pending}
+            label="Pending"
+            className="order-stat-card order-stat-card--pending"
+            onClick={() => setStatusFilter('pending')}
+          />
+          <StatTile
+            value={stats.processing}
+            label="Shipped"
+            className="order-stat-card order-stat-card--processing"
+            onClick={() => setStatusFilter('shipped')}
+          />
+          <StatTile
+            value={stats.completed}
+            label="Completed"
+            className="order-stat-card order-stat-card--completed"
+            onClick={() => setStatusFilter('paid')}
+          />
+        </StatTileGrid>
 
         <div className="admin-card">
           <div className="order-management-header">

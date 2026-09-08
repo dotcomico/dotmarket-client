@@ -6,6 +6,7 @@ import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import { CategoryForm } from '../../../features/categories/components/CategoryForm/CategoryForm';
 import type { Category } from '../../../features/categories/types/category.types';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
+import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 
 const CategoryManagement = () => {
     // Store
@@ -145,29 +146,26 @@ const CategoryManagement = () => {
 
             <main className="admin-main">
                 {/* Stats Cards */}
-                <div className="category-stats">
-                    <div className="category-stat-card category-stat-card--total">
-                        <div className="category-stat-card__icon">🏷️</div>
-                        <div className="category-stat-card__content">
-                            <div className="category-stat-card__value">{stats.total}</div>
-                            <div className="category-stat-card__label">Total Categories</div>
-                        </div>
-                    </div>
-                    <div className="category-stat-card category-stat-card--parent">
-                        <div className="category-stat-card__icon">📁</div>
-                        <div className="category-stat-card__content">
-                            <div className="category-stat-card__value">{stats.parents}</div>
-                            <div className="category-stat-card__label">Parent Categories</div>
-                        </div>
-                    </div>
-                    <div className="category-stat-card category-stat-card--child">
-                        <div className="category-stat-card__icon">📂</div>
-                        <div className="category-stat-card__content">
-                            <div className="category-stat-card__value">{stats.children}</div>
-                            <div className="category-stat-card__label">Subcategories</div>
-                        </div>
-                    </div>
-                </div>
+                <StatTileGrid cols={3}>
+                    <StatTile
+                        icon="🏷️"
+                        value={stats.total}
+                        label="Total Categories"
+                        className="category-stat-card category-stat-card--total"
+                    />
+                    <StatTile
+                        icon="📁"
+                        value={stats.parents}
+                        label="Parent Categories"
+                        className="category-stat-card category-stat-card--parent"
+                    />
+                    <StatTile
+                        icon="📂"
+                        value={stats.children}
+                        label="Subcategories"
+                        className="category-stat-card category-stat-card--child"
+                    />
+                </StatTileGrid>
 
                 <div className="admin-card">
                     {/* Header Section */}

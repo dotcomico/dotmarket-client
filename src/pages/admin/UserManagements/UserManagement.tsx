@@ -5,6 +5,7 @@ import type { AdminUser, UserRole } from '../../../features/admin/types/admin.ty
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
 import { useUsers } from '../../../features/admin/hooks/useUsers';
 import { getRelativeTime as getRelativeTimeShared } from '../../../utils/formatters';
+import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 import './UserManagement.css';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
@@ -65,36 +66,40 @@ const UserManagement = () => {
 
       <main className="admin-main">
         {/* Stats Summary */}
-        <div className="user-stats">
-          <div className="user-stat-card" onClick={() => setRoleFilter('all')}>
-            <div className="user-stat-card__icon">👥</div>
-            <div className="user-stat-card__content">
-              <div className="user-stat-card__value">{stats.total}</div>
-              <div className="user-stat-card__label">Total Users</div>
-            </div>
-          </div>
-          <div className="user-stat-card user-stat-card--admin" onClick={() => setRoleFilter('admin')}>
-            <div className="user-stat-card__icon">🛡️</div>
-            <div className="user-stat-card__content">
-              <div className="user-stat-card__value">{stats.admins}</div>
-              <div className="user-stat-card__label">Admins</div>
-            </div>
-          </div>
-          <div className="user-stat-card user-stat-card--manager" onClick={() => setRoleFilter('manager')}>
-            <div className="user-stat-card__icon">👔</div>
-            <div className="user-stat-card__content">
-              <div className="user-stat-card__value">{stats.managers}</div>
-              <div className="user-stat-card__label">Managers</div>
-            </div>
-          </div>
-          <div className="user-stat-card user-stat-card--customer" onClick={() => setRoleFilter('customer')}>
-            <div className="user-stat-card__icon">🛒</div>
-            <div className="user-stat-card__content">
-              <div className="user-stat-card__value">{stats.customers}</div>
-              <div className="user-stat-card__label">Customers</div>
-            </div>
-          </div>
-        </div>
+        <StatTileGrid cols={4}>
+          <StatTile
+            icon="👥"
+            iconSize="lg"
+            value={stats.total}
+            label="Total Users"
+            className="user-stat-card"
+            onClick={() => setRoleFilter('all')}
+          />
+          <StatTile
+            icon="🛡️"
+            iconSize="lg"
+            value={stats.admins}
+            label="Admins"
+            className="user-stat-card user-stat-card--admin"
+            onClick={() => setRoleFilter('admin')}
+          />
+          <StatTile
+            icon="👔"
+            iconSize="lg"
+            value={stats.managers}
+            label="Managers"
+            className="user-stat-card user-stat-card--manager"
+            onClick={() => setRoleFilter('manager')}
+          />
+          <StatTile
+            icon="🛒"
+            iconSize="lg"
+            value={stats.customers}
+            label="Customers"
+            className="user-stat-card user-stat-card--customer"
+            onClick={() => setRoleFilter('customer')}
+          />
+        </StatTileGrid>
 
         <div className="admin-card">
           {/* Header Section */}
