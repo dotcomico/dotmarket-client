@@ -1,4 +1,5 @@
-import { Routes, Route } from "react-router-dom";
+import { Suspense, lazy } from "react";
+import { Routes, Route, Outlet } from "react-router-dom";
 import Home from "../pages/Home/Home";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
@@ -11,14 +12,23 @@ import Cart from "../pages/Cart";
 import Profile from "../pages/Profile/Profile";
 import AdminRoute from "./AdminRoute";
 import { AdminLayout } from "../components/layouts/AdminLayout/AdminLayout";
-import OrderManagement from "../pages/admin/OrderManagement/OrderManagement";
-import UserManagement from "../pages/admin/UserManagements/UserManagement";
-import ProductManagement from "../pages/admin/ProductManagement/ProductManagement";
-import Dashboard from "../pages/admin/Dashboard/Dashboard";
 import Orders from "../pages/Orders/Orders";
 import Checkout from "../pages/Checkout/Checkout";
 import ProductDetails from "../pages/ProductDetails";
-import CategoryManagement from "../pages/admin/CategoryManagement/CategoryManagement";
+
+// Admin pages are code-split: customers/anonymous users never load this bundle.
+const Dashboard = lazy(() => import("../pages/admin/Dashboard/Dashboard"));
+const ProductManagement = lazy(() => import("../pages/admin/ProductManagement/ProductManagement"));
+const CategoryManagement = lazy(() => import("../pages/admin/CategoryManagement/CategoryManagement"));
+const OrderManagement = lazy(() => import("../pages/admin/OrderManagement/OrderManagement"));
+const UserManagement = lazy(() => import("../pages/admin/UserManagements/UserManagement"));
+
+const AdminRouteFallback = () => (
+  <div className="admin-route-loading">
+    <div className="admin-route-spinner" />
+    <p>Loading…</p>
+  </div>
+);
 
 const AppRoutes = () => {
   return (
@@ -43,11 +53,19 @@ const AppRoutes = () => {
       {/* Admin routes (admin & manager only) with AdminLayout */}
       <Route element={<AdminRoute />}>
         <Route element={<AdminLayout />}>
-          <Route path={PATHS.ADMIN.DASHBOARD} element={<Dashboard />} />
-          <Route path={PATHS.ADMIN.PRODUCTS} element={<ProductManagement />} />
-          <Route path={PATHS.ADMIN.CATEGORIES} element={<CategoryManagement />} />
-          <Route path={PATHS.ADMIN.ORDERS} element={<OrderManagement />} />
-          <Route path={PATHS.ADMIN.USERS} element={<UserManagement />} />
+          <Route
+            element={
+              <Suspense fallback={<AdminRouteFallback />}>
+                <Outlet />
+              </Suspense>
+            }
+          >
+            <Route path={PATHS.ADMIN.DASHBOARD} element={<Dashboard />} />
+            <Route path={PATHS.ADMIN.PRODUCTS} element={<ProductManagement />} />
+            <Route path={PATHS.ADMIN.CATEGORIES} element={<CategoryManagement />} />
+            <Route path={PATHS.ADMIN.ORDERS} element={<OrderManagement />} />
+            <Route path={PATHS.ADMIN.USERS} element={<UserManagement />} />
+          </Route>
         </Route>
       </Route>
 

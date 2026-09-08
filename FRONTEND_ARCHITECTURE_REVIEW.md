@@ -160,7 +160,7 @@ above have already reduced page size and established the target shape.
 
 ## Step 8 (optional, low urgency) — Route-level code splitting
 
-- [ ] Wrap the `/admin/*` route elements in `AppRoutes.tsx` with
+- [x] Wrap the `/admin/*` route elements in `AppRoutes.tsx` with
       `React.lazy` + `Suspense` so anonymous/customer users don't load the
       admin bundle on first paint.
 
