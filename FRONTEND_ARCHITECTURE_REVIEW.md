@@ -143,13 +143,14 @@ Pick one pattern and apply it everywhere — recommended: **introduce thin
 hooks** (`useProducts`, `useCategories`, `useOrders`) mirroring `useCart`, so
 every admin page follows the same shape as `UserManagement` after Step 4.
 
-- [ ] `useProducts` (wraps `useProductStore`, houses `filterProducts`,
-      `getCategoryOptions`)
-- [ ] `useCategories` (wraps `useCategoryStore`)
-- [ ] `useOrders` (wraps `useOrderStore`, houses status-filter logic already
+- [x] `useProducts` (wraps `useProductStore`, houses `filterProducts`,
+      `getCategoryOptions`) — also absorbed the create/update/delete
+      `productApi` calls `ProductManagement` was making directly.
+- [x] `useCategories` (wraps `useCategoryStore`)
+- [x] `useOrders` (wraps `useOrderStore`, houses status-filter logic already
       in `features/orders/utils/orderUtils.ts` — keep that file, just call it
       from the hook instead of from the page)
-- [ ] Update the 3 admin pages to use the new hooks instead of calling the
+- [x] Update the 3 admin pages to use the new hooks instead of calling the
       store directly
 
 This is the largest, most invasive step — do it last, after the smaller wins
