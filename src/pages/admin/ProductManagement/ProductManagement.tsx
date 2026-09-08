@@ -1,8 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './ProductManagement.css';
 import {
-  useProductStore,
-  productApi,
+  useProducts,
   ProductTable,
   ProductFormModal,
   DeleteProductModal,
@@ -13,7 +12,7 @@ import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
 const ProductManagement = () => {
-  const { products, fetchProducts, isLoading } = useProductStore();
+  const { fetchProducts, isLoading, filterProducts, getCategoryOptions, createProduct, updateProduct, deleteProduct } = useProducts();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showProductModal, setShowProductModal] = useState(false);
@@ -25,28 +24,12 @@ const ProductManagement = () => {
     fetchProducts({ limit: 1000 });
   }, [fetchProducts]);
 
-  const categories = useMemo(() => {
-    const uniqueCategories = new Set(
-      products
-        .map(p => p.category?.name)
-        .filter((name): name is string => Boolean(name))
-    );
-    return ['all', ...Array.from(uniqueCategories)];
-  }, [products]);
+  const categories = useMemo(() => getCategoryOptions(), [getCategoryOptions]);
 
-  // filtered products
-  const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      const matchesSearch =
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory =
-        selectedCategory === 'all' ||
-        product.category?.name === selectedCategory;
-
-      return matchesSearch && matchesCategory;
-    });
-  }, [products, searchQuery, selectedCategory]);
+  const filteredProducts = useMemo(
+    () => filterProducts(searchQuery, selectedCategory),
+    [filterProducts, searchQuery, selectedCategory]
+  );
 
   const getStockStatus = useCallback((stock: number) => {
     if (stock === 0) return { label: 'Out of Stock', class: 'stock-status--critical' };
@@ -77,29 +60,19 @@ const ProductManagement = () => {
     setIsSubmitting(true);
 
     try {
-      if (editingProduct) {
-        // Update existing product
-        await productApi.update(editingProduct.id, formData);
-      } else {
-        // Create new product
-        await productApi.create(formData);
+      const result = editingProduct
+        ? await updateProduct(editingProduct.id, formData)
+        : await createProduct(formData);
+
+      if (result.success) {
+        handleCloseModal();
       }
 
-      // Refresh products list
-      await fetchProducts();
-      handleCloseModal();
-
-      return { success: true };
-    } catch (error) {
-      console.error('Failed to save product:', error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to save product'
-      };
+      return result;
     } finally {
       setIsSubmitting(false);
     }
-  }, [editingProduct, fetchProducts, handleCloseModal]);
+  }, [editingProduct, createProduct, updateProduct, handleCloseModal]);
 
   // Open delete confirmation modal
   const handleDeleteClick = useCallback((product: Product) => {
@@ -112,16 +85,14 @@ const ProductManagement = () => {
 
     setIsSubmitting(true);
     try {
-      await productApi.delete(deleteConfirm.id);
-      await fetchProducts();
-      setDeleteConfirm(null);
-    } catch (error) {
-      console.error('Failed to delete product:', error);
-      // Could add toast notification here
+      const result = await deleteProduct(deleteConfirm.id);
+      if (result.success) {
+        setDeleteConfirm(null);
+      }
     } finally {
       setIsSubmitting(false);
     }
-  }, [deleteConfirm, fetchProducts]);
+  }, [deleteConfirm, deleteProduct]);
 
   return (
     <>
