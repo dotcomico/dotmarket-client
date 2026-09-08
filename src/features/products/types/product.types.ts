@@ -16,6 +16,19 @@ export interface Product {
   updatedAt: string;
 }
 
+/**
+ * The product form's field values. Every field is a string because it mirrors
+ * raw `<input>` values — parsing to number happens at validation/submit time.
+ * Shared by the form component and its validation helper.
+ */
+export interface ProductFormState {
+  name: string;
+  description: string;
+  price: string;
+  stock: string;
+  categoryId: string;
+}
+
 export interface ProductsResponse {
   products: Product[];
   pagination: {

@@ -1,9 +1,8 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './ProductManagement.css';
-import { useProductStore, productApi, type Product } from '../../../features/products';
+import { useProductStore, productApi, ProductForm, type Product } from '../../../features/products';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
-import { ProductForm } from '../../../features/products/components/ProductForm/ProductForm';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
 
 const ProductManagement = () => {
