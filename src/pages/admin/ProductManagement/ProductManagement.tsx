@@ -1,6 +1,13 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import './ProductManagement.css';
-import { useProductStore, productApi, ProductForm, type Product } from '../../../features/products';
+import {
+  useProductStore,
+  productApi,
+  ProductTable,
+  ProductFormModal,
+  DeleteProductModal,
+  type Product
+} from '../../../features/products';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
@@ -179,160 +186,33 @@ const ProductManagement = () => {
               <p>Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="table-wrapper">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th>Category</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map(product => {
-                    const stockStatus = getStockStatus(product.stock);
-
-                    return (
-                      <tr key={product.id}>
-                        <td>
-                          <div className="product-cell">
-                            {product.image ? (
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                className="product-thumbnail"
-                              />
-                            ) : (
-                              <div className="product-thumbnail product-thumbnail--placeholder">
-                                📦
-                              </div>
-                            )}
-                            <div className="product-info">
-                              <div className="product-name">{product.name}</div>
-                              {product.description && (
-                                <div className="product-description">
-                                  {product.description.substring(0, 50)}
-                                  {product.description.length > 50 ? '...' : ''}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="category-badge">
-                            {product.category?.name || 'Uncategorized'}
-                          </span>
-                        </td>
-                        <td className="price-cell">${product.price.toFixed(2)}</td>
-                        <td className="stock-cell">{product.stock}</td>
-                        <td>
-                          <span className={`stock-status ${stockStatus.class}`}>
-                            {stockStatus.label}
-                          </span>
-                        </td>
-                        <td>
-                          <div className="action-buttons">
-                            <button
-                              className="action-btn action-btn--edit"
-                              onClick={() => handleEdit(product)}
-                              title="Edit"
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                              </svg>
-                            </button>
-                            <button
-                              className="action-btn action-btn--delete"
-                              onClick={() => handleDeleteClick(product)}
-                              title="Delete"
-                            >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="3 6 5 6 21 6" />
-                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                              </svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+            <ProductTable
+              products={filteredProducts}
+              getStockStatus={getStockStatus}
+              onEdit={handleEdit}
+              onDelete={handleDeleteClick}
+            />
           )}
         </div>
 
         {/* Add/Edit Product Modal */}
         {showProductModal && (
-          <div className="modal-overlay" onClick={handleCloseModal}>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
-                <button
-                  className="modal-close"
-                  onClick={handleCloseModal}
-                >
-                  ×
-                </button>
-              </div>
-              <div className="modal-body">
-                <ProductForm
-                  product={editingProduct}
-                  onSubmit={handleProductSubmit}
-                  onCancel={handleCloseModal}
-                  isLoading={isSubmitting}
-                />
-              </div>
-            </div>
-          </div>
+          <ProductFormModal
+            product={editingProduct}
+            isSubmitting={isSubmitting}
+            onSubmit={handleProductSubmit}
+            onClose={handleCloseModal}
+          />
         )}
 
         {/* Delete Confirmation Modal */}
         {deleteConfirm && (
-          <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
-            <div className="modal modal--small" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>Delete Product</h3>
-                <button
-                  className="modal-close"
-                  onClick={() => setDeleteConfirm(null)}
-                >
-                  ×
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="delete-confirm">
-                  <div className="delete-confirm__icon">🗑️</div>
-                  <p className="delete-confirm__message">
-                    Are you sure you want to delete <strong>"{deleteConfirm.name}"</strong>?
-                  </p>
-                  <p className="delete-confirm__warning">
-                    This action cannot be undone.
-                  </p>
-                  <div className="delete-confirm__actions">
-                    <button
-                      className="btn-secondary"
-                      onClick={() => setDeleteConfirm(null)}
-                      disabled={isSubmitting}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="btn-danger"
-                      onClick={handleConfirmDelete}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Deleting...' : 'Delete'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <DeleteProductModal
+            product={deleteConfirm}
+            isDeleting={isSubmitting}
+            onConfirm={handleConfirmDelete}
+            onClose={() => setDeleteConfirm(null)}
+          />
         )}
       </main>
     </>

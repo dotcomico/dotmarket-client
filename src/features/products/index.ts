@@ -1,6 +1,9 @@
 export { ProductCard } from './components/ProductCard/ProductCard';
 export { ProductGrid} from './components/ProductGrid/ProductGrid';
 export { ProductForm } from './components/ProductForm/ProductForm';
+export { ProductTable } from './components/ProductTable/ProductTable';
+export { ProductFormModal } from './components/ProductFormModal/ProductFormModal';
+export { DeleteProductModal } from './components/DeleteProductModal/DeleteProductModal';
 export { useProductStore } from './productStore';
 export { productApi } from './api/productApi';
 
