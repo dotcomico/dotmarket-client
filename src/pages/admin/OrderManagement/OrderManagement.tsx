@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { AdminHeader } from '../../../components/admin/AdminHeader/AdminHeader';
 import SearchBar from '../../../components/ui/SearchBar/SearchBar';
-import { useOrderStore } from '../../../store/orderStore';
+import { useOrders } from '../../../features/orders/hooks/useOrders';
 import { formatDate } from '../../../utils/formatters';
 import {
   getStatusClass,
@@ -12,14 +12,11 @@ import type { Order, OrderStatus } from '../../../features/orders/types/order.ty
 import './OrderManagement.css';
 import OrderDetailsModal from '../../../features/orders/components/OrderDetailsModal/OrderDetailsModal';
 import RefreshButton from '../../../components/admin/RefreshButton/RefreshButton';
+import { StatTile, StatTileGrid } from '../../../components/ui/StatTile/StatTile';
 
 const OrderManagement = () => {
-  // Store Access
-  const orders = useOrderStore((state) => state.orders);
-  const isLoading = useOrderStore((state) => state.isLoading);
-  const error = useOrderStore((state) => state.error);
-  const fetchOrders = useOrderStore((state) => state.fetchOrders);
-  const updateOrderStatus = useOrderStore((state) => state.updateOrderStatus);
+  // Hook (wraps useOrderStore)
+  const { orders, isLoading, error, fetchOrders, updateOrderStatus, filterOrders, getOrderStats } = useOrders();
 
   // Local State
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,27 +28,13 @@ const OrderManagement = () => {
   }, [fetchOrders]);
 
   // Derived Data: Filtering
-  const filteredOrders = useMemo(() => {
-    return orders.filter(order => {
-      const matchesSearch =
-        order.id.toString().includes(searchQuery) ||
-        order.User?.username?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.User?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.address?.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-
-      return matchesSearch && matchesStatus;
-    });
-  }, [orders, searchQuery, statusFilter]);
+  const filteredOrders = useMemo(
+    () => filterOrders(searchQuery, statusFilter),
+    [filterOrders, searchQuery, statusFilter]
+  );
 
   // Derived Data: Statistics
-  const stats = useMemo(() => ({
-    total: orders.length,
-    pending: orders.filter(o => o.status === 'pending').length,
-    processing: orders.filter(o => o.status === 'shipped').length,
-    completed: orders.filter(o => o.status === 'paid').length,
-  }), [orders]);
+  const stats = useMemo(() => getOrderStats(), [getOrderStats]);
 
   // Handlers
   const handleStatusChange = useCallback(async (orderId: number, newStatus: OrderStatus) => {
@@ -71,24 +54,32 @@ const OrderManagement = () => {
 
       <main className="admin-main">
         {/* Stats Summary Cards */}
-        <div className="order-stats">
-          <div className="order-stat-card" onClick={() => setStatusFilter('all')}>
-            <div className="order-stat-card__value">{stats.total}</div>
-            <div className="order-stat-card__label">Total Orders</div>
-          </div>
-          <div className="order-stat-card order-stat-card--pending" onClick={() => setStatusFilter('pending')}>
-            <div className="order-stat-card__value">{stats.pending}</div>
-            <div className="order-stat-card__label">Pending</div>
-          </div>
-          <div className="order-stat-card order-stat-card--processing" onClick={() => setStatusFilter('shipped')}>
-            <div className="order-stat-card__value">{stats.processing}</div>
-            <div className="order-stat-card__label">Shipped</div>
-          </div>
-          <div className="order-stat-card order-stat-card--completed" onClick={() => setStatusFilter('paid')}>
-            <div className="order-stat-card__value">{stats.completed}</div>
-            <div className="order-stat-card__label">Completed</div>
-          </div>
-        </div>
+        <StatTileGrid cols={4}>
+          <StatTile
+            value={stats.total}
+            label="Total Orders"
+            className="order-stat-card"
+            onClick={() => setStatusFilter('all')}
+          />
+          <StatTile
+            value={stats.pending}
+            label="Pending"
+            className="order-stat-card order-stat-card--pending"
+            onClick={() => setStatusFilter('pending')}
+          />
+          <StatTile
+            value={stats.processing}
+            label="Shipped"
+            className="order-stat-card order-stat-card--processing"
+            onClick={() => setStatusFilter('shipped')}
+          />
+          <StatTile
+            value={stats.completed}
+            label="Completed"
+            className="order-stat-card order-stat-card--completed"
+            onClick={() => setStatusFilter('paid')}
+          />
+        </StatTileGrid>
 
         <div className="admin-card">
           <div className="order-management-header">

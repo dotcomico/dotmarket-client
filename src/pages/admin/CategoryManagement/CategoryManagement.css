@@ -1,64 +1,14 @@
-.category-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.category-stat-card {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  background-color: var(--surface-color);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--border-color);
-  cursor: default;
-  transition: var(--transition-fast);
-}
-
-.category-stat-card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.category-stat-card__icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  border-radius: var(--radius-lg);
-  flex-shrink: 0;
-}
-
-.category-stat-card--total .category-stat-card__icon {
+/* Stat Tile color variants (base tile layout lives in shared StatTile.css) */
+.category-stat-card--total .stat-tile__icon {
   background-color: rgba(0, 64, 255, 0.1);
 }
 
-.category-stat-card--parent .category-stat-card__icon {
+.category-stat-card--parent .stat-tile__icon {
   background-color: rgba(76, 175, 80, 0.1);
 }
 
-.category-stat-card--child .category-stat-card__icon {
+.category-stat-card--child .stat-tile__icon {
   background-color: rgba(255, 152, 0, 0.1);
-}
-
-.category-stat-card__content {
-  flex: 1;
-}
-
-.category-stat-card__value {
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-bold);
-  color: var(--primary-text);
-  line-height: 1;
-}
-
-.category-stat-card__label {
-  font-size: var(--font-size-sm);
-  color: var(--secondary-text);
-  margin-top: var(--spacing-xxs);
 }
 
 /* Header Section */
@@ -251,17 +201,7 @@
   gap: var(--spacing-md);
 }
 
-@media (max-width: 1024px) {
-  .category-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
-  .category-stats {
-    grid-template-columns: 1fr;
-  }
-
   .category-management-header {
     flex-direction: column;
     align-items: stretch;
@@ -285,16 +225,6 @@
 }
 
 @media (max-width: 480px) {
-  .category-stat-card {
-    padding: var(--spacing-md);
-  }
-
-  .category-stat-card__icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1.25rem;
-  }
-
   .category-cell {
     gap: var(--spacing-sm);
   }

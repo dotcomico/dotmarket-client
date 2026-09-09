@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { productApi } from '../features/products/api/productApi';
-import type { Product } from '../features/products/types/product.types';
 import { useCart } from '../features/cart/hooks/useCart';
+import { useProductDetails } from '../features/products/hooks/useProductDetails';
+import { getProductStockStatus } from '../features/products/utils/productStockStatus';
 import { QuantitySelector } from '../components/ui/QuantitySelector/QuantitySelector';
 import { PATHS } from '../routes/paths';
 import './ProductDetails.css';
@@ -10,31 +10,10 @@ import './ProductDetails.css';
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<Product | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'photo' | '360'>('photo');
 
   const { getProductQuantity, addToCart, changeQuantity } = useCart();
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (!id) return;
-
-      try {
-        setIsLoading(true);
-        const response = await productApi.getById(parseInt(id));
-        setProduct(response.data);
-      } catch (err) {
-        setError('Failed to load product');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [id]);
+  const { product, isLoading, error } = useProductDetails(id);
 
   if (isLoading) {
     return (
@@ -66,16 +45,7 @@ const ProductDetails = () => {
   const isOutOfStock = product.stock === 0;
   const hasImage360 = !!product.image360;
   const currentImage = activeView === '360' && hasImage360 ? product.image360 : product.image;
-
-  // Stock status helper
-  const getStockStatus = () => {
-    if (isOutOfStock) return { label: 'Out of Stock', class: 'out', icon: '✕' };
-    if (product.stock <= 5) return { label: `Only ${product.stock} left!`, class: 'low', icon: '⚠' };
-    if (product.stock <= 20) return { label: 'Limited Stock', class: 'limited', icon: '📦' };
-    return { label: 'In Stock', class: 'available', icon: '✓' };
-  };
-
-  const stockStatus = getStockStatus();
+  const stockStatus = getProductStockStatus(product);
 
   return (
     <div className="product-details-page">

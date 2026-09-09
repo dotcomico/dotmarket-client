@@ -4,6 +4,11 @@ export { RecentOrdersTable } from './components/RecentOrdersTable/RecentOrdersTa
 export { LowStockAlert } from './components/LowStockAlert/LowStockAlert';
 export { QuickStatsGrid } from './components/QuickStatsGrid/QuickStatsGrid';
 
+// User Management Components
+export { UsersTable } from './components/UsersTable/UsersTable';
+export { UserDetailsModal } from './components/UserDetailsModal/UserDetailsModal';
+export { ChangeRoleModal } from './components/ChangeRoleModal/ChangeRoleModal';
+
 // Hooks
 export { useAdminAccess } from './hooks/useAdminAccess';
 export { useUsers } from './hooks/useUsers';
@@ -15,9 +20,10 @@ export { useUserStore } from './store/userStore';
 export { userApi } from './api/userApi';
 
 // Types
-export type { 
+export type {
   DashboardStats as DashboardStatsType,
   OrderStatus,
+  UserRole,
   RecentOrder,
   AdminUser,
   AdminOrder,

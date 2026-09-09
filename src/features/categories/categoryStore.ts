@@ -1,23 +1,12 @@
 import { create } from 'zustand';
 import { categoryApi } from './api/categoryApi';
 import { getErrorMessage, logError } from '../../utils/errorHandler';
+import { flattenCategoryTree } from './utils/categoryTree';
 import type { Category, CategoryState } from './types/category.types';
 
-const flattenCategories = (categories: Category[]): Category[] => {
-  const result: Category[] = [];
-
-  const traverse = (cats: Category[]) => {
-    for (const cat of cats) {
-      result.push(cat);
-      if (cat.children && cat.children.length > 0) {
-        traverse(cat.children);
-      }
-    }
-  };
-
-  traverse(categories);
-  return result;
-};
+/** Pre-order flat list of every category. Depth is dropped — see `flattenCategoryTree`. */
+const flattenCategories = (categories: Category[]): Category[] =>
+  flattenCategoryTree(categories).map(({ category }) => category);
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
   categories: [],

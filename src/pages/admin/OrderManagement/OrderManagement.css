@@ -1,54 +1,21 @@
-.order-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-lg);
-  margin-bottom: var(--spacing-xl);
-}
-
-.order-stat-card {
-  background-color: var(--surface-color);
-  border-radius: var(--radius-xl);
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-sm);
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  text-align: center;
-}
-
-.order-stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* Stat Card Color Variants */
-.order-stat-card--pending {
+/* Stat Tile color variants (base tile layout lives in shared StatTile.css).
+   Chained onto .stat-tile so these outrank the shared base rules on
+   specificity rather than on stylesheet order — this page imports its CSS
+   before StatTile's, so plain .order-stat-card--* selectors would tie and
+   lose their border-color to .stat-tile--clickable's border shorthand. */
+.stat-tile.order-stat-card--pending {
   border-color: rgba(237, 108, 2, 0.3);
   background: linear-gradient(135deg, rgba(237, 108, 2, 0.05) 0%, var(--surface-color) 100%);
 }
 
-.order-stat-card--processing {
+.stat-tile.order-stat-card--processing {
   border-color: rgba(0, 64, 255, 0.3);
   background: linear-gradient(135deg, rgba(0, 64, 255, 0.05) 0%, var(--surface-color) 100%);
 }
 
-.order-stat-card--completed {
+.stat-tile.order-stat-card--completed {
   border-color: rgba(46, 125, 50, 0.3);
   background: linear-gradient(135deg, rgba(46, 125, 50, 0.05) 0%, var(--surface-color) 100%);
-}
-
-.order-stat-card__value {
-  font-size: var(--font-size-xxxl);
-  font-weight: var(--font-weight-bold);
-  color: var(--primary-text);
-  margin-bottom: var(--spacing-xxs);
-}
-
-.order-stat-card__label {
-  font-size: var(--font-size-sm);
-  color: var(--secondary-text);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 /* Header */
@@ -215,17 +182,7 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .order-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 768px) {
-  .order-stats {
-    grid-template-columns: 1fr;
-  }
-
   .order-management-header {
     flex-direction: column;
     align-items: stretch;
