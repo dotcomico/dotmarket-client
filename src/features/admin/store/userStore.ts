@@ -11,6 +11,15 @@ interface UserState {
   users: AdminUser[];
   isLoading: boolean;
   error: string | null;
+  /*
+   * True once a fetch has completed — success or failure.
+   * Distinguishes "haven't fetched yet" (show the spinner) from "fetched and
+   * got nothing" (show the empty state). `isLoading` alone can't do this: it
+   * starts `false`, so the first paint would otherwise look like an empty
+   * result. It deliberately cannot start `true` either — `fetchUsers` bails on
+   * `if (get().isLoading) return`, which would block the very first fetch.
+   */
+  hasLoaded: boolean;
   // Actions
   fetchUsers: () => Promise<void>;
   updateUserRole: (userId: number, role: UserRole) => Promise<{
@@ -39,6 +48,7 @@ export const useUserStore = create<UserState>((set, get) => ({
   users: [],
   isLoading: false,
   error: null,
+  hasLoaded: false,
 
   /*
    * Fetch all users from API
@@ -72,6 +82,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       set({
         users,
         isLoading: false,
+        hasLoaded: true,
       });
     } catch (error) {
       const errorMessage = getErrorMessage(error, 'Failed to load users');
@@ -81,6 +92,9 @@ export const useUserStore = create<UserState>((set, get) => ({
         error: errorMessage,
         isLoading: false,
         users: [],
+        // A failed load is still a completed attempt — the page must show the
+        // error banner, not fall back to the "no users yet" spinner.
+        hasLoaded: true,
       });
     }
   },
@@ -153,6 +167,7 @@ export const useUserStore = create<UserState>((set, get) => ({
       users: [],
       isLoading: false,
       error: null,
+      hasLoaded: false,
     });
   },
 }));

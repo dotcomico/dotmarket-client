@@ -15,7 +15,7 @@ import './UserManagement.css';
 
 const UserManagement = () => {
   const { isAdmin } = useAdminAccess();
-  const { isLoading, error, loadUsers, refreshUsers, changeRole, filterUsers, getStats } = useUsers();
+  const { isLoading, error, hasLoaded, loadUsers, refreshUsers, changeRole, filterUsers, getStats } = useUsers();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | UserRole>('all');
@@ -28,6 +28,23 @@ const UserManagement = () => {
 
   const filteredUsers = filterUsers(searchQuery, roleFilter);
   const stats = getStats();
+
+  /*
+   * The list area has four mutually exclusive states. Deriving them as flags
+   * (rather than nesting conditions in the JSX) is what guarantees two of them
+   * can never render at once — the bug this replaced, where a failed fetch
+   * showed the error banner *and* told the admin to adjust their filters.
+   *
+   * The error banner stays a sibling above this block on purpose:
+   * `updateUserRole` sets `error` without clearing `users`, so a failed role
+   * change must show the banner while the table is still on screen.
+   */
+  const hasRows = filteredUsers.length > 0;
+  const showLoading = !hasRows && (!hasLoaded || isLoading);
+  const showEmpty = !hasRows && hasLoaded && !isLoading && !error;
+  /* Only claim a count we can stand behind — "0 users found" under a failed
+     fetch reads as "the table is empty" rather than "the request failed". */
+  const showCount = hasRows || (hasLoaded && !error);
 
   const handleRoleChange = async (newRole: UserRole) => {
     if (!userBeingEdited) return;
@@ -85,7 +102,7 @@ const UserManagement = () => {
           <div className="user-management-header">
             <div className="user-management-header__info">
               <h2>Users</h2>
-              <p className="subtitle">{filteredUsers.length} users found</p>
+              {showCount && <p className="subtitle">{filteredUsers.length} users found</p>}
             </div>
             <RefreshButton onClick={refreshUsers} isLoading={isLoading} />
           </div>
@@ -120,25 +137,25 @@ const UserManagement = () => {
             </div>
           )}
 
-          {isLoading && filteredUsers.length === 0 ? (
+          {showLoading ? (
             <div className="loading-state">
               <div className="spinner" />
               <p>Loading users...</p>
             </div>
-          ) : filteredUsers.length === 0 ? (
+          ) : showEmpty ? (
             <div className="empty-state">
               <div className="empty-state__icon">👤</div>
               <h3>No users found</h3>
               <p>Try adjusting your search or filter criteria</p>
             </div>
-          ) : (
+          ) : hasRows ? (
             <UsersTable
               users={filteredUsers}
               canChangeRole={isAdmin}
               onViewDetails={setSelectedUser}
               onChangeRole={setUserBeingEdited}
             />
-          )}
+          ) : null /* Fetch failed with no rows — the error banner above is the whole story. */}
         </div>
 
         {selectedUser && (
