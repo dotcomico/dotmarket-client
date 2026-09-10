@@ -19,6 +19,16 @@ export const formatUserDate = (dateString: string) => {
 export const getUserRelativeTime = (dateString: string) =>
   getRelativeTimeShared(dateString, formatUserDate);
 
+/**
+ * USD money for the admin user views, e.g. 133.63 -> "$133.63".
+ *
+ * Always renders a real amount, including "$0.00". A dash was used here while
+ * the value was a stub and genuinely unknown; now that the backend computes it,
+ * zero is a fact about the user and should read like one.
+ */
+export const formatCurrency = (amount: number) =>
+  amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
 /** Avatar initials, e.g. "dotan" -> "DO". */
 export const getUserInitials = (username: string) =>
   username.substring(0, 2).toUpperCase();

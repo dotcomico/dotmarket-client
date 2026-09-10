@@ -1,13 +1,9 @@
 import React from 'react';
+import type { OrderStatsSummary } from '../../types/order.types';
 import './OrderStats.css';
 
 interface OrderStatsProps {
-    stats: {
-        totalOrders: number;
-        totalSpent: number;
-        pendingCount: number;
-        shippedCount: number;
-    };
+    stats: OrderStatsSummary;
 }
 
 const OrderStats: React.FC<OrderStatsProps> = ({ stats }) => {

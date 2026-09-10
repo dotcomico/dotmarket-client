@@ -35,9 +35,18 @@
   white-space: nowrap;
 }
 
-.low-stock-item__category {
+.low-stock-item__price {
   font-size: var(--font-size-sm);
   color: var(--secondary-text);
+}
+
+/* Honesty line for the capped preview - the panel shows at most 5 rows while
+   the badge shows the true total, so the gap has to be spelled out. */
+.low-stock-footnote {
+  margin: var(--spacing-md) 0 0;
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+  text-align: center;
 }
 
 .low-stock-item__stock {

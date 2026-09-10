@@ -1,5 +1,6 @@
 import type { AdminUser } from '../../types/admin.types';
 import {
+  formatCurrency,
   formatRoleLabel,
   formatUserDate,
   getRoleBadgeClass,
@@ -21,6 +22,10 @@ interface UsersTableProps {
  *
  * Styling comes from the page-level `UserManagement.css` (global stylesheet,
  * not CSS modules), which also defines the shared `.admin-table` chrome.
+ *
+ * `ordersCount` / `totalSpent` are rendered without fallbacks on purpose: the
+ * backend computes both for every user, so a missing value is a bug to surface,
+ * not a case to paper over with a zero.
  */
 export const UsersTable = ({ users, canChangeRole, onViewDetails, onChangeRole }: UsersTableProps) => (
   <div className="table-wrapper">
@@ -32,7 +37,7 @@ export const UsersTable = ({ users, canChangeRole, onViewDetails, onChangeRole }
           <th>Orders</th>
           <th>Total Spent</th>
           <th>Joined</th>
-          <th>Last Active</th>
+          <th>Last Updated</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -53,12 +58,10 @@ export const UsersTable = ({ users, canChangeRole, onViewDetails, onChangeRole }
                 {formatRoleLabel(user.role)}
               </span>
             </td>
-            <td className="orders-cell">{user.ordersCount ?? 0}</td>
-            <td className="spent-cell">
-              {(user.totalSpent ?? 0) > 0 ? `$${(user.totalSpent ?? 0).toFixed(2)}` : '—'}
-            </td>
+            <td className="orders-cell">{user.ordersCount}</td>
+            <td className="spent-cell">{formatCurrency(user.totalSpent)}</td>
             <td className="date-cell">{formatUserDate(user.createdAt)}</td>
-            <td className="activity-cell">{getUserRelativeTime(user.lastActive ?? user.createdAt)}</td>
+            <td className="activity-cell">{getUserRelativeTime(user.updatedAt)}</td>
             <td>
               <div className="action-buttons">
                 <button

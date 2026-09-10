@@ -1,6 +1,6 @@
 import axiosInstance from '../../../api/axiosInstance';
 import { API_ENDPOINTS } from '../../../api/apiConfig';
-import type { Product, ProductsResponse, ProductFilters } from '../types/product.types';
+import type { Product, ProductsResponse, ProductFilters, ProductStats } from '../types/product.types';
 
 export const productApi = {
   // Get all products with optional filters
@@ -9,6 +9,12 @@ export const productApi = {
       params: filters 
     }),
   
+  // Catalogue-wide aggregates computed in SQL (admin/manager only).
+  // Separate from getAll on purpose: getAll is paginated, so its payload can
+  // never answer "how many products are there in total".
+  getStats: () =>
+    axiosInstance.get<ProductStats>(API_ENDPOINTS.PRODUCT_STATS),
+
   // Get single product by ID
   getById: (id: number) => 
     axiosInstance.get<Product>(API_ENDPOINTS.PRODUCT_BY_ID(id)),

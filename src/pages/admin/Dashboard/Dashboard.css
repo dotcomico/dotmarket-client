@@ -127,6 +127,19 @@
   font-size: var(--font-size-md);
 }
 
+/* Error Message (matches the admin list pages' banner) */
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md);
+  background-color: rgba(211, 47, 47, 0.1);
+  border: 1px solid var(--error);
+  border-radius: var(--radius-md);
+  color: var(--error);
+}
+
 /* Loading State */
 .loading-state {
   display: flex;

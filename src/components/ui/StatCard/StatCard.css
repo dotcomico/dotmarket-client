@@ -1,4 +1,7 @@
 .stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   border-radius: var(--radius-xl);
   padding: var(--spacing-lg);
   color: white;
@@ -25,7 +28,15 @@
   margin-bottom: var(--spacing-xs);
 }
 
-.stat-card__change {
+/* `subtext` is optional - when it is omitted the value is the last element and
+   must not leave a phantom gap under itself. Grid stretch keeps the card the
+   same height as its neighbours; centring the column keeps the shorter
+   content optically balanced instead of top-heavy. */
+.stat-card__value:last-child {
+  margin-bottom: 0;
+}
+
+.stat-card__subtext {
   font-size: 13px;
   opacity: 0.85;
   font-weight: var(--font-weight-medium);

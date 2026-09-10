@@ -18,4 +18,4 @@ export {
 } from './utils/productFormValidation';
 export type { ImageUploadRules, ProductFormErrors } from './utils/productFormValidation';
 
-export type { Product, ProductsResponse, ProductFilters as ProductFilterParams, ProductState, ProductFormState } from './types/product.types';
+export type { Product, ProductsResponse, ProductFilters as ProductFilterParams, ProductState, ProductFormState, ProductStats, LowStockProduct } from './types/product.types';

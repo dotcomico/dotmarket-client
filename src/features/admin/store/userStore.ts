@@ -63,8 +63,16 @@ export const useUserStore = create<UserState>((set, get) => ({
     try {
       const response = await userApi.getAll();
       
-      // Transform API response to AdminUser format
-      // API returns basic user data, we extend with default values for admin fields
+      /*
+       * The API row and AdminUser are the same shape, so this is a pass-through
+       * rather than a transform.
+       *
+       * It used to stub `ordersCount: 0` / `totalSpent: 0` pending a backend
+       * change - which rendered as "0 orders / $0.00" for every user, including
+       * ones with real order history. The backend now computes both in SQL
+       * (they aggregate over orders the admin client never loads), so they are
+       * mapped straight through.
+       */
       const users: AdminUser[] = response.data.map(user => ({
         id: user.id,
         username: user.username,
@@ -72,11 +80,8 @@ export const useUserStore = create<UserState>((set, get) => ({
         role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
-        // These fields may not be available from API yet
-        // They'll be populated when backend is extended
-        ordersCount: 0,
-        totalSpent: 0,
-        lastActive: user.updatedAt,
+        ordersCount: user.ordersCount,
+        totalSpent: user.totalSpent,
       }));
 
       set({

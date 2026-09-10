@@ -226,6 +226,17 @@
   color: var(--primary-text);
 }
 
+/* Definitional footnote inside a details section - explains what a metric
+   counts, so the reader never has to guess at the aggregate's boundaries. */
+.detail-note {
+  margin: var(--spacing-sm) 0 0;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-color);
+  font-size: var(--font-size-sm);
+  color: var(--secondary-text);
+  line-height: 1.4;
+}
+
 .detail-value--highlight {
   font-size: var(--font-size-lg);
   color: var(--tertiary);

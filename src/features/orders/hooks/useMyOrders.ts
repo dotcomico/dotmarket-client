@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useOrderStore } from '../../../store/orderStore';
-import type { OrderStatus } from '../types/order.types';
+import { computeOrderStats } from '../utils/orderStats';
 
 /*
  * useMyOrders - Hook for current user's orders
@@ -13,9 +13,6 @@ export const useMyOrders = () => {
     error,
     fetchOrdersOfCurrentUser,
     fetchOrderById,
-    getCurrentUserOrdersByStatus,
-    getCurrentUserTotalSpent,
-    getCurrentUserOrdersCount,
     getOrderById,
     clearError,
     clearCurrentOrder,
@@ -48,38 +45,17 @@ export const useMyOrders = () => {
   }, [getOrderById, fetchOrderById]);
 
   /*
-   * Get orders filtered by status
+   * Order statistics for the current user.
+   *
+   * Derived state, not a getter: it is keyed on the reactive `currentUserOrders`
+   * slice, so it recomputes the moment the fetch resolves. Exposing a getter
+   * here instead would freeze consumers on the pre-fetch (empty) values, since
+   * zustand action identities are permanently stable.
    */
-  const getOrdersByStatus = useCallback((status: OrderStatus) => {
-    return getCurrentUserOrdersByStatus(status);
-  }, [getCurrentUserOrdersByStatus]);
-
-  /*
-   * Memoized status helpers
-   */
-  const getPendingOrders = useCallback(() => getOrdersByStatus('pending'), [getOrdersByStatus]);
-  const getShippedOrders = useCallback(() => getOrdersByStatus('shipped'), [getOrdersByStatus]);
-  const getPaidOrders = useCallback(() => getOrdersByStatus('paid'), [getOrdersByStatus]);
-  const getCancelledOrders = useCallback(() => getOrdersByStatus('cancelled'), [getOrdersByStatus]);
-
-  /*
-   * Get order statistics for current user
-   */
-  const getOrderStats = useCallback(() => ({
-    totalOrders: getCurrentUserOrdersCount(),
-    totalSpent: getCurrentUserTotalSpent(),
-    pendingCount: getPendingOrders().length,
-    shippedCount: getShippedOrders().length,
-    paidCount: getPaidOrders().length,
-    cancelledCount: getCancelledOrders().length,
-  }), [
-    getCurrentUserOrdersCount,
-    getCurrentUserTotalSpent,
-    getPendingOrders,
-    getShippedOrders,
-    getPaidOrders,
-    getCancelledOrders
-  ]);
+  const stats = useMemo(
+    () => computeOrderStats(currentUserOrders),
+    [currentUserOrders]
+  );
 
   return {
     // State
@@ -87,6 +63,9 @@ export const useMyOrders = () => {
     currentOrder,
     isLoading,
     error,
+
+    // Derived state
+    stats,
 
     // Actions
     loadOrders,
@@ -97,11 +76,5 @@ export const useMyOrders = () => {
 
     // Helpers
     getOrderById,
-    getOrdersByStatus,
-    getPendingOrders,
-    getShippedOrders,
-    getPaidOrders,
-    getCancelledOrders,
-    getOrderStats,
   };
 };

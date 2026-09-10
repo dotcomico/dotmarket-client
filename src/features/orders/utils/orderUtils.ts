@@ -79,3 +79,12 @@ export const getOrderItemCount = (order: {
   }
   return 0;
 };
+/**
+ * Statuses that count as realized revenue.
+ *
+ * Money the customer has actually committed = `paid` + `shipped`.
+ * `pending` is not settled yet and `cancelled` was refunded/never charged, so
+ * neither belongs in a "Total Spent" / revenue figure. This mirrors the same
+ * decision made on the backend, so both sides report the same number.
+ */
+export const REVENUE_ORDER_STATUSES: readonly OrderStatus[] = ['paid', 'shipped'];

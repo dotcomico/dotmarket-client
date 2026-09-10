@@ -9,7 +9,18 @@ import type { Order, OrderStatus } from '../types/order.types';
  * inline with useMemo, on top of the store's raw `orders` + actions.
  */
 export const useOrders = () => {
-  const { orders, isLoading, error, fetchOrders, updateOrderStatus } = useOrderStore();
+  const {
+    orders,
+    /* The admin-list-specific request state, surfaced to consumers under the
+       plain `isLoading` / `error` names. The store's shared pair is written by
+       the customer/detail/create fetches too, so reading it here would let an
+       unrelated order request spinner-out or error-out the admin screens. */
+    isOrdersLoading,
+    ordersError,
+    ordersLoaded,
+    fetchOrders,
+    updateOrderStatus
+  } = useOrderStore();
 
   /**
    * Filter orders by free-text search (id/customer/email/address) and status.
@@ -47,8 +58,12 @@ export const useOrders = () => {
   return {
     // State
     orders,
-    isLoading,
-    error,
+    isLoading: isOrdersLoading,
+    error: ordersError,
+    /* Has `fetchOrders` succeeded at least once this session? Consumers that
+       present an aggregate over `orders` must render it as unknown until this
+       is true — `orders: []` before the first successful fetch is not zero. */
+    ordersLoaded,
 
     // Actions
     fetchOrders,
