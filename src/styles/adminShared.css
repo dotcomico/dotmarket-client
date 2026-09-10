@@ -1,0 +1,207 @@
+/*
+ * Shared primitives for admin list pages (Users, Products, Categories, Orders, Dashboard):
+ * the generic data table shell and the generic modal/dialog shell.
+ *
+ * Why this file exists: these classes used to live inside individual page
+ * stylesheets (Dashboard.css, ProductManagement.css) even though every admin
+ * page's table/modal components (UsersTable, ProductTable, CategoryTable,
+ * RecentOrdersTable, UserDetailsModal, ChangeRoleModal, OrderDetailsModal, ...)
+ * reference them. Because admin routes are React.lazy-loaded, each page's CSS
+ * chunk is only injected the first time that page is visited — so a page that
+ * didn't itself define `.admin-table`/`.modal-overlay` (e.g. Users Management)
+ * only rendered correctly if the admin happened to visit Dashboard or Product
+ * Management earlier in the same session. This file makes these classes
+ * globally available (imported once from index.css, never code-split) so
+ * every admin page renders correctly regardless of navigation order.
+ *
+ * Page-specific rules (column hiding via nth-child, page-only badges, etc.)
+ * stay in each page's own CSS file — only the truly shared shell lives here.
+ */
+
+/* Table Wrapper + Base Table */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table thead tr {
+  border-bottom: 2px solid var(--border-color);
+}
+
+.admin-table th {
+  padding: var(--spacing-md);
+  text-align: left;
+  color: var(--secondary-text);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition-fast);
+}
+
+.admin-table tbody tr:hover {
+  background-color: var(--surface-color-hover);
+}
+
+.admin-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.admin-table td {
+  padding: var(--spacing-md);
+  font-size: var(--font-size-md);
+  color: var(--primary-text);
+}
+
+@media (max-width: 768px) {
+  .admin-table {
+    font-size: var(--font-size-sm);
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* Row Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.action-btn--edit {
+  background-color: rgba(0, 64, 255, 0.1);
+  color: var(--tertiary);
+}
+
+.action-btn--edit:hover {
+  background-color: rgba(0, 64, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.action-btn--delete {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: var(--error);
+}
+
+.action-btn--delete:hover {
+  background-color: rgba(211, 47, 47, 0.2);
+  transform: scale(1.1);
+}
+
+@media (max-width: 480px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+}
+
+/* Modal Shell */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: var(--spacing-lg);
+  animation: adminModalFadeIn 0.2s ease-out;
+}
+
+@keyframes adminModalFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background-color: var(--surface-color);
+  border-radius: var(--radius-xl);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-color);
+  animation: adminModalSlideUp 0.3s ease-out;
+}
+
+@keyframes adminModalSlideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xl);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--primary-text);
+}
+
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  color: var(--secondary-text);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  background-color: var(--surface-color-hover);
+  color: var(--primary-text);
+}
+
+.modal-body {
+  padding: var(--spacing-xl);
+}

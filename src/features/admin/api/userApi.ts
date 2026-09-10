@@ -4,7 +4,13 @@ import type { UserRole } from '../types/admin.types';
 
 /* User Admin API Service */
 
-// Response type for get all users
+/**
+ * One row of `GET /users` (admin only).
+ *
+ * `ordersCount` and `totalSpent` are computed per user in SQL by the backend -
+ * they are aggregates over orders the admin client never loads, so they cannot
+ * be derived here. Both are always present.
+ */
 interface UsersResponse {
   id: number;
   username: string;
@@ -12,6 +18,10 @@ interface UsersResponse {
   role: UserRole;
   createdAt: string;
   updatedAt: string;
+  /** All orders ever placed by this user, cancelled included. */
+  ordersCount: number;
+  /** Sum of this user's paid + shipped orders only. */
+  totalSpent: number;
 }
 
 export const userApi = {

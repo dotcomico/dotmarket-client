@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMyOrders } from '../../features/orders/hooks/useMyOrders';
 import { PATHS } from '../../routes/paths';
@@ -10,7 +10,7 @@ import OrderDetailsModal from '../../features/orders/components/OrderDetailsModa
 
 const Orders = () => {
   const navigate = useNavigate();
-  const { orders, isLoading, error, refreshOrders, getOrderStats, clearError } = useMyOrders();
+  const { orders, isLoading, error, stats, refreshOrders, clearError } = useMyOrders();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const hasFetchedRef = useRef(false);
 
@@ -20,8 +20,6 @@ const Orders = () => {
       refreshOrders();
     }
   }, [refreshOrders]);
-
-  const stats = useMemo(() => getOrderStats(), [getOrderStats]);
 
   const handleStartShopping = () => {
     navigate(PATHS.PRODUCTS);

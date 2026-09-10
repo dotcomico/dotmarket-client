@@ -18,28 +18,53 @@ export const useOrderStore = create<OrderState>()(
       currentOrder: null,
       isLoading: false,
       error: null,
+      isOrdersLoading: false,
+      ordersError: null,
+      ordersLoaded: false,
 
       /*
        * Fetch all orders (Admin/Manager)
+       *
+       * Tracked with its OWN request state (`isOrdersLoading` / `ordersError` /
+       * `ordersLoaded`) rather than the shared `isLoading` / `error`, for three
+       * reasons:
+       *  1. `isLoading` answers "is a request in flight", not "do we have
+       *     data". `isLoading === false` with `orders === []` is exactly the
+       *     ambiguous first-paint state, so it cannot tell a consumer whether
+       *     0 orders means "unknown" or "genuinely none". `ordersLoaded` can.
+       *  2. `isLoading` is also written by the customer/detail/create fetches,
+       *     so an unrelated order request would put the admin order views into
+       *     a spinner (and its error into their banner).
+       *  3. The re-entrancy guard below must only skip a duplicate *admin
+       *     orders* fetch. Guarding on the shared flag silently cancelled this
+       *     fetch whenever any other order request happened to be in flight.
+       *
+       * `ordersLoaded` is intentionally NOT persisted (see `partialize`): a
+       * rehydrated `orders` array is last session's data, so every mount must
+       * re-fetch before any aggregate derived from it is presented as fact.
        */
       fetchOrders: async () => {
-        if (get().isLoading) return;
+        if (get().isOrdersLoading) return;
 
-        set({ isLoading: true, error: null });
+        set({ isOrdersLoading: true, ordersError: null });
 
         try {
           const response = await orderApi.getAll();
           set({
             orders: response.data,
-            isLoading: false
+            isOrdersLoading: false,
+            ordersLoaded: true
           });
         } catch (error) {
           const errorMessage = getErrorMessage(error, 'Failed to load orders');
           logError(error, 'orderStore.fetchOrders');
 
           set({
-            error: errorMessage,
-            isLoading: false,
+            ordersError: errorMessage,
+            isOrdersLoading: false,
+            // Stays false so consumers keep rendering "unknown" instead of
+            // presenting the empty array below as a confident zero.
+            ordersLoaded: false,
             orders: []
           });
         }
@@ -132,7 +157,9 @@ export const useOrderStore = create<OrderState>()(
        * Update order status (Admin/Manager)
        */
       updateOrderStatus: async (orderId: number, status) => {
-        set({ error: null });
+        // Admin-orders surface, so it reports through `ordersError` — the pair
+        // the admin screens actually render — not the shared `error`.
+        set({ ordersError: null });
 
         try {
           const response = await orderApi.updateStatus(orderId, status);
@@ -155,7 +182,7 @@ export const useOrderStore = create<OrderState>()(
           const errorMessage = getErrorMessage(error, 'Failed to update order status');
           logError(error, 'orderStore.updateOrderStatus');
 
-          set({ error: errorMessage });
+          set({ ordersError: errorMessage });
           return { success: false, error: errorMessage };
         }
       },
@@ -168,31 +195,19 @@ export const useOrderStore = create<OrderState>()(
           || currentUserOrders.find(o => o.id === orderId);
       },
 
-      getOrdersByStatus: (status) => {
-        return get().orders.filter(order => order.status === status);
-      },
-
-      getTotalSpent: () => {
-        return get().orders.reduce((sum, order) => sum + order.totalAmount, 0);
-      },
-
-      getOrdersCount: () => get().orders.length,
-
-      //  Helpers ( User ) 
-
-      getCurrentUserOrdersByStatus: (status) => {
-        return get().currentUserOrders.filter(order => order.status === status);
-      },
-
-      getCurrentUserTotalSpent: () => {
-        return get().currentUserOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-      },
-
-      getCurrentUserOrdersCount: () => get().currentUserOrders.length,
+      /*
+       * NOTE: there are deliberately no `getTotalSpent` / `getOrdersCount` /
+       * `getOrdersByStatus` getters here. Aggregates over `orders` are derived
+       * at render from the reactive slice (see `utils/orderStats.ts`): a
+       * zustand action identity is permanently stable, so a `useMemo` keyed on
+       * a getter never recomputes and freezes on the pre-fetch values. The old
+       * `getTotalSpent` also summed EVERY status ($910.63 on the seed data)
+       * while every other surface reports paid+shipped only ($133.63).
+       */
 
       //////////////////
 
-      clearError: () => set({ error: null }),
+      clearError: () => set({ error: null, ordersError: null }),
 
       clearCurrentOrder: () => set({ currentOrder: null }),
 
@@ -201,10 +216,15 @@ export const useOrderStore = create<OrderState>()(
         currentUserOrders: [],
         currentOrder: null,
         isLoading: false,
-        error: null
+        error: null,
+        isOrdersLoading: false,
+        ordersError: null,
+        ordersLoaded: false
       })
     }),
     {
+      // Only the data is persisted. `ordersLoaded` is not, so a rehydrated
+      // `orders` array can never be mistaken for a freshly-loaded one.
       name: 'order-storage',
       partialize: (state) => ({
         orders: state.orders,

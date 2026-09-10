@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useOrderStore } from '../../../../store/orderStore';
 import { formatDate } from '../../../../utils/formatters';
 import { PATHS } from '../../../../routes/paths';
-import type { OrderStatus } from '../../../../features/orders/types/order.types';
+import type { Order, OrderStatus } from '../../../../features/orders';
 import './RecentOrdersTable.css';
 
 // --- Helper Functions (Moved outside to keep component clean) ---
@@ -42,21 +40,28 @@ const getStatusLabel = (status: OrderStatus) => {
 
 // --- Main Component ---
 
-export const RecentOrdersTable = () => {
-  const navigate = useNavigate();
-  
-  // Store Selectors
-  const orders = useOrderStore((state) => state.orders);
-  const isLoading = useOrderStore((state) => state.isLoading);
-  const fetchOrders = useOrderStore((state) => state.fetchOrders);
+interface RecentOrdersTableProps {
+  /** The full admin orders list; the table shows the first 5 itself. */
+  orders: Order[];
+  /** True only while the first successful load is still outstanding. */
+  isLoading: boolean;
+  error: string | null;
+  onRetry: () => void;
+}
 
-  // SAFE EFFECT: Only runs if orders are empty. 
-  // Does NOT depend on isLoading, preventing the infinite loop.
-  useEffect(() => {
-    if (orders.length === 0) {
-      fetchOrders();
-    }
-  }, [fetchOrders, orders.length]);
+/**
+ * RecentOrdersTable - presentational.
+ *
+ * It used to fetch its own orders in a `useEffect` guarded by
+ * `orders.length === 0`, which made it the *only* thing on the dashboard
+ * loading orders — the page's revenue/order tiles silently depended on a
+ * child's side effect, ran a paint behind it, and never refreshed at all when
+ * a persisted `order-storage` made the guard false. The page owns that fetch
+ * now (see `pages/admin/Dashboard`), so there is exactly one fetcher and the
+ * tiles and this table always describe the same request.
+ */
+export const RecentOrdersTable = ({ orders, isLoading, error, onRetry }: RecentOrdersTableProps) => {
+  const navigate = useNavigate();
 
   // Derived State
   const recentOrders = orders.slice(0, 5);
@@ -66,64 +71,76 @@ export const RecentOrdersTable = () => {
     navigate(PATHS.ADMIN.ORDERS);
   };
 
-  // 1. Loading State (Only show if we have no data yet)
-  if (isLoading && !hasOrders) {
-    return (
-      <div className="admin-card admin-card--large">
-        <div className="admin-card__header">
-          <h2>Recent Orders</h2>
-        </div>
+  const renderBody = () => {
+    if (isLoading) {
+      return (
         <div className="loading-state">
           <div className="spinner" />
           <p>Loading orders...</p>
         </div>
+      );
+    }
+
+    /* A failed load must read as a failure, not as "no orders yet" — the
+       dashboard tiles show — for the same reason. Mirrors LowStockAlert. */
+    if (error) {
+      return (
+        <div className="error-message">
+          <span>⚠️ {error}</span>
+          <button onClick={onRetry} className="btn-link">Retry</button>
+        </div>
+      );
+    }
+
+    if (!hasOrders) {
+      return (
+        <div className="empty-state">
+          <div className="empty-state__icon">📋</div>
+          <div className="empty-state__text">No orders yet</div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="table-wrapper">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Date</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recentOrders.map(order => (
+              <tr key={order.id}>
+                <td className="order-id">#{order.id}</td>
+                <td>{order.User?.username || 'Unknown'}</td>
+                <td className="text-secondary">{formatDate(order.createdAt)}</td>
+                <td className="amount">${order.totalAmount.toFixed(2)}</td>
+                <td>
+                  <span className={`status ${getStatusClass(order.status)}`}>
+                    {getStatusLabel(order.status)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
-  }
+  };
 
-  // 2. Main Render
   return (
     <div className="admin-card admin-card--large">
       <div className="admin-card__header">
         <h2>Recent Orders</h2>
         <button className="btn-link" onClick={handleViewAll}>View All</button>
       </div>
-      
-      {!hasOrders ? (
-        <div className="empty-state">
-          <div className="empty-state__icon">📋</div>
-          <div className="empty-state__text">No orders yet</div>
-        </div>
-      ) : (
-        <div className="table-wrapper">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentOrders.map(order => (
-                <tr key={order.id}>
-                  <td className="order-id">#{order.id}</td>
-                  <td>{order.User?.username || 'Unknown'}</td>
-                  <td className="text-secondary">{formatDate(order.createdAt)}</td>
-                  <td className="amount">${order.totalAmount.toFixed(2)}</td>
-                  <td>
-                    <span className={`status ${getStatusClass(order.status)}`}>
-                      {getStatusLabel(order.status)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+
+      {renderBody()}
     </div>
   );
 };

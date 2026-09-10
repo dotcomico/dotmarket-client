@@ -8,6 +8,9 @@ export const useProductStore = create<ProductState>((set, get) => ({
   isLoading: false,
   error: null,
   pagination: null,
+  stats: null,
+  isStatsLoading: false,
+  statsError: null,
 
   fetchProducts: async (filters?: ProductFilters) => {
     set({ isLoading: true, error: null });
@@ -26,6 +29,36 @@ export const useProductStore = create<ProductState>((set, get) => ({
         error: errorMessage,
         isLoading: false,
         products: [] 
+      });
+    }
+  },
+
+  /*
+   * Fetch catalogue-wide aggregates (total products, low stock, inventory
+   * value) from the backend.
+   *
+   * These CANNOT be derived from `products`: that array holds a single
+   * paginated page, so any reduce over it answers a question about 10 rows
+   * while pretending to answer one about 84.
+   */
+  fetchStats: async () => {
+    set({ isStatsLoading: true, statsError: null });
+    try {
+      const response = await productApi.getStats();
+      set({
+        stats: response.data,
+        isStatsLoading: false
+      });
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, 'Failed to load product stats');
+      logError(error, 'productStore.fetchStats');
+
+      set({
+        statsError: errorMessage,
+        isStatsLoading: false,
+        // Drop stale numbers rather than showing them next to an error —
+        // a confident wrong figure is worse than a visible failure.
+        stats: null
       });
     }
   },

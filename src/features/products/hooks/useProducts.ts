@@ -12,7 +12,17 @@ import type { Product } from '../types/product.types';
  * inline against `productApi` directly.
  */
 export const useProducts = () => {
-  const { products, isLoading, error, pagination, fetchProducts } = useProductStore();
+  const {
+    products,
+    isLoading,
+    error,
+    pagination,
+    stats,
+    isStatsLoading,
+    statsError,
+    fetchProducts,
+    fetchStats
+  } = useProductStore();
 
   /**
    * Filter products by free-text search (name/description) and category name.
@@ -103,9 +113,18 @@ export const useProducts = () => {
     isLoading,
     error,
     pagination,
+    /*
+     * Catalogue-wide aggregates from the backend. Exposed alongside `products`
+     * but deliberately NOT derived from it: `products` is one paginated page,
+     * so any total computed here would describe a fraction of the catalogue.
+     */
+    stats,
+    isStatsLoading,
+    statsError,
 
     // Actions
     fetchProducts,
+    fetchStats,
     createProduct,
     updateProduct,
     deleteProduct,

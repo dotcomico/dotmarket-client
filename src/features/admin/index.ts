@@ -21,7 +21,6 @@ export { userApi } from './api/userApi';
 
 // Types
 export type {
-  DashboardStats as DashboardStatsType,
   OrderStatus,
   UserRole,
   RecentOrder,

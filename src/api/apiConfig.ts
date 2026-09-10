@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
 
   // Products
   PRODUCTS: '/products',
+  PRODUCT_STATS: '/products/stats',
   PRODUCT_BY_ID: (pid: number) => `/products/${pid}`,
 
   // Orders
