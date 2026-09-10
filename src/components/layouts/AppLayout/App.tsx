@@ -8,6 +8,7 @@ import { useAuthStore } from "../../../store/authStore";
 import { authApi } from "../../../features/auth/api/authApi";
 import { isAxiosError } from "axios";
 import { useScrollToTop } from "../../../hooks/useScrollToTop";
+import { ChatWidget } from "../../../features/chat";
 
 
 const AppContent = () => {
@@ -44,6 +45,7 @@ const AppContent = () => {
       {!isAdminRoute && <Header />}
       <AppRoutes />
       {!isAdminRoute && <Fotter />}
+      {!isAdminRoute && <ChatWidget />}
     </>
   );
 };
