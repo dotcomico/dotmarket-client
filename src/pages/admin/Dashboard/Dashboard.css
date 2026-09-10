@@ -61,50 +61,8 @@
   background-color: rgba(0, 64, 255, 0.1);
 }
 
-/* Table Wrapper */
-.table-wrapper {
-  overflow-x: auto;
-  border-radius: var(--radius-md);
-}
-
-/* Admin Table */
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.admin-table thead tr {
-  border-bottom: 2px solid var(--border-color);
-}
-
-.admin-table th {
-  padding: var(--spacing-md);
-  text-align: left;
-  color: var(--secondary-text);
-  font-weight: var(--font-weight-semibold);
-  font-size: var(--font-size-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.admin-table tbody tr {
-  border-bottom: 1px solid var(--border-color);
-  transition: var(--transition-fast);
-}
-
-.admin-table tbody tr:hover {
-  background-color: var(--surface-color-hover);
-}
-
-.admin-table tbody tr:last-child {
-  border-bottom: none;
-}
-
-.admin-table td {
-  padding: var(--spacing-md);
-  font-size: var(--font-size-md);
-  color: var(--primary-text);
-}
+/* Table Wrapper + Admin Table base styles moved to src/styles/adminShared.css
+   (shared across every admin list page — see that file's header comment). */
 
 /* Empty State */
 .empty-state {
@@ -179,15 +137,8 @@
     padding: var(--spacing-lg);
   }
 
-  .admin-table {
-    font-size: var(--font-size-sm);
-  }
-
-  .admin-table th,
-  .admin-table td {
-    padding: var(--spacing-sm);
-  }
-
+  /* .admin-table font-size/padding downsizing is shared — see adminShared.css.
+     This nth-child hide is Dashboard-specific (its 3rd column). */
   .admin-table th:nth-child(3),
   .admin-table td:nth-child(3) {
     display: none;
