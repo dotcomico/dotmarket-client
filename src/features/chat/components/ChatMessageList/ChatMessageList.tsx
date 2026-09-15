@@ -11,43 +11,17 @@ interface ChatMessageListProps {
 
 // Below this, nothing shows but the bouncing dots — a caption would just
 // flash for instant replies.
-const CAPTION_REVEAL_THRESHOLD_MS = 10000;
-
-// Once revealed, the caption normally shows the running timer, but every
-// MESSAGE_CYCLE_MS it briefly interrupts itself with a status message for
-// MESSAGE_VISIBLE_MS before reverting back to the timer.
-const MESSAGE_CYCLE_MS = 6000;
-const MESSAGE_VISIBLE_MS = 1800;
-
-// No real step data comes from the backend (single request/response, no
-// streaming), so these only ever say things that stay true no matter how
-// much longer it actually takes — never a fabricated "almost there".
-const STATUS_MESSAGES = ['Thinking…', 'Still working — this can take a moment'];
+const CAPTION_REVEAL_THRESHOLD_MS = 5000;
 
 const formatTime = (timestamp: number) =>
   new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-type CaptionPhase =
-  | { visible: false }
-  | { visible: true; mode: 'message' | 'timer'; text: string; key: string };
+type CaptionPhase = { visible: false } | { visible: true; text: string };
 
 const getCaptionPhase = (elapsedMs: number): CaptionPhase => {
   if (elapsedMs < CAPTION_REVEAL_THRESHOLD_MS) return { visible: false };
 
-  const sinceReveal = elapsedMs - CAPTION_REVEAL_THRESHOLD_MS;
-  const cycleIndex = Math.floor(sinceReveal / MESSAGE_CYCLE_MS);
-  const phaseMs = sinceReveal % MESSAGE_CYCLE_MS;
-
-  if (phaseMs < MESSAGE_VISIBLE_MS) {
-    return {
-      visible: true,
-      mode: 'message',
-      text: STATUS_MESSAGES[cycleIndex % STATUS_MESSAGES.length],
-      key: `${cycleIndex}-message`
-    };
-  }
-
-  return { visible: true, mode: 'timer', text: formatElapsedTime(elapsedMs), key: `${cycleIndex}-timer` };
+  return { visible: true, text: formatElapsedTime(elapsedMs) };
 };
 
 interface TypingIndicatorProps {
@@ -68,9 +42,7 @@ const TypingIndicator = ({ onCaptionReveal }: TypingIndicatorProps) => {
     if (phase.visible) onCaptionReveal();
   }, [phase.visible, onCaptionReveal]);
 
-  const ariaLabel = phase.visible
-    ? `AI is typing, ${phase.mode === 'message' ? phase.text : `${phase.text} elapsed`}`
-    : 'AI is typing';
+  const ariaLabel = phase.visible ? `AI is typing, ${phase.text} elapsed` : 'AI is typing';
 
   return (
     <div className="chat-message-list__message chat-message-list__message--bot">
@@ -85,7 +57,7 @@ const TypingIndicator = ({ onCaptionReveal }: TypingIndicatorProps) => {
         className={`chat-message-list__time chat-message-list__time--typing${phase.visible ? ' chat-message-list__time--visible' : ''}`}
         aria-hidden="true"
       >
-        {phase.visible && <span key={phase.key} className="chat-message-list__time-text">{phase.text}</span>}
+        {phase.visible && <span className="chat-message-list__time-text">{phase.text}</span>}
       </span>
     </div>
   );
