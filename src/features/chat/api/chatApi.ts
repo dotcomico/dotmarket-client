@@ -10,11 +10,21 @@ const aiClient = axios.create({
   timeout: 180000
 });
 
+interface ChatHistoryTurn {
+  role: 'user' | 'bot';
+  text: string;
+}
+
+interface ChatRequest {
+  message: string;
+  history: ChatHistoryTurn[];
+}
+
 interface ChatResponse {
   reply: string;
 }
 
 export const chatApi = {
-  sendMessage: (message: string) =>
-    aiClient.post<ChatResponse>('/chat', { message })
+  sendMessage: (message: string, history: ChatHistoryTurn[]) =>
+    aiClient.post<ChatResponse>('/chat', { message, history } satisfies ChatRequest)
 };

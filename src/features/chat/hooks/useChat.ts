@@ -26,11 +26,13 @@ export const useChat = () => {
     const text = rawText.trim();
     if (!text) return;
 
+    const history = messages.map(({ role, text: turnText }) => ({ role, text: turnText }));
+
     setMessages((prev) => [...prev, createMessage('user', text)]);
     setIsBotTyping(true);
 
     try {
-      const { data } = await chatApi.sendMessage(text);
+      const { data } = await chatApi.sendMessage(text, history);
       setMessages((prev) => [...prev, createMessage('bot', data.reply)]);
     } catch {
       setMessages((prev) => [...prev, createMessage('bot', ERROR_REPLY_TEXT)]);
