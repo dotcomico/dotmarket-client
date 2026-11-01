@@ -28,6 +28,13 @@ export const UI_STRINGS = {
     
   },
 
+  HOME: {
+    HERO: {
+      HEADLINE: "Everyday shopping, made simple",
+      CTA: "Shop now",
+    },
+  },
+
   CART: {
     TITLE: "Your Cart",
     EMPTY_MESSAGE: "Your basket is empty. Start adding some fresh items!",

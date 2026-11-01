@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import "./Home.css";
 import { CategoryList } from '../../features/categories';
 import { ProductGrid, useProductStore } from "../../features/products";
+import { HeroBanner } from "../../features/home";
 
 const Home = () => {
   const { products, isLoading, fetchProducts } = useProductStore();
@@ -14,6 +15,7 @@ const Home = () => {
 
   return (
     <div className='Home'>
+      <HeroBanner />
       <CategoryList variant="grid" limit={100} showChildren={false} />
       <ProductGrid 
         products={products} 

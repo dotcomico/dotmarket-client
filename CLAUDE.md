@@ -26,7 +26,7 @@ src/
 │   ├── layouts/       # AppLayout (Header/Footer/Sidebar) and AdminLayout — wrap routes via <Outlet/>
 │   ├── admin/          # Admin-only chrome (AdminHeader, AdminSidebar, RefreshButton)
 │   └── ui/             # Generic shared components (StatCard, SearchBar, QuantitySelector, ThemeToggle, UserMenuPopup)
-├── features/<domain>/  # auth, cart, categories, orders, products, admin, profile
+├── features/<domain>/  # auth, cart, categories, orders, products, admin, profile, home
 │   ├── api/            # feature-specific axios calls, built on api/axiosInstance
 │   ├── components/     # feature-specific components
 │   ├── hooks/          # thin hook wrapping the domain's zustand store (see Store pattern below)
