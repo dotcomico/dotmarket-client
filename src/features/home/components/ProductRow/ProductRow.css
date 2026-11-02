@@ -33,14 +33,10 @@
   display: flex;
   flex: 0 0 240px;
   flex-direction: column;
+  /* Without this, a long one-line product name widens the card past its flex-basis */
+  min-width: 0;
   scroll-snap-align: start;
   border-radius: var(--radius-xl);
-}
-
-/* A percentage height would push the note past the item, and the cards would stop lining up */
-.product-row__item > .product-card {
-  flex: 1;
-  height: auto;
 }
 
 /* .product-card clips its link's own outline, so the ring has to sit on the list item.
@@ -63,7 +59,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 450px;
+  /* Square card plus the list's vertical padding, so the page doesn't jump when products load */
+  min-height: 268px;
 }
 
 /* Several global .spinner rules compete, and one of them uses an undefined variable */
@@ -90,7 +87,7 @@
   }
 
   .product-row__loading {
-    min-height: 425px;
+    min-height: 228px;
   }
 }
 
@@ -100,6 +97,6 @@
   }
 
   .product-row__loading {
-    min-height: 450px;
+    min-height: 196px;
   }
 }

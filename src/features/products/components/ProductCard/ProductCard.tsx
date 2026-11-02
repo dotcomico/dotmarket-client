@@ -7,15 +7,17 @@ import { QuantitySelector } from '../../../../components/ui/QuantitySelector/Qua
 
 interface ProductCardProps {
   product: Product;
+  variant?: 'default' | 'compact';
 }
 
-export const ProductCard = ({ product }: ProductCardProps) => {
+export const ProductCard = ({ product, variant = 'default' }: ProductCardProps) => {
   const { getProductQuantity, addToCart, changeQuantity } = useCart();
   const quantity = getProductQuantity(product.id);
   const isOutOfStock = product.stock === 0;
+  const isCompact = variant === 'compact';
 
   return (
-    <div className="product-card">
+    <div className={`product-card product-card--${variant}`}>
       <Link to={buildPath.productDetail(product.id)} className="product-card__link">
         <div className="product-card__image">
           {product.image ? (
@@ -43,11 +45,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <div className="product-card__content">
           <h3 className="product-card__title">{product.name}</h3>
 
-          {product.description && (
+          {!isCompact && product.description && (
             <p className="product-card__description">{product.description}</p>
           )}
 
-          {product.category && (
+          {!isCompact && product.category && (
             <span className="product-card__category">{product.category.name}</span>
           )}
 

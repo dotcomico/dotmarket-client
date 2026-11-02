@@ -45,7 +45,7 @@ export const ProductRow = ({
         <ul className="product-row__list" onFocus={revealFocusedCard}>
           {products.map((product) => (
             <li key={product.id} className="product-row__item">
-              <ProductCard product={product} />
+              <ProductCard product={product} variant="compact" />
               {getItemNote && <p className="product-row__note">{getItemNote(product)}</p>}
             </li>
           ))}
