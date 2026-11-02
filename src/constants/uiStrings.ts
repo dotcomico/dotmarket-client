@@ -28,6 +28,42 @@ export const UI_STRINGS = {
     
   },
 
+  HOME: {
+    HERO: {
+      HEADLINE: "Everyday shopping, made simple",
+      CTA: "Shop now",
+    },
+    TRUST_STRIP: {
+      ARIA_LABEL: "Why shop with DotMarket",
+      ITEMS: {
+        RANGE: {
+          LABEL: "Fresh food & everyday essentials",
+          SUBTEXT: "Browse produce, dairy, bakery, pantry and household categories.",
+        },
+        STOCK: {
+          LABEL: "Stock checked at checkout",
+          SUBTEXT: "Items are confirmed available before your order is placed.",
+        },
+        ORDERS: {
+          LABEL: "Check your order status",
+          SUBTEXT: "See every order and its status in My Orders.",
+        },
+        ACCOUNT: {
+          LABEL: "Password-protected accounts",
+          SUBTEXT: "Sign in to check out and view your own orders.",
+        },
+      },
+    },
+    NEW_ARRIVALS: {
+      TITLE: "New arrivals",
+      SUBTEXT: "The latest products added to the store.",
+    },
+    ALMOST_GONE: {
+      TITLE: "Almost gone",
+      SUBTEXT: "Only a few left of these products.",
+    },
+  },
+
   CART: {
     TITLE: "Your Cart",
     EMPTY_MESSAGE: "Your basket is empty. Start adding some fresh items!",

@@ -1,0 +1,113 @@
+.hero-banner {
+  position: relative;
+  /* Keeps the z-index: -1 circles above this background rather than behind .Home */
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  background: linear-gradient(135deg, var(--surface-color) 0%, var(--surface-color-hover) 100%);
+  border-radius: var(--radius-xl);
+}
+
+.hero-banner::before,
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  background-color: var(--tertiary);
+  border-radius: var(--radius-circle);
+  pointer-events: none;
+}
+
+.hero-banner::before {
+  top: -140px;
+  right: -80px;
+  width: 320px;
+  height: 320px;
+  opacity: 0.14;
+}
+
+.hero-banner::after {
+  right: 160px;
+  bottom: -90px;
+  width: 180px;
+  height: 180px;
+  opacity: 0.1;
+}
+
+.hero-banner__title {
+  margin: 0;
+  color: var(--primary-text);
+  font-size: var(--font-size-xxxl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: 1.15;
+}
+
+.hero-banner__tagline {
+  margin: 0;
+  color: var(--secondary-text);
+  font-size: var(--font-size-lg);
+}
+
+.hero-banner__cta {
+  margin-top: var(--spacing-xs);
+  padding: var(--spacing-smd) var(--spacing-xl);
+  background-color: var(--tertiary);
+  color: white;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: var(--transition-fast);
+}
+
+.hero-banner__cta:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.hero-banner__cta:active {
+  transform: translateY(0);
+}
+
+/* --tertiary is under 3:1 against the dark surface, so it can't be the focus ring */
+.hero-banner__cta:focus-visible {
+  outline: 2px solid var(--primary-text);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .hero-banner {
+    padding: var(--spacing-lg);
+  }
+
+  .hero-banner::before {
+    top: -70px;
+    right: -60px;
+    width: 160px;
+    height: 160px;
+  }
+
+  .hero-banner::after {
+    display: none;
+  }
+
+  .hero-banner__title {
+    font-size: var(--font-size-xxl);
+  }
+
+  .hero-banner__tagline {
+    font-size: var(--font-size-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-banner__title {
+    font-size: var(--font-size-xl);
+  }
+}

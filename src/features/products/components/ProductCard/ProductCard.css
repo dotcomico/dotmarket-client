@@ -120,6 +120,43 @@
   color: var(--tertiary);
 }
 
+/* Compact: a square card, where the image takes whatever the title and price leave */
+.product-card--compact {
+  aspect-ratio: 1;
+  height: auto;
+}
+
+.product-card--compact .product-card__link {
+  min-height: 0;
+}
+
+.product-card--compact .product-card__image {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+.product-card--compact .product-card__content {
+  flex: none;
+  padding: var(--spacing-sm);
+}
+
+/* One line only: a wrapped name would take its height from the image */
+.product-card--compact .product-card__title {
+  overflow: hidden;
+  font-size: var(--font-size-md);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-card--compact .product-card__footer {
+  padding-top: var(--spacing-xs);
+}
+
+.product-card--compact .product-card__price {
+  font-size: var(--font-size-md);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .product-card__image {

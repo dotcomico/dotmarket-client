@@ -1,0 +1,102 @@
+.product-row {
+  margin-bottom: var(--spacing-lg);
+}
+
+.product-row__title {
+  margin: 0;
+  color: var(--primary-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.product-row__subtext {
+  margin: var(--spacing-xs) 0 var(--spacing-sm);
+  color: var(--secondary-text);
+  font-size: var(--font-size-md);
+}
+
+.product-row__list {
+  display: flex;
+  gap: var(--spacing-md);
+  margin: 0;
+  /* overflow-x clips the other axis too, so this keeps room for the card's hover lift, shadow and focus ring */
+  padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-lg);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--spacing-xs);
+  scrollbar-width: thin;
+}
+
+.product-row__item {
+  display: flex;
+  flex: 0 0 240px;
+  flex-direction: column;
+  /* Without this, a long one-line product name widens the card past its flex-basis */
+  min-width: 0;
+  scroll-snap-align: start;
+  border-radius: var(--radius-xl);
+}
+
+/* .product-card clips its link's own outline, so the ring has to sit on the list item.
+   --tertiary is under 3:1 against the dark surface, so it can't be the focus ring. */
+.product-row__item:has(:focus-visible) {
+  outline: 2px solid var(--primary-text);
+  outline-offset: 2px;
+}
+
+/* --warning is under 4.5:1 on the light page background */
+.product-row__note {
+  margin: var(--spacing-sm) 0 0;
+  padding-inline: var(--spacing-sm);
+  color: var(--primary-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.product-row__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Square card plus the list's vertical padding, so the page doesn't jump when products load */
+  min-height: 268px;
+}
+
+/* Several global .spinner rules compete, and one of them uses an undefined variable */
+.product-row__loading .spinner {
+  border-color: var(--surface-color);
+  border-top-color: var(--primary-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .product-row__list {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-row__loading .spinner {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-row__item {
+    flex-basis: 200px;
+  }
+
+  .product-row__loading {
+    min-height: 228px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-row__item {
+    flex-basis: 168px;
+  }
+
+  .product-row__loading {
+    min-height: 196px;
+  }
+}
