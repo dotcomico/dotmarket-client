@@ -39,6 +39,42 @@
   opacity: 0.1;
 }
 
+/* Sway and breathe run on separate properties and timings, so the combined
+   motion doesn't visibly repeat. Offsets are percentages to suit each circle's size. */
+@keyframes hero-banner-sway {
+  from {
+    translate: -5% 1%;
+  }
+
+  to {
+    translate: 5% -1%;
+  }
+}
+
+@keyframes hero-banner-breathe {
+  from {
+    scale: 1.03;
+  }
+
+  to {
+    scale: 0.97;
+  }
+}
+
+/* Not gated on prefers-reduced-motion: the motion is small, slow and part of the
+   banner's look, and the gate hid it entirely for anyone with Windows animations off. */
+.hero-banner::before {
+  animation:
+    hero-banner-sway 5s ease-in-out infinite alternate,
+    hero-banner-breathe 7s ease-in-out infinite alternate;
+}
+
+.hero-banner::after {
+  animation:
+    hero-banner-sway 4s ease-in-out infinite alternate,
+    hero-banner-breathe 5.5s ease-in-out infinite alternate;
+}
+
 .hero-banner__title {
   margin: 0;
   color: var(--primary-text);
