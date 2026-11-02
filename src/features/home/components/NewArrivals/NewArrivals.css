@@ -1,0 +1,88 @@
+.new-arrivals {
+  margin-bottom: var(--spacing-lg);
+}
+
+.new-arrivals__title {
+  margin: 0;
+  color: var(--primary-text);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.new-arrivals__subtext {
+  margin: var(--spacing-xs) 0 var(--spacing-sm);
+  color: var(--secondary-text);
+  font-size: var(--font-size-md);
+}
+
+.new-arrivals__list {
+  display: flex;
+  gap: var(--spacing-md);
+  margin: 0;
+  /* overflow-x clips the other axis too, so this keeps room for the card's hover lift, shadow and focus ring */
+  padding: var(--spacing-xs) var(--spacing-xs) var(--spacing-lg);
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--spacing-xs);
+  scrollbar-width: thin;
+}
+
+.new-arrivals__item {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+  border-radius: var(--radius-xl);
+}
+
+/* .product-card clips its link's own outline, so the ring has to sit on the list item.
+   --tertiary is under 3:1 against the dark surface, so it can't be the focus ring. */
+.new-arrivals__item:has(:focus-visible) {
+  outline: 2px solid var(--primary-text);
+  outline-offset: 2px;
+}
+
+.new-arrivals__loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 450px;
+}
+
+/* Several global .spinner rules compete, and one of them uses an undefined variable */
+.new-arrivals__loading .spinner {
+  border-color: var(--surface-color);
+  border-top-color: var(--primary-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .new-arrivals__list {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .new-arrivals__loading .spinner {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .new-arrivals__item {
+    flex-basis: 200px;
+  }
+
+  .new-arrivals__loading {
+    min-height: 425px;
+  }
+}
+
+@media (max-width: 480px) {
+  .new-arrivals__item {
+    flex-basis: 168px;
+  }
+
+  .new-arrivals__loading {
+    min-height: 450px;
+  }
+}

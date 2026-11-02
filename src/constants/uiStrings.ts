@@ -54,6 +54,10 @@ export const UI_STRINGS = {
         },
       },
     },
+    NEW_ARRIVALS: {
+      TITLE: "New arrivals",
+      SUBTEXT: "The latest products added to the store.",
+    },
   },
 
   CART: {
