@@ -12,12 +12,9 @@ const Home = () => {
   const { products, isLoading, fetchProducts } = useProductStore();
   const { arrivals, isLoading: isLoadingArrivals } = useNewArrivals();
 
-  const arrivalIds = new Set(arrivals.map((product) => product.id));
   // Waiting on arrivals too: on return from a category page the first render still has
   // that category in the store, before the catalogue fetch has set isLoading.
-  const almostGone = isLoading || isLoadingArrivals ? [] : selectAlmostGone(products, arrivalIds);
-  const rowIds = new Set([...arrivalIds, ...almostGone.map((product) => product.id)]);
-  const gridProducts = products.filter((product) => !rowIds.has(product.id));
+  const almostGone = isLoading || isLoadingArrivals ? [] : selectAlmostGone(products);
 
   useEffect(() => {
     fetchProducts({ limit: 1000 }); // Fetch all products
@@ -44,7 +41,7 @@ const Home = () => {
         getItemNote={getStockLabel}
       />
       <ProductGrid 
-        products={gridProducts} 
+        products={products}
         isLoading={isLoading}
         limit={20}
         showMoreEnabled={true}
