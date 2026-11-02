@@ -120,3 +120,7 @@ The production image has to run alongside the other services, because `nginx.con
 | [`dotmarket-server`](https://github.com/dotcomico/dotmarket-server) | REST API, auth and database |
 | [`dotmarket-mcp-server`](https://github.com/dotcomico/dotmarket-mcp-server) | Exposes the backend as tools for AI models |
 | [`dotmarket-ai-server`](https://github.com/dotcomico/dotmarket-ai-server) | Chat assistant |
+
+## 📄 License
+
+[MIT](LICENSE)
