@@ -18,6 +18,7 @@ interface ChatHistoryTurn {
 interface ChatRequest {
   message: string;
   history: ChatHistoryTurn[];
+  conversationId: string;
 }
 
 interface ChatResponse {
@@ -25,6 +26,6 @@ interface ChatResponse {
 }
 
 export const chatApi = {
-  sendMessage: (message: string, history: ChatHistoryTurn[]) =>
-    aiClient.post<ChatResponse>('/chat', { message, history } satisfies ChatRequest)
+  sendMessage: (message: string, history: ChatHistoryTurn[], conversationId: string) =>
+    aiClient.post<ChatResponse>('/chat', { message, history, conversationId } satisfies ChatRequest)
 };

@@ -11,14 +11,17 @@ const WELCOME_MESSAGE: ChatMessage = {
 
 const ERROR_REPLY_TEXT = "Sorry, I couldn't reach the assistant. Please try again.";
 
+const createId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
 const createMessage = (role: ChatMessage['role'], text: string): ChatMessage => ({
-  id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+  id: createId(),
   role,
   text,
   timestamp: Date.now(),
 });
 
 export const useChat = () => {
+  const [conversationId] = useState(createId);
   const [messages, setMessages] = useState<ChatMessage[]>([WELCOME_MESSAGE]);
   const [isBotTyping, setIsBotTyping] = useState(false);
 
@@ -32,7 +35,7 @@ export const useChat = () => {
     setIsBotTyping(true);
 
     try {
-      const { data } = await chatApi.sendMessage(text, history);
+      const { data } = await chatApi.sendMessage(text, history, conversationId);
       setMessages((prev) => [...prev, createMessage('bot', data.reply)]);
     } catch {
       setMessages((prev) => [...prev, createMessage('bot', ERROR_REPLY_TEXT)]);
