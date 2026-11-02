@@ -58,6 +58,10 @@ export const UI_STRINGS = {
       TITLE: "New arrivals",
       SUBTEXT: "The latest products added to the store.",
     },
+    ALMOST_GONE: {
+      TITLE: "Almost gone",
+      SUBTEXT: "Only a few left of these products.",
+    },
   },
 
   CART: {

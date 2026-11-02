@@ -1,13 +1,15 @@
 import type { FocusEvent } from 'react';
 import { UI_STRINGS } from '../../../../constants/uiStrings';
 import { ProductCard, type Product } from '../../../products';
-import './NewArrivals.css';
+import './ProductRow.css';
 
-const HEADING_ID = 'new-arrivals-heading';
-
-interface NewArrivalsProps {
+interface ProductRowProps {
+  title: string;
+  subtext: string;
   products: Product[];
   isLoading: boolean;
+  headingId: string;
+  getItemNote?: (product: Product) => string;
 }
 
 // Scroll snap pulls the small scroll that focus triggers back to the previous stop,
@@ -18,25 +20,33 @@ const revealFocusedCard = ({ target }: FocusEvent<HTMLUListElement>) => {
   target.closest('li')?.scrollIntoView({ block: 'nearest', inline: 'start' });
 };
 
-export const NewArrivals = ({ products, isLoading }: NewArrivalsProps) => {
+export const ProductRow = ({
+  title,
+  subtext,
+  products,
+  isLoading,
+  headingId,
+  getItemNote,
+}: ProductRowProps) => {
   if (!isLoading && products.length === 0) return null;
 
   return (
-    <section className="new-arrivals" aria-labelledby={HEADING_ID} aria-busy={isLoading}>
-      <h2 id={HEADING_ID} className="new-arrivals__title">
-        {UI_STRINGS.HOME.NEW_ARRIVALS.TITLE}
+    <section className="product-row" aria-labelledby={headingId} aria-busy={isLoading}>
+      <h2 id={headingId} className="product-row__title">
+        {title}
       </h2>
-      <p className="new-arrivals__subtext">{UI_STRINGS.HOME.NEW_ARRIVALS.SUBTEXT}</p>
+      <p className="product-row__subtext">{subtext}</p>
 
       {isLoading ? (
-        <div className="new-arrivals__loading" role="status" aria-label={UI_STRINGS.COMMON.LOADING}>
+        <div className="product-row__loading" role="status" aria-label={UI_STRINGS.COMMON.LOADING}>
           <div className="spinner" />
         </div>
       ) : (
-        <ul className="new-arrivals__list" onFocus={revealFocusedCard}>
+        <ul className="product-row__list" onFocus={revealFocusedCard}>
           {products.map((product) => (
-            <li key={product.id} className="new-arrivals__item">
+            <li key={product.id} className="product-row__item">
               <ProductCard product={product} />
+              {getItemNote && <p className="product-row__note">{getItemNote(product)}</p>}
             </li>
           ))}
         </ul>

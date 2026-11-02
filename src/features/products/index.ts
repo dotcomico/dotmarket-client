@@ -8,6 +8,8 @@ export { useProductStore } from './productStore';
 export { useProducts } from './hooks/useProducts';
 export { productApi } from './api/productApi';
 
+export { getProductStockStatus } from './utils/productStockStatus';
+
 // Form validation (pure helpers — safe to use outside React)
 export {
   validateProductForm,

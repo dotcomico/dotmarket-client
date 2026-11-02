@@ -1,21 +1,21 @@
-.new-arrivals {
+.product-row {
   margin-bottom: var(--spacing-lg);
 }
 
-.new-arrivals__title {
+.product-row__title {
   margin: 0;
   color: var(--primary-text);
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
 }
 
-.new-arrivals__subtext {
+.product-row__subtext {
   margin: var(--spacing-xs) 0 var(--spacing-sm);
   color: var(--secondary-text);
   font-size: var(--font-size-md);
 }
 
-.new-arrivals__list {
+.product-row__list {
   display: flex;
   gap: var(--spacing-md);
   margin: 0;
@@ -29,20 +29,37 @@
   scrollbar-width: thin;
 }
 
-.new-arrivals__item {
+.product-row__item {
+  display: flex;
   flex: 0 0 240px;
+  flex-direction: column;
   scroll-snap-align: start;
   border-radius: var(--radius-xl);
 }
 
+/* A percentage height would push the note past the item, and the cards would stop lining up */
+.product-row__item > .product-card {
+  flex: 1;
+  height: auto;
+}
+
 /* .product-card clips its link's own outline, so the ring has to sit on the list item.
    --tertiary is under 3:1 against the dark surface, so it can't be the focus ring. */
-.new-arrivals__item:has(:focus-visible) {
+.product-row__item:has(:focus-visible) {
   outline: 2px solid var(--primary-text);
   outline-offset: 2px;
 }
 
-.new-arrivals__loading {
+/* --warning is under 4.5:1 on the light page background */
+.product-row__note {
+  margin: var(--spacing-sm) 0 0;
+  padding-inline: var(--spacing-sm);
+  color: var(--primary-text);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.product-row__loading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,39 +67,39 @@
 }
 
 /* Several global .spinner rules compete, and one of them uses an undefined variable */
-.new-arrivals__loading .spinner {
+.product-row__loading .spinner {
   border-color: var(--surface-color);
   border-top-color: var(--primary-text);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .new-arrivals__list {
+  .product-row__list {
     scroll-behavior: smooth;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .new-arrivals__loading .spinner {
+  .product-row__loading .spinner {
     animation: none;
   }
 }
 
 @media (max-width: 768px) {
-  .new-arrivals__item {
+  .product-row__item {
     flex-basis: 200px;
   }
 
-  .new-arrivals__loading {
+  .product-row__loading {
     min-height: 425px;
   }
 }
 
 @media (max-width: 480px) {
-  .new-arrivals__item {
+  .product-row__item {
     flex-basis: 168px;
   }
 
-  .new-arrivals__loading {
+  .product-row__loading {
     min-height: 450px;
   }
 }
