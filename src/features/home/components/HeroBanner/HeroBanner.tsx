@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ShoppingCart } from 'lucide-react';
 import { PATHS } from '../../../../routes/paths';
 import { UI_STRINGS } from '../../../../constants/uiStrings';
 import './HeroBanner.css';
@@ -7,6 +8,8 @@ const HEADING_ID = 'hero-banner-heading';
 
 export const HeroBanner = () => (
   <section className="hero-banner" aria-labelledby={HEADING_ID}>
+    <ShoppingCart className="hero-banner__cart hero-banner__cart--large" size={72} aria-hidden="true" />
+    <ShoppingCart className="hero-banner__cart hero-banner__cart--small" size={40} aria-hidden="true" />
     <h1 id={HEADING_ID} className="hero-banner__title">
       {UI_STRINGS.HOME.HERO.HEADLINE}
     </h1>
