@@ -192,7 +192,7 @@ const CategoryManagement = () => {
                     {error && (
                         <div className="error-message">
                             <span>{error}</span>
-                            <button onClick={clearError} className="error-message__close">×</button>
+                            <button onClick={clearError} className="error-message__close" aria-label="Dismiss error">×</button>
                         </div>
                     )}
 

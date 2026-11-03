@@ -61,6 +61,7 @@ export const ProfileDropdown = ({ user, onLogout }: ProfileDropdownProps) => {
         onClick={handleToggle}
         aria-expanded={isOpen}
         aria-haspopup="true"
+        aria-label={`Account menu for ${user.username}`}
       >
         <div className="profile-dropdown__avatar">
           {user.username.substring(0, 2).toUpperCase()}
