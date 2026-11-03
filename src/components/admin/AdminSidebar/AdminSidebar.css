@@ -21,6 +21,8 @@
   cursor: pointer;
   transition: opacity var(--transition-fast);
   color: var(--primary-text);
+  display: block;
+  text-decoration: none;
 }
 
 .admin-sidebar__logo:hover {

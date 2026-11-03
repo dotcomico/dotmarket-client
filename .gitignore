@@ -29,3 +29,8 @@ dist-ssr
 *.sw?
 CLAUDE.md
 AGENTS.md
+
+# AllyCat scan output
+allycat-report.json
+allycat-report.txt
+allycat-report.html

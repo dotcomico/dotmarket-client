@@ -2,6 +2,7 @@ import React from 'react';
 import { getStatusClass, getStatusLabel } from '../../utils/orderUtils';
 import { formatDate } from '../../../../utils/formatters';
 import type { Order } from '../../types/order.types';
+import { useDialogFocus } from '../../../../hooks/useDialogFocus';
 import './OrderDetailsModal.css';
 
 type ModalVariant = 'customer' | 'admin';
@@ -20,14 +21,22 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
   onContinueShopping,
 }) => {
   const isAdmin = variant === 'admin';
+  const dialogRef = useDialogFocus(onClose);
 
   return (
     <div className="order-modal-overlay" onClick={onClose}>
-      <div className="order-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="order-modal"
+        onClick={(e) => e.stopPropagation()}
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-modal-title"
+      >
         {/* Header */}
         <div className="order-modal__header">
           <div className="order-modal__header-content">
-            <h2>Order #{order.id}</h2>
+            <h2 id="order-modal-title">Order #{order.id}</h2>
             <span className={`order-modal__status-badge ${getStatusClass(order.status)}`}>
               {getStatusLabel(order.status)}
             </span>

@@ -133,6 +133,7 @@ const ProductManagement = () => {
             {/* Category Filter */}
             <select
               className="category-filter"
+              aria-label="Filter by category"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >

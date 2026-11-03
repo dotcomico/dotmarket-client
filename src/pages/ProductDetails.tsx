@@ -162,7 +162,7 @@ const ProductDetails = () => {
           {/* Description */}
           {product.description && (
             <div className="product-details__description">
-              <h3>Description</h3>
+              <h2>Description</h2>
               <p>{product.description}</p>
             </div>
           )}

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { KeyboardEvent, ReactNode } from 'react';
 import './StatTile.css';
 
 /**
@@ -30,8 +30,21 @@ export const StatTile = ({ icon, value, label, onClick, iconSize = 'md', classNa
     className,
   ].filter(Boolean).join(' ');
 
+  // Clickable tiles act as buttons: focusable and activatable with Enter/Space.
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const { key } = event;
+    if (key === 'Enter' || key === ' ') {
+      event.preventDefault();
+      onClick?.();
+    }
+  };
+
   return (
-    <div className={classes} onClick={onClick}>
+    <div
+      className={classes}
+      onClick={onClick}
+      {...(onClick && { role: 'button', tabIndex: 0, onKeyDown: handleKeyDown })}
+    >
       {icon && <div className="stat-tile__icon">{icon}</div>}
       <div className="stat-tile__content">
         <div className="stat-tile__value">{value}</div>
