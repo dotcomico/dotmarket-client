@@ -6,11 +6,15 @@ import ThemeToggle from "../../../ui/ThemeToggle/ThemeToggle";
 import { useAuthStore } from "../../../../store/authStore";
 import { useAuth } from "../../../../features/auth/hooks/useAuth";
 import { ProfileDropdown } from "../../../../features/profile/components/ProfileDropdown/ProfileDropdown";
+import { useDialogFocus } from "../../../../hooks/useDialogFocus";
 
 const HeaderActions = ({ cartCount }: { cartCount: number }) => {
   const { isAuthenticated, user } = useAuthStore();
   const { logout } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const logoutDialogRef = useDialogFocus(() => setShowLogoutModal(false), {
+    isOpen: showLogoutModal,
+  });
 
   const handleLogout = () => {
     setShowLogoutModal(true);
@@ -119,6 +123,7 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
           <div
             className="logout-modal"
             onClick={(e) => e.stopPropagation()}
+            ref={logoutDialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="header-logout-title"

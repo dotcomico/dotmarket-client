@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../auth/hooks/useAuth';
 import { PATHS } from '../../../../routes/paths';
+import { useDialogFocus } from '../../../../hooks/useDialogFocus';
 import './AccountActions.css';
 
 export const AccountActions = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const logoutDialogRef = useDialogFocus(() => setShowLogoutModal(false), {
+    isOpen: showLogoutModal,
+  });
 
   const handleLogout = () => {
     logout();
@@ -106,6 +110,7 @@ export const AccountActions = () => {
           <div
             className="logout-modal"
             onClick={(e) => e.stopPropagation()}
+            ref={logoutDialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="account-logout-title"
