@@ -297,7 +297,7 @@
   border-top: 1px solid var(--border-color);
 }
 
-.product-details__description h3 {
+.product-details__description h2 {
   margin: 0 0 var(--spacing-xs) 0;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);

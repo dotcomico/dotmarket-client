@@ -33,8 +33,10 @@
   gap: var(--spacing-sm);
 }
 
-.footer-links h4, .footer-app h4 {
+.footer-links h3, .footer-app h3 {
   font-size: var(--font-size-md);
+  /* Pin the old h4 UA top margin (h3's default is 1em) so the h4 -> h3 swap stays visually identical */
+  margin-top: 1.33em;
   color: var(--tertiary); /* Using your primary orange as a highlight */
   margin-bottom: var(--spacing-sm);
   text-transform: uppercase;
