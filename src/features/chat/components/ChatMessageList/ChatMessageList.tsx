@@ -44,9 +44,18 @@ const TypingIndicator = ({ onCaptionReveal }: TypingIndicatorProps) => {
 
   const ariaLabel = phase.visible ? `AI is typing, ${phase.text} elapsed` : 'AI is typing';
 
+  // role="img", not role="status": the parent is already a role="log" live
+  // region that announces this bubble when it mounts. A nested status region
+  // would double-announce it, and putting the elapsed text in a live region
+  // would re-announce it on every tick. An aria-label change on an img is
+  // not announced, so the ticking label can only be read on demand.
   return (
     <div className="chat-message-list__message chat-message-list__message--bot">
-      <div className="chat-message-list__bubble chat-message-list__bubble--typing" aria-label={ariaLabel}>
+      <div
+        className="chat-message-list__bubble chat-message-list__bubble--typing"
+        role="img"
+        aria-label={ariaLabel}
+      >
         <span className="chat-message-list__typing-dots" aria-hidden="true">
           <span />
           <span />
