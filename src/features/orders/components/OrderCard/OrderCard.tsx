@@ -11,8 +11,25 @@ interface OrderCardProps {
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order, onClick }) => {
+    // The whole card is the click target, so expose it as a button to
+    // keyboard and screen-reader users (Enter/Space, like a native button).
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        const { key } = event;
+        if (key === 'Enter' || key === ' ') {
+            event.preventDefault();
+            onClick(order);
+        }
+    };
+
     return (
-        <div className="order-card" onClick={() => onClick(order)}>
+        <div
+            className="order-card"
+            onClick={() => onClick(order)}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-label={`View details for order #${order.id}, ${getStatusLabel(order.status)}, total $${order.totalAmount.toFixed(2)}`}
+        >
             <div className="order-card__header">
                 <div className="order-card__id">Order #{order.id}</div>
                 <span className={`order-card__status ${getStatusClass(order.status)}`}>
