@@ -116,8 +116,14 @@ const HeaderActions = ({ cartCount }: { cartCount: number }) => {
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (
         <div className="logout-modal-overlay" onClick={() => setShowLogoutModal(false)}>
-          <div className="logout-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Confirm Logout</h3>
+          <div
+            className="logout-modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="header-logout-title"
+          >
+            <h3 id="header-logout-title">Confirm Logout</h3>
             <p>Are you sure you want to log out of your account?</p>
             <div className="logout-modal__actions">
               <button

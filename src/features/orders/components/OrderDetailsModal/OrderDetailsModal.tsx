@@ -23,11 +23,17 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({
 
   return (
     <div className="order-modal-overlay" onClick={onClose}>
-      <div className="order-modal" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="order-modal"
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="order-modal-title"
+      >
         {/* Header */}
         <div className="order-modal__header">
           <div className="order-modal__header-content">
-            <h2>Order #{order.id}</h2>
+            <h2 id="order-modal-title">Order #{order.id}</h2>
             <span className={`order-modal__status-badge ${getStatusClass(order.status)}`}>
               {getStatusLabel(order.status)}
             </span>
