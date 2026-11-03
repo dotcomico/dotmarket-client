@@ -103,6 +103,7 @@ const OrderManagement = () => {
 
             <select
               className="status-filter"
+              aria-label="Filter by order status"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as 'all' | OrderStatus)}
             >
