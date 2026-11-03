@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { PATHS } from '../../../routes/paths';
 import { useAdminAccess } from '../../../features/admin/hooks/useAdminAccess';
 import { useAuth } from '../../../features/auth/hooks/useAuth';
@@ -93,9 +93,9 @@ export const AdminSidebar = () => {
       </button>
 
       {/* 🆕 Brand logo instead of Dashboard */}
-      <div className="admin-sidebar__logo" onClick={() => navigate(PATHS.HOME)}>
+      <Link to={PATHS.HOME} className="admin-sidebar__logo" aria-label="DotMarket home">
         {isSidebarCollapsed ? '🛒' : '🛒 DotMarket'}
-      </div>
+      </Link>
 
       {/* Navigation */}
       <nav className="admin-sidebar__nav">
@@ -110,8 +110,10 @@ export const AdminSidebar = () => {
               onClick={() => navigate(item.path)}
               className={`admin-sidebar__item ${isActive ? 'admin-sidebar__item--active' : ''}`}
               title={isSidebarCollapsed ? item.label : undefined}
+              aria-label={item.label}
+              aria-current={isActive ? 'page' : undefined}
             >
-              <span className="admin-sidebar__icon">{item.icon}</span>
+              <span className="admin-sidebar__icon" aria-hidden="true">{item.icon}</span>
               {!isSidebarCollapsed && <span>{item.label}</span>}
             </button>
           );
@@ -123,8 +125,9 @@ export const AdminSidebar = () => {
         onClick={logout}
         className="admin-sidebar__logout"
         title={isSidebarCollapsed ? 'Sign Out' : undefined}
+        aria-label="Sign Out"
       >
-        <span className="admin-sidebar__icon">🚪</span>
+        <span className="admin-sidebar__icon" aria-hidden="true">🚪</span>
         {!isSidebarCollapsed && <span>Sign Out</span>}
       </button>
     </div>
